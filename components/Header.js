@@ -1,33 +1,82 @@
+"use client";
 import Link from 'next/link';
-import React from 'react'
+import React, { useState } from 'react';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
+import { HiOutlineMenuAlt3, HiX } from 'react-icons/hi';
+
 export default function Header() {
-    return (
-        <>
-            <header className="w-full flex items-center justify-between bg-transparent py-3 px-8 shadow">
-                <div className="flex items-center">
-                    <div className="bg-white rounded-lg px-6 py-2 shadow font-semibold text-xl text-gray-800">
-                        Logo Here
-                    </div>
-                </div>
+  const [open, setOpen] = useState(false);
 
-                <nav className="flex items-center gap-9 ml-10">
-                    <a href="#" className="text-white font-light  text-[12px] *:hover:underline">HOME</a>
-                    <a href="#" className="text-stone-300 font-light  text-[12px] *:hover:text-white">SERVICES</a>
-                    <a href="#" className="text-stone-300 font-light  text-[12px] *:hover:text-white">CONTACT US</a>
-                    <a href="#" className="text-stone-300 font-light  text-[12px] *:hover:text-white">BLOG</a>
+  return (
+    <>
+      <header className="fixed top-0 left-0 z-50 w-full bg-transparent py-3 px-4 sm:px-10 md:px-16 lg:px-16 border-b-2 border-[#717171]">
+        <div className="max-w-6xl flex items-center justify-between mx-auto">
+          {/* Logo */}
+          <div className="flex items-center">
+            <div className="bg-white rounded-lg px-3 py-2 sm:px-6 sm:py-2 shadow font-semibold text-base sm:text-xl text-gray-800">
+              Logo Here
+            </div>
+          </div>
 
-                    <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />
-                    <FaUser className="text-[#CBAA87] mx-2" size={16} />
+          {/* Hamburger Button (Mobile Only) */}
+          <button
+            className="lg:hidden text-white text-2xl"
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+          >
+            {open ? <HiX /> : <HiOutlineMenuAlt3 />}
+          </button>
 
-                    <Link href={"/"} className="ml-6 px-7 py-2 text-[12px] rounded-full bg-[#9D9C9A] text-white font-medium shadow  transition">
-                        BOOK AN APPOINTMENT
-                    </Link>
-                    <Link href={"/"} className="ml-3 px-5 py-2 rounded-full bg-stone-100 text-gray-900 font-medium shadow hover:bg-stone-300 transition">
-                        GET APP
-                    </Link>
-                </nav>
-            </header>
-        </>
-    )
+          {/* Navigation (Desktop) */}
+          <nav className="hidden lg:flex items-center gap-8 ml-10">
+            <Link href="/" className="text-white font-light text-[12px] hover:underline">HOME</Link>
+            <Link href="/services" className="text-stone-300 font-light text-[12px] hover:text-white">SERVICES</Link>
+            <Link href="/contact" className="text-stone-300 font-light text-[12px] hover:text-white">CONTACT US</Link>
+            <Link href="/blog" className="text-stone-300 font-light text-[12px] hover:text-white">BLOG</Link>
+            <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />
+            <FaUser className="text-[#CBAA87] mx-2" size={16} />
+            <div className="lg:pr-10">
+              <Link href="/" className="px-7 py-2 text-[12px] rounded-full bg-[#9D9C9A] text-white font-medium shadow transition">
+                BOOK AN APPOINTMENT
+              </Link>
+              <Link href="/" className="ml-3 px-5 py-2 rounded-full text-[12px] bg-[#E9E3D9] text-gray-900 font-medium shadow hover:bg-stone-300 transition">
+                GET APP
+              </Link>
+            </div>
+          </nav>
+        </div>
+        
+        {/* Mobile Menu Overlay */}
+        {open && (
+          <div className="lg:hidden bg-[#181818] bg-opacity-95 fixed top-0 left-0 w-full h-full z-50 flex flex-col items-center justify-center gap-6">
+            {/* Close button always visible top right */}
+            <button
+              className="absolute top-4 right-4 text-white text-3xl z-60"
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+            >
+              <HiX />
+            </button>
+
+            {/* Menu Content - add spacing below close btn */}
+            <Link href="/" className="text-white font-light text-lg mt-20">HOME</Link>
+            <Link href="/services" className="text-stone-300 font-light text-lg">SERVICES</Link>
+            <Link href="/contact" className="text-stone-300 font-light text-lg">CONTACT US</Link>
+            <Link href="/blog" className="text-stone-300 font-light text-lg">BLOG</Link>
+            <div className="flex gap-4 mt-4">
+              <FaShoppingCart className="text-[#CBAA87]" size={22} />
+              <FaUser className="text-[#CBAA87]" size={22} />
+            </div>
+            <Link href="/" className="px-7 py-3 text-lg rounded-full bg-[#9D9C9A] text-white font-medium shadow transition mt-4">
+              BOOK AN APPOINTMENT
+            </Link>
+            <Link href="/" className="px-5 py-3 rounded-full text-lg bg-[#E9E3D9] text-gray-900 font-medium shadow hover:bg-stone-300 transition mt-2">
+              GET APP
+            </Link>
+          </div>
+        )}
+
+      </header>
+    </>
+  );
 }

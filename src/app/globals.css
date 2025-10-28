@@ -7,4 +7,8 @@ body{
   padding: 0;
   box-sizing: border-box;
   font-family: "Inria Serif", serif;
+  background-color: #F6EFE4;
+}
+button{
+  cursor: pointer;
 }
