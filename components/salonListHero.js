@@ -5,8 +5,7 @@ import Image from 'next/image'
 function HeroSection() {
     return (
         <>
-            <div className="bg-black text-white relative overflow-hidden">
-
+            <div className="bg-black text-white relative overflow-hidden pt-14">
 
                 {/* Main Hero Content */}
                 <div className="relative flex flex-col lg:flex-row items-center justify-center min-h-[90vh] px-8 lg:px-16 py-12">
