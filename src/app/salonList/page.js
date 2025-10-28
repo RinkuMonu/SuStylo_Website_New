@@ -90,7 +90,6 @@ import SalonList from '../components/salonListComponent'
 function salonlist() {
   return (
     <div>
-
         <HeroSection />
         <SalonList />
     </div>
