@@ -124,6 +124,7 @@ export default function Footer() {
             alt="Facebook"
             width={24}
             height={24}
+            className="bg-white rounded-full"
           />
         </Link>
         <Link href="#" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
