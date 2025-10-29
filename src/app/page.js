@@ -5,6 +5,8 @@ import HomeFreelancer from "../../components/HomeFreelancer";
 import NearBySalonSection from "../../components/NearBySalonSection";
 import PopularSalon from "../../components/PopularSalon";
 import DiscountSlider from "../../components/DiscountSlider";
+import Testimonial from "../../components/Testimonial";
+import HomeAbout from "../../components/HomeAbout";
 
 export default function Home() {
   const homeTabContent = {
@@ -199,6 +201,8 @@ export default function Home() {
       <PopularSalon />
       <div className="container mx-auto max-w-7xl lg:px-16 px-4 sm:px-10 md:px-14">
         <DiscountSlider />
+        <Testimonial />
+        <HomeAbout />
       </div>
 
     </>

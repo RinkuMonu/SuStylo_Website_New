@@ -4,9 +4,18 @@ import React, { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { HiOutlineMenuAlt3, HiX } from 'react-icons/hi';
 
+import LoginModal from '../components/modals/LoginModal';
+import AuthModalManager from "../components/modals/AuthModalManager";
+
+
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+    // const [openLogin, setOpenLogin] = useState(false);
+      const [showModal, setShowModal] = useState(false);
+
+
 
 
   useEffect(() => {
@@ -43,8 +52,17 @@ export default function Header() {
             <Link href="/allservices" className="text-stone-300 font-light text-[12px] hover:text-white">SERVICES</Link>
             <Link href="/contact" className="text-stone-300 font-light text-[12px] hover:text-white">CONTACT US</Link>
             <Link href="/blog" className="text-stone-300 font-light text-[12px] hover:text-white">BLOG</Link>
+            {/* <Link href="/login" className="text-stone-300 font-light text-[12px] hover:text-white">LOGIN</Link> */}
+             <Link
+          href="#"
+          // onClick={() => setOpenLogin(true)}
+          onClick={() => setShowModal(true)}
+          className="text-stone-300 font-light text-[12px] hover:text-white"
+        >
+          LOGIN
+        </Link>
             <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />
-            <FaUser className="text-[#CBAA87] mx-2" size={16} />
+            {/* <FaUser className="text-[#CBAA87] mx-2" size={16} /> */}
             <div className="lg:pr-10">
               <Link href="/" className="px-7 py-2 text-[12px] rounded-full bg-[#9D9C9A] text-white font-medium shadow transition">
                 BOOK AN APPOINTMENT
@@ -87,6 +105,10 @@ export default function Header() {
         )}
 
       </header>
+
+      {/* <LoginModal isOpen={openLogin} onClose={() => setOpenLogin(false)} /> */}
+            <AuthModalManager isOpen={showModal} onClose={() => setShowModal(false)} />
+
     </>
   );
 }
