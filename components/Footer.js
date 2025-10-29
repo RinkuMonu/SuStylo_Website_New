@@ -117,7 +117,7 @@ export default function Footer() {
     </div>
 
       {/* Social Icons */}
-      <div className="flex gap-7 py-6">
+      <div className="flex gap-7 py-6 justify-center items-center">
         <Link href="#" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
           <Image
             src="/Image/facebook-icon.png"
