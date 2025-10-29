@@ -35,12 +35,31 @@ export default function NearBySalonSection() {
           View more
         </Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-8 mx-auto">
         {salons.map((salon, idx) => (
-          <div key={idx} className="bg-white rounded-[48px] flex flex-col border-[#CBAA87] border items-center overflow-hidden w-max">
-            <div className="relative w-56 h-52 rounded-t-[40px] overflow-hidden">
-              <Image src={salon.imgUrl} alt={salon.name} fill className="object-cover" />
+          <div key={idx} className="bg-white rounded-[48px] flex flex-col border-[#CBAA87] border items-center overflow-hidden lg:w-max">
+            <div
+              className="
+                relative 
+                w-full            
+                h-36                  
+                sm:h-44              
+                md:h-48             
+                lg:w-56               
+                lg:h-52               
+                rounded-t-[28px] 
+                overflow-hidden
+              "
+            >
+              <Image
+                src={salon.imgUrl}
+                alt={salon.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, (max-width:1024px) 350px, 224px"
+              />
             </div>
+
             <div className="my-3 text-center">
               <div className="text-[16px] font-serif font-semibold text-[#363333]">{salon.name}</div>
               <div className="flex items-center justify-center gap-2 text-[#697070] text-base mt-1 font-serif">

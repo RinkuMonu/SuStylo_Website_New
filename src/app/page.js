@@ -4,6 +4,7 @@ import ServiceSection from "../../components/ServiceSection";
 import HomeFreelancer from "../../components/HomeFreelancer";
 import NearBySalonSection from "../../components/NearBySalonSection";
 import PopularSalon from "../../components/PopularSalon";
+import DiscountSlider from "../../components/DiscountSlider";
 
 export default function Home() {
   const homeTabContent = {
@@ -180,7 +181,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-7xl lg:px-16 px-4 sm:px-10 md:px-14">
         <Homeservices />
         <ServiceSection
           title="SERVICES AT HOME"
@@ -196,6 +197,9 @@ export default function Home() {
         <NearBySalonSection />
       </div>
       <PopularSalon />
+      <div className="container mx-auto max-w-7xl lg:px-16 px-4 sm:px-10 md:px-14">
+        <DiscountSlider />
+      </div>
 
     </>
   );
