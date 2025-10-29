@@ -528,7 +528,7 @@ export default function SalonList() {
                                 fill
                                 className="object-cover"
                             />
-                            <div className="font-['Inria_Serif'] absolute top-0 right-0 px-8 py-1 bg-gradient-to-r from-black/70 via-[#b00020] to-[#e63946] text-white text-sm font-medium">
+                            <div className="font-['Inria_Serif'] absolute top-0 right-0 px-8 py-1 rounded-bl-lg bg-[linear-gradient(90deg,rgba(202,60,60,0)_6.5%,#FF3636_70.41%)] text-white text-sm font-medium">
                                 Popular
                             </div>
                         </div>
