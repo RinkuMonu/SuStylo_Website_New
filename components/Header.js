@@ -1,15 +1,25 @@
 "use client";
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { HiOutlineMenuAlt3, HiX } from 'react-icons/hi';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   return (
     <>
-      <header className="fixed top-0 left-0 z-50 w-full bg-transparent py-3 px-4 sm:px-10 md:px-16 lg:px-16 border-b-2 border-[#717171]">
+      <header className={`fixed top-0 left-0 z-50 w-full py-3 px-4 sm:px-10 md:px-16 lg:px-16 border-b-2 border-[#717171] transition-colors duration-300
+        ${scrolled ? 'bg-[#181818]/90 backdrop-blur border-0' : 'bg-transparent'}`}>
         <div className="max-w-6xl flex items-center justify-between mx-auto">
           {/* Logo */}
           <div className="flex items-center">
