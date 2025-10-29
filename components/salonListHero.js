@@ -7,7 +7,7 @@ function HeroSection() {
         <>
              <section className="relative bg-[#587066] pb-[49px]">
                 {/* ✅ Inner Black Box */}
-                <div className="relative bg-black text-white shadow-2xl w-[90%] max-w-[1300px] h-[692px] py-12 px-8">
+                <div className="relative bg-black text-white shadow-2xl w-[90%] max-w-[1300px] h-[600px] py-12 px-8">
                   {/* Left floating images */}
                   <div className="absolute left-[290px] top-[180px] w-48 h-32 rounded-xl overflow-hidden shadow-lg">
                     <Image src="/salonlist/img2.jpg" alt="Service" fill className="object-cover" />
