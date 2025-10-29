@@ -681,111 +681,111 @@ export default function SalonList() {
                     </button>
 
                     {/* More Filters Dropdown */}
-                  {isMoreFiltersModalOpen && (
-                <div className="absolute top-12 right-0 bg-white text-black rounded-lg shadow-xl border border-gray-200 z-50 w-[630px] p-5">
-                    {/* Filters Row */}
-                    <div className="grid grid-cols-4 gap-6">
-                        {/* Gender Section */}
-                        <div className="border-r pr-4">
-                            <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
-                                Gender
-                            </h4>
-                            <div className="space-y-1">
-                                {["Male", "Female"].map((gender) => (
-                                    <label key={gender} className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            className="mr-2 w-3 h-3"
-                                            checked={selectedFilters.gender.includes(gender)}
-                                            onChange={() => handleCheckboxChange("gender", gender)}
-                                        />
-                                        <span className="text-sm">{gender}</span>
-                                    </label>
-                                ))}
+                    {isMoreFiltersModalOpen && (
+                        <div className="absolute top-12 right-0 bg-white text-black rounded-lg shadow-xl border border-gray-200 z-50 w-[630px] p-5">
+                            {/* Filters Row */}
+                            <div className="grid grid-cols-4 gap-6">
+                                {/* Gender Section */}
+                                <div className="border-r pr-4">
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                        Gender
+                                    </h4>
+                                    <div className="space-y-1">
+                                        {["Male", "Female"].map((gender) => (
+                                            <label key={gender} className="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="mr-2 w-3 h-3"
+                                                    checked={selectedFilters.gender.includes(gender)}
+                                                    onChange={() => handleCheckboxChange("gender", gender)}
+                                                />
+                                                <span className="text-sm">{gender}</span>
+                                            </label>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Price Section */}
+                                <div className="border-r pr-4">
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                        Price
+                                    </h4>
+                                    <div className="space-y-1">
+                                        {["1,000 - 2,000", "2,000 - 3,000", "3,000 - 4,000", "4,000 - 5,000", "5,000 - 6,000"].map(
+                                            (price) => (
+                                                <label key={price} className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="mr-2 w-3 h-3"
+                                                        checked={selectedFilters.price.includes(price)}
+                                                        onChange={() => handleCheckboxChange("price", price)}
+                                                    />
+                                                    <span className="text-sm">{price}</span>
+                                                </label>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Customer Rating Section */}
+                                <div className="border-r pr-4">
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                        Customer Rating
+                                    </h4>
+                                    <div className="space-y-1">
+                                        {["4.5 - 5 Ratings", "4 - 4.5 Ratings", "3.5 - 4 Ratings", "3 - 3.5 Ratings", "2 - 3 Ratings"].map(
+                                            (rating) => (
+                                                <label key={rating} className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="mr-2 w-3 h-3"
+                                                        checked={selectedFilters.rating.includes(rating)}
+                                                        onChange={() => handleCheckboxChange("rating", rating)}
+                                                    />
+                                                    <span className="text-sm">{rating}</span>
+                                                </label>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Discount Section */}
+                                <div>
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                        Discount
+                                    </h4>
+                                    <div className="space-y-1">
+                                        {["10% Discount", "20% Discount", "30% Discount", "40% Discount", "50% Discount"].map(
+                                            (discount) => (
+                                                <label key={discount} className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="mr-2 w-3 h-3"
+                                                        checked={selectedFilters.discount.includes(discount)}
+                                                        onChange={() => handleCheckboxChange("discount", discount)}
+                                                    />
+                                                    <span className="text-sm">{discount}</span>
+                                                </label>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Bottom Buttons */}
+                            <div className="flex justify-end items-center gap-4 mt-4 text-sm text-gray-600">
+                                <button
+                                    className="flex items-center gap-1 hover:text-gray-800"
+                                    onClick={handleReset}
+                                >
+                                    <span>⟳</span> Reset
+                                </button>
+                                <button className="flex items-center gap-1 text-green-600 hover:text-green-700">
+                                    <span>✔</span> Done
+                                </button>
                             </div>
                         </div>
-
-                        {/* Price Section */}
-                        <div className="border-r pr-4">
-                            <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
-                                Price
-                            </h4>
-                            <div className="space-y-1">
-                                {["1,000 - 2,000", "2,000 - 3,000", "3,000 - 4,000", "4,000 - 5,000", "5,000 - 6,000"].map(
-                                    (price) => (
-                                        <label key={price} className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="mr-2 w-3 h-3"
-                                                checked={selectedFilters.price.includes(price)}
-                                                onChange={() => handleCheckboxChange("price", price)}
-                                            />
-                                            <span className="text-sm">{price}</span>
-                                        </label>
-                                    )
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Customer Rating Section */}
-                        <div className="border-r pr-4">
-                            <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
-                                Customer Rating
-                            </h4>
-                            <div className="space-y-1">
-                                {["4.5 - 5 Ratings", "4 - 4.5 Ratings", "3.5 - 4 Ratings", "3 - 3.5 Ratings", "2 - 3 Ratings"].map(
-                                    (rating) => (
-                                        <label key={rating} className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="mr-2 w-3 h-3"
-                                                checked={selectedFilters.rating.includes(rating)}
-                                                onChange={() => handleCheckboxChange("rating", rating)}
-                                            />
-                                            <span className="text-sm">{rating}</span>
-                                        </label>
-                                    )
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Discount Section */}
-                        <div>
-                            <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
-                                Discount
-                            </h4>
-                            <div className="space-y-1">
-                                {["10% Discount", "20% Discount", "30% Discount", "40% Discount", "50% Discount"].map(
-                                    (discount) => (
-                                        <label key={discount} className="flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="mr-2 w-3 h-3"
-                                                checked={selectedFilters.discount.includes(discount)}
-                                                onChange={() => handleCheckboxChange("discount", discount)}
-                                            />
-                                            <span className="text-sm">{discount}</span>
-                                        </label>
-                                    )
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Bottom Buttons */}
-                    <div className="flex justify-end items-center gap-4 mt-4 text-sm text-gray-600">
-                        <button
-                            className="flex items-center gap-1 hover:text-gray-800"
-                            onClick={handleReset}
-                        >
-                            <span>⟳</span> Reset
-                        </button>
-                        <button className="flex items-center gap-1 text-green-600 hover:text-green-700">
-                            <span>✔</span> Done
-                        </button>
-                    </div>
-                </div>
-            )}
+                    )}
 
                 </div>
             </div>
@@ -1027,8 +1027,8 @@ export default function SalonList() {
                                                             key={slot}
                                                             onClick={() => setSelectedTime(slot)}
                                                             className={`py-2 rounded-md text-sm font-medium border transition-all duration-200 ${selectedTime === slot
-                                                                    ? "bg-[#5F3F31] text-white border-[#70513D]"
-                                                                    : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
+                                                                ? "bg-[#5F3F31] text-white border-[#70513D]"
+                                                                : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
                                                                 }`}
                                                         >
                                                             {slot}
@@ -1041,15 +1041,15 @@ export default function SalonList() {
                                 </div>
                             )}
 
-                           {/* Add More Services */}
-<div className="flex justify-center">
-    <a
-        href="/add-services" // 👉 yahan apna actual page path daal dena
-        className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6"
-    >
-        + Add More Services
-    </a>
-</div>
+                            {/* Add More Services */}
+                            <div className="flex justify-center">
+                                <a
+                                    href="/add-services" // 👉 yahan apna actual page path daal dena
+                                    className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6"
+                                >
+                                    + Add More Services
+                                </a>
+                            </div>
 
 
                             {/* White Box - Price Summary */}
