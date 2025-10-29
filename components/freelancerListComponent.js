@@ -94,7 +94,7 @@ export default function FreelancerList() {
     return (
         <div className="bg-[#f2e7d7] px-[130px] py-8">
             {/* Header */}
-            <span className="font-['Inria_Serif'] text-2xl font-semibold mb-6 text-[#1f1f1f] tracking-wide border-b-2 border-black">
+            <span className="text-[32px] font-semibold mb-6 text-[#1f1f1f] tracking-wide border-b-2 border-black">
                 FREELANCERS
             </span>
 
@@ -146,7 +146,7 @@ export default function FreelancerList() {
                             <div className="grid grid-cols-4 gap-6">
                                 {/* Gender Section */}
                                 <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
                                         Gender
                                     </h4>
                                     <div className="space-y-1">
@@ -163,7 +163,7 @@ export default function FreelancerList() {
 
                                 {/* Price Section */}
                                 <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Price</h4>
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Price</h4>
                                     <div className="space-y-1">
                                         {["1,000 - 2,000", "2,000 - 3,000", "3,000 - 4,000", "4,000 - 5,000", "5,000 - 6,000"].map(
                                             (price) => (
@@ -178,7 +178,7 @@ export default function FreelancerList() {
 
                                 {/* Customer Rating Section */}
                                 <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Customer Rating</h4>
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Customer Rating</h4>
                                     <div className="space-y-1">
                                         {["4.5 - 5 Ratings", "4 - 4.5 Ratings", "3.5 - 4 Ratings", "3 - 3.5 Ratings", "2 - 3 Ratings"].map(
                                             (rating) => (
@@ -193,7 +193,7 @@ export default function FreelancerList() {
 
                                 {/* Discount Section */}
                                 <div>
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Discount</h4>
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Discount</h4>
                                     <div className="space-y-1">
                                         {["10% Discount", "20% Discount", "30% Discount", "40% Discount", "50% Discount"].map(
                                             (discount) => (

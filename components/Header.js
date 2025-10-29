@@ -40,7 +40,7 @@ export default function Header() {
           {/* Navigation (Desktop) */}
           <nav className="hidden lg:flex items-center gap-8 ml-10">
             <Link href="/" className="text-white font-light text-[12px] hover:underline">HOME</Link>
-            <Link href="/services" className="text-stone-300 font-light text-[12px] hover:text-white">SERVICES</Link>
+            <Link href="/allservices" className="text-stone-300 font-light text-[12px] hover:text-white">SERVICES</Link>
             <Link href="/contact" className="text-stone-300 font-light text-[12px] hover:text-white">CONTACT US</Link>
             <Link href="/blog" className="text-stone-300 font-light text-[12px] hover:text-white">BLOG</Link>
             <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />

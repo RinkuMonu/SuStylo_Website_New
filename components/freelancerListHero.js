@@ -35,7 +35,7 @@ function HeroSection() {
                     {/* Center text + main image */}
                     <div className="lg:w-2/4 flex flex-col items-center justify-center text-center px-6">
                         <h1
-                            className="font-['Inria_Serif'] text-[45px] leading-[100%] tracking-[0] text-center text-white"
+                            className="text-[45px] leading-[100%] tracking-[0] text-center text-white"
                         >
                             Unleash <span className="text-[55px] text-white">Your Inner</span>{" "} Glow
                         </h1>

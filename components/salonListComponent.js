@@ -130,7 +130,7 @@
 //     return (
 //         <div className="bg-[#f2e7d7] px-[130px] py-8">
 //             {/* Header */}
-//             <span className="font-['Inria_Serif'] text-2xl font-semibold mb-6 text-[#1f1f1f] tracking-wide border-b-2 border-black">
+//             <span className="text-2xl font-semibold mb-6 text-[#1f1f1f] tracking-wide border-b-2 border-black">
 //                 SALON LIST
 //             </span>
 
@@ -170,7 +170,7 @@
 //           fill
 //           className="object-cover"
 //         />
-//         <div className="font-['Inria_Serif'] absolute top-0 right-0 px-8 py-1 bg-gradient-to-r from-black/70 via-[#b00020] to-[#e63946] text-white text-sm font-medium">
+//         <div className="absolute top-0 right-0 px-8 py-1 bg-gradient-to-r from-black/70 via-[#b00020] to-[#e63946] text-white text-sm font-medium">
 //           Popular
 //         </div>
 //       </div>
@@ -347,7 +347,7 @@ export default function SalonList() {
     return (
         <div className="bg-[#f2e7d7] px-[130px] py-8">
             {/* Header */}
-            <span className="font-['Inria_Serif'] text-2xl font-semibold mb-6 text-[#1f1f1f] tracking-wide border-b-2 border-black">
+            <span className="text-2xl font-semibold mb-6 text-[#1f1f1f] tracking-wide border-b-2 border-black">
                 SALON LIST
             </span>
 
@@ -435,7 +435,7 @@ export default function SalonList() {
                             <div className="grid grid-cols-4 gap-6">
                                 {/* Gender Section */}
                                 <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
                                         Gender
                                     </h4>
                                     <div className="space-y-1">
@@ -454,7 +454,7 @@ export default function SalonList() {
 
                                 {/* Price Section */}
                                 <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Price</h4>
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Price</h4>
                                     <div className="space-y-1">
                                         {["1,000 - 2,000", "2,000 - 3,000", "3,000 - 4,000", "4,000 - 5,000", "5,000 - 6,000"].map(
                                             (price) => (
@@ -469,7 +469,7 @@ export default function SalonList() {
 
                                 {/* Customer Rating Section */}
                                 <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Customer Rating</h4>
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Customer Rating</h4>
                                     <div className="space-y-1">
                                         {["4.5 - 5 Ratings", "4 - 4.5 Ratings", "3.5 - 4 Ratings", "3 - 3.5 Ratings", "2 - 3 Ratings"].map(
                                             (rating) => (
@@ -484,7 +484,7 @@ export default function SalonList() {
 
                                 {/* Discount Section */}
                                 <div>
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Discount</h4>
+                                    <h4 className="font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">Discount</h4>
                                     <div className="space-y-1">
                                         {["10% Discount", "20% Discount", "30% Discount", "40% Discount", "50% Discount"].map(
                                             (discount) => (
@@ -528,7 +528,7 @@ export default function SalonList() {
                                 fill
                                 className="object-cover"
                             />
-                            <div className="font-['Inria_Serif'] absolute top-0 right-0 px-8 py-1 rounded-bl-lg bg-[linear-gradient(90deg,rgba(202,60,60,0)_6.5%,#FF3636_70.41%)] text-white text-sm font-medium">
+                            <div className="absolute top-0 right-0 px-8 py-1 rounded-bl-lg bg-[linear-gradient(90deg,rgba(202,60,60,0)_6.5%,#FF3636_70.41%)] text-white text-sm font-medium">
                                 Popular
                             </div>
                         </div>
@@ -539,7 +539,7 @@ export default function SalonList() {
                             <div className="flex items-center justify-between mb-2">
                                 {/* <h2 className="text-lg tracking-wide">{salon.name}</h2> */}
                                 <h2
-                                    className="font-['Inria_Serif'] font-bold text-[24px] text-[#F6EFE4] leading-[100%] tracking-[0] uppercase"
+                                    className="font-bold text-[24px] text-[#F6EFE4] leading-[100%] tracking-[0] uppercase"
                                 >
                                     {salon.name}
                                 </h2>
@@ -551,15 +551,15 @@ export default function SalonList() {
 
                             {/* Details */}
                             <p
-                                className="font-['Inria_Serif'] font-bold text-[20px] leading-[100%] tracking-[0] capitalize text-[#F6EFE4] py-1 mb-2"
+                                className="font-bold text-[20px] leading-[100%] tracking-[0] capitalize text-[#F6EFE4] py-1 mb-2"
                             >
                                 Services Available : <span className="font-medium">{salon.service}</span>
                             </p>
 
-                            <p className="font-['Inria_Serif'] font-normal text-[16px] text-[#F6EFE4] leading-[100%] tracking-[0] capitalize mb-2">
+                            <p className="font-normal text-[16px] text-[#F6EFE4] leading-[100%] tracking-[0] capitalize mb-2">
                                 Timing: {salon.timing}
                             </p>
-                            <p className="font-['Inria_Serif'] font-normal text-[16px] text-[#F6EFE4] leading-[100%] tracking-[0] capitalize mb-4">
+                            <p className="font-normal text-[16px] text-[#F6EFE4] leading-[100%] tracking-[0] capitalize mb-4">
                                 Prices Range: {salon.price}
                             </p>
 
@@ -567,7 +567,7 @@ export default function SalonList() {
                             {/* Bottom Row — Club + Button */}
                             <div className="flex items-center justify-between mt-2">
                                 {/* <p className="text-sm flex items-center gap-1"> <MapPin className="w-4 h-4" /> {salon.club}</p> */}
-                                <p className="flex items-center gap-1 font-['Inria_Serif'] font-bold text-[16px] leading-[100%] tracking-[0]">
+                                <p className="flex items-center gap-1 font-bold text-[16px] leading-[100%] tracking-[0]">
                                     <MapPin className="w-4 h-4" /> {salon.club}
                                 </p>
 
