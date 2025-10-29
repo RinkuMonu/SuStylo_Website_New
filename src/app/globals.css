@@ -9,7 +9,7 @@ body{
   font-family: "Inria Serif", serif;
   background-color: #F6EFE4;
 }
-button{
+button, a{
   cursor: pointer;
 }
 

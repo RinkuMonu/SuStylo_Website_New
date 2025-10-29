@@ -37,12 +37,12 @@ export default function HomeFreelancer() {
             <section className='my-12'>
                 <div className='flex justify-between items-center'>
                     <h3 className="text-[24px] font-bold uppercase underline decoration-[#717171] ">CHOOSE YOUR FREELANCER</h3>
-                    <Link href={"/freelancer"} className='text-[14px] bg-[#637571] text-white p-2 px-3 rounded-[10px]'>View more</Link>
+                    <Link href={"/freelancerList"} className='text-[14px] bg-[#637571] text-white p-2 px-3 rounded-[10px]'>View more</Link>
                 </div>
                 <div className="py-10">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                         {experts.map((expert, idx) => (
-                            <Link href={"/freelancer"} key={idx} className="rounded-2xl relative overflow-hidden flex flex-col items-center">
+                            <Link href={"/freelancerList"} key={idx} className="rounded-2xl relative overflow-hidden flex flex-col items-center">
                                 <div className="w-64  relative h-44 rounded-2xl overflow-hidden">
                                     <Image
                                         src={expert.imgUrl}
