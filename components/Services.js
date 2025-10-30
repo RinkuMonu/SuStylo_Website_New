@@ -28,19 +28,19 @@ export default function Services() {
     { title: "Pedicure", img: "/Image/allservices/pedicure.png" },
     { title: "Massage", img: "/Image/allservices/massage.png" },
     { title: "Waxing", img: "/Image/allservices/facial.png" },
- { title: "Colouring", img: "/Image/allservices/colouring.png" },
+    { title: "Colouring", img: "/Image/allservices/colouring.png" },
     { title: "Threading", img: "/Image/allservices/threading.png" },
     { title: "Facial", img: "/Image/allservices/facial.png" },
     { title: "Pedicure", img: "/Image/allservices/pedicure.png" },
     { title: "Massage", img: "/Image/allservices/massage.png" },
     { title: "Waxing", img: "/Image/allservices/facial.png" },
-     { title: "Colouring", img: "/Image/allservices/colouring.png" },
+    { title: "Colouring", img: "/Image/allservices/colouring.png" },
     { title: "Threading", img: "/Image/allservices/threading.png" },
     { title: "Facial", img: "/Image/allservices/facial.png" },
     { title: "Pedicure", img: "/Image/allservices/pedicure.png" },
     { title: "Massage", img: "/Image/allservices/massage.png" },
     { title: "Waxing", img: "/Image/allservices/facial.png" },
-     { title: "Colouring", img: "/Image/allservices/colouring.png" },
+    { title: "Colouring", img: "/Image/allservices/colouring.png" },
     { title: "Threading", img: "/Image/allservices/threading.png" },
     { title: "Facial", img: "/Image/allservices/facial.png" },
     { title: "Pedicure", img: "/Image/allservices/pedicure.png" },
@@ -137,13 +137,12 @@ export default function Services() {
                   className="flex items-center gap-2 w-full text-left p-2 hover:bg-gray-100 text-sm rounded-md"
                 >
                   <Image
-                    src={`/Image/allservices/${
-                      option === "At Salon"
+                    src={`/Image/allservices/${option === "At Salon"
                         ? "salon-icon.png"
                         : option === "At Home"
-                        ? "home-icon.png"
-                        : "freelancer-icon.png"
-                    }`}
+                          ? "home-icon.png"
+                          : "freelancer-icon.png"
+                      }`}
                     width={18}
                     height={18}
                     alt={option}
@@ -210,42 +209,40 @@ export default function Services() {
       <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
         {/* Service Cards */}
         <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-      {services.map((item, index) => (
-        <div
-          key={index}
-          onClick={() => handleCardClick(index)}
-          className="relative w-[90%] rounded-3xl overflow-hidden shadow-md cursor-pointer transition-all duration-500"
-        >
-          {/* Image */}
-          <Image
-            src={item.img}
-            alt={item.title}
-            width={240}
-            height={240}
-            className={`w-full h-42 object-cover transition-transform duration-500 ${
-              activeCards.includes(index) ? "scale-105" : ""
-            }`}
-          />
+          {services.map((item, index) => (
+            <div
+              key={index}
+              onClick={() => handleCardClick(index)}
+              className="relative w-[90%] rounded-3xl overflow-hidden shadow-md cursor-pointer transition-all duration-500"
+            >
+              {/* Image */}
+              <Image
+                src={item.img}
+                alt={item.title}
+                width={240}
+                height={240}
+                className={`w-full h-42 object-cover transition-transform duration-500 ${activeCards.includes(index) ? "scale-105" : ""
+                  }`}
+              />
 
-          {/* Black overlay rises & stays on click */}
-          <div
-            className={`absolute inset-0 bg-black/60 transition-transform duration-700 ease-out ${
-              activeCards.includes(index)
-                ? "translate-y-0"
-                : "translate-y-full"
-            }`}
-          ></div>
+              {/* Black overlay rises & stays on click */}
+              <div
+                className={`absolute inset-0 bg-black/60 transition-transform duration-700 ease-out ${activeCards.includes(index)
+                    ? "translate-y-0"
+                    : "translate-y-full"
+                  }`}
+              ></div>
 
-          {/* Title fixed at bottom */}
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-lg font-semibold z-10">
-            {item.title}
-          </div>
+              {/* Title fixed at bottom */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-lg font-semibold z-10">
+                {item.title}
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
 
         {/* Filters Section */}
-        <div className="lg:col-span-3 bg-white rounded-xl shadow-md p-6 h-fit">
+        <div className="lg:col-span-3 bg-white rounded-xl shadow-md p-6 h-fit sticky top-20">
           {filters.map((group, idx) => (
             <div key={idx} className="mb-6">
               <h4 className="text-[#617772] font-semibold text-lg mb-4">
@@ -271,20 +268,20 @@ export default function Services() {
             </div>
           ))}
 
-<div className="flex float-end">
-  <Link
-    href="/salonList"
-    className="bg-[#637571] text-white py-1 px-5 rounded-3xl flex items-center gap-2"
-  >
-    Find Your Salon
-    <Image
-      src="/Image/allservices/arrow-right.png"
-      width={12}
-      height={12}
-      alt="arrow right"
-    />
-  </Link>
-</div>
+          <div className="flex float-end">
+            <Link
+              href="/salonList"
+              className="bg-[#637571] text-white py-1 px-5 rounded-3xl flex items-center gap-2"
+            >
+              Find Your Salon
+              <Image
+                src="/Image/allservices/arrow-right.png"
+                width={12}
+                height={12}
+                alt="arrow right"
+              />
+            </Link>
+          </div>
 
         </div>
       </div>
