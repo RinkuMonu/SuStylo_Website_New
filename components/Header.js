@@ -3,18 +3,30 @@ import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { HiOutlineMenuAlt3, HiX } from 'react-icons/hi';
+import { usePathname } from 'next/navigation';
 
 import LoginModal from '../components/modals/LoginModal';
 import AuthModalManager from "../components/modals/AuthModalManager";
 
 
 export default function Header() {
+ 
+
+
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-    // const [openLogin, setOpenLogin] = useState(false);
-      const [showModal, setShowModal] = useState(false);
+  // const [openLogin, setOpenLogin] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
+ 
+  const pathname = usePathname();
+  const isHome = pathname === '/';
+
+  const headerClass = `
+    fixed top-0 left-0 z-50 w-full py-3 px-4 sm:px-10 md:px-16 lg:px-16 border-b-2 border-[#717171] transition-colors duration-300
+    ${scrolled ? 'bg-[#181818]/90 backdrop-blur border-0' : isHome ? 'bg-transparent' : 'bg-[#181818]'}
+  `;
 
 
 
@@ -27,8 +39,7 @@ export default function Header() {
   }, []);
   return (
     <>
-      <header className={`fixed top-0 left-0 z-50 w-full py-3 px-4 sm:px-10 md:px-16 lg:px-16 border-b-2 border-[#717171] transition-colors duration-300
-        ${scrolled ? 'bg-[#181818]/90 backdrop-blur border-0' : 'bg-transparent'}`}>
+      <header className={headerClass}>
         <div className="max-w-6xl flex items-center justify-between mx-auto">
           {/* Logo */}
           <div className="flex items-center">
@@ -53,14 +64,14 @@ export default function Header() {
             <Link href="/contact" className="text-stone-300 font-light text-[12px] hover:text-white">CONTACT US</Link>
             <Link href="/blog" className="text-stone-300 font-light text-[12px] hover:text-white">BLOG</Link>
             {/* <Link href="/login" className="text-stone-300 font-light text-[12px] hover:text-white">LOGIN</Link> */}
-             <Link
-          href="#"
-          // onClick={() => setOpenLogin(true)}
-          onClick={() => setShowModal(true)}
-          className="text-stone-300 font-light text-[12px] hover:text-white"
-        >
-          LOGIN
-        </Link>
+            <Link
+              href="#"
+              // onClick={() => setOpenLogin(true)}
+              onClick={() => setShowModal(true)}
+              className="text-stone-300 font-light text-[12px] hover:text-white"
+            >
+              LOGIN
+            </Link>
             <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />
             {/* <FaUser className="text-[#CBAA87] mx-2" size={16} /> */}
             <div className="lg:pr-10">
@@ -73,7 +84,7 @@ export default function Header() {
             </div>
           </nav>
         </div>
-        
+
         {/* Mobile Menu Overlay */}
         {open && (
           <div className="lg:hidden bg-[#181818] bg-opacity-95 fixed top-0 left-0 w-full h-full z-50 flex flex-col items-center justify-center gap-6">
@@ -107,7 +118,7 @@ export default function Header() {
       </header>
 
       {/* <LoginModal isOpen={openLogin} onClose={() => setOpenLogin(false)} /> */}
-            <AuthModalManager isOpen={showModal} onClose={() => setShowModal(false)} />
+      <AuthModalManager isOpen={showModal} onClose={() => setShowModal(false)} />
 
     </>
   );
