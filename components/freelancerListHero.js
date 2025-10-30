@@ -91,7 +91,7 @@
         {/* ✅ Inner Black Box */}
         <div className="relative bg-black text-white shadow-2xl w-[90%] max-w-[1300px] h-[600px] py-12 px-8">
             {/* Left floating images */}
-            <div className="absolute left-[290px] top-[180px] w-48 h-32 rounded-xl overflow-hidden shadow-lg">
+            <div className="absolute left-[290px] top-[180px] w-48 h-32 rounded-xl overflow-hidden shadow-lg z-[20]">
             <Image src="/salonlist/img2.jpg" alt="Service" fill className="object-cover" />
             </div>
 
@@ -108,11 +108,11 @@
             <Image src="/salonlist/img4.jpg" alt="Service" fill className="object-cover" />
             </div>
 
-            <div className="absolute right-[-100px] bottom-[200px] w-44 h-28 rounded-xl overflow-hidden shadow-lg z-[999]">
+            <div className="absolute right-[-100px] bottom-[200px] w-44 h-28 rounded-xl overflow-hidden shadow-lg">
             <Image src="/salonlist/img5.jpg" alt="Service" fill className="object-cover" />
             </div>
 
-            <div className="absolute right-[230px] bottom-[50px] w-64 h-42 rounded-xl overflow-hidden shadow-lg">
+            <div className="absolute right-[230px] bottom-[50px] w-64 h-42 rounded-xl overflow-hidden shadow-lg z-[20]">
             <Image src="/salonlist/img6.jpg" alt="Service" fill className="object-cover" />
             </div>
 

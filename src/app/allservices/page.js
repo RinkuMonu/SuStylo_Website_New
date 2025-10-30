@@ -14,9 +14,6 @@ export default function AllServices() {
         backgroundImage: "url('/Image/allservices/allservices-bg-banner.png')",
       }}
     >
-
-
-
       <div className="relative w-1/3 z-10 text-[#C5C5C5] max-w-xl">
         <h1 className="text-3xl md:text-5xl lg:pt-20 font-bold mb-4 leading-tight">
          Pampering
