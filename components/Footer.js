@@ -29,7 +29,7 @@ export default function Footer() {
     alt="loc"
     width={18}
     height={18}
-    className="opacity-70 mt-1 flex-shrink-0"
+    className="mt-1 flex-shrink-0"
   />
   Plot No 97, Dakshinpuri - I, Shrikishan, Sanganer, Jagatpura, Jaipur Rajasthan, India, 302017
 </p>
@@ -40,7 +40,7 @@ export default function Footer() {
     alt="loc"
     width={18}
     height={18}
-    className="opacity-70 mt-1 flex-shrink-0"
+    className=""
   />
             7unique@gmail.com
           </p>
@@ -50,7 +50,7 @@ export default function Footer() {
     alt="loc"
     width={18}
     height={18}
-    className="opacity-70 mt-1 flex-shrink-0"
+    className=""
   />
              +91-987654321
           </p>
@@ -63,24 +63,24 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-16">
             {/* Column 1 */}
             <ul className="space-y-2 text-gray-300 text-base">
-              <li>Home</li>
-              <li>Our Services</li>
-              <li>About Us</li>
-              <li>Blog</li>
-              <li>Book an Appointment</li>
-              <li>Become a Freelancer</li>
-              <li>Become a Salon Partner</li>
+              <li><Link href="/">Home</Link></li>
+              <li><Link href="/allservices">Our Services</Link></li>
+              <li><Link href="/">About Us</Link></li>
+              <li><Link href="/blog">Blog</Link></li>
+              <li><Link href="/">Book an Appointment</Link></li>
+              <li><Link href="/">Become a Freelancer</Link></li>
+              <li><Link href="/">Become a Salon Partner</Link></li>
             </ul>
 
             {/* Column 2 */}
             <ul className="space-y-2 text-gray-300 text-base">
-              <li>Hair Cut</li>
-              <li>Waxing</li>
-              <li>Facial</li>
-              <li>Party Makeup</li>
-              <li>Bridal Makeup</li>
-              <li>Hair Spa</li>
-              <li>Manicure</li>
+              <li><Link href="/">Hair Cut</Link></li>
+              <li><Link href="/">Waxing</Link></li>
+              <li><Link href="/">Facial</Link></li>
+              <li><Link href="/">Party Makeup</Link></li>
+              <li><Link href="/">Bridal Makeup</Link></li>
+              <li><Link href="/">Hair Spa</Link></li>
+              <li><Link href="/">Manicure</Link></li>
             </ul>
           </div>
         </div>
@@ -118,45 +118,45 @@ export default function Footer() {
 
       {/* Social Icons */}
       <div className="flex gap-7 py-6 justify-center items-center">
-        <Link href="#" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
+        <Link href="/" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
           <Image
             src="/Image/facebook-icon.png"
             alt="Facebook"
-            width={24}
-            height={24}
+            width={28}
+            height={28}
             className="bg-white rounded-full"
           />
         </Link>
-        <Link href="#" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
+        <Link href="/" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
           <Image
             src="/Image/instagram-icon.png"
             alt="Instagram"
-            width={24}
-            height={24}
+            width={28}
+            height={28}
           />
         </Link>
-        <Link href="#" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
+        <Link href="/" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
           <Image
             src="/Image/linkedin-icon.png"
             alt="LinkedIn"
-            width={24}
-            height={24}
+            width={28}
+            height={28}
           />
         </Link>
-        <Link href="#" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
+        <Link href="/" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
           <Image
             src="/Image/whatsapp-icon.png"
             alt="WhatsApp"
-            width={24}
-            height={24}
+            width={28}
+            height={28}
           />
         </Link>
-        <Link href="#" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
+        <Link href="/" className="p-3 border border-gray-600 rounded-lg hover:scale-110 transition-transform">
           <Image
             src="/Image/youtube-icon.png"
             alt="YouTube"
-            width={24}
-            height={24}
+            width={28}
+            height={28}
           />
         </Link>
       </div>
@@ -174,11 +174,11 @@ export default function Footer() {
 
     {/* Right side */}
     <div className="flex items-center gap-3 text-center md:text-right">
-      <a href="#" className="hover:underline">
+      <a href="/" className="hover:underline">
         Privacy Policy
       </a>
 
-      <a href="#" className="hover:underline">
+      <a href="/" className="hover:underline">
         Terms of Use
       </a>
     </div>
