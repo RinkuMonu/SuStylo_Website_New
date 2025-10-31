@@ -11,6 +11,7 @@ function page() {
       <section className="bg-[#F6EFE4] flex flex-col md:flex-row  items-center justify-between overflow-hidden">
         {/* Left Content */}
         <div className="w-full md:w-1/2 px-6 md:px-12 lg:px-20 pt-20 lg:mt-14">
+
           <h1 className="text-4xl md:text-5xl font-serif italic mb-3">
             ALISA MENON
           </h1>

@@ -30,7 +30,7 @@ export default function NearBySalonSection() {
   return (
     <section className="pb-10">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl sm:text-[28px] font-bold font-serif underline decoration-[#363333]">NEAR BY SALON</h2>
+        <h2 className="text-2xl sm:text-[28px] font-bold underline decoration-[#363333]">NEAR BY SALON</h2>
         <Link href="/salons" className="px-5 py-2 bg-[#536764] text-white text-sm rounded-lg font-medium shadow transition hover:bg-[#6e8782]">
           View more
         </Link>

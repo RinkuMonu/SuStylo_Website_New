@@ -1,9 +1,13 @@
 import React from "react";
+import TopStylish from "../../../components/TopStylish";
+import Image from "next/image";
+import FreelancerServicesSection from "../../../components/freelancerservices";
+import Testimonial from "../../../components/Testimonial";
 
 export default function page() {
     return (
         <>
-            <section className="flex justify-center items-center py-8 sm:py-16 md:py-20 lg:py-26">
+            <section className="flex justify-center items-center pt-8 sm:pt-16 md:pt-20 lg:pt-26">
                 <div
                     className="bg-center bg-no-repeat bg-contain w-full h-[41vh] sm:h-[70vh] flex justify-between items-center"
                     style={{ backgroundImage: "url(/Salon/salonbanner.png)" }}
@@ -62,6 +66,28 @@ export default function page() {
                     </div>
                 </div>
             </section>
+            <div className="container mx-auto max-w-7xl lg:px-16 px-4 sm:px-10 md:px-14">
+                <TopStylish />
+            </div>
+            <section className='mt-8'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-5 my-5 mx-auto '>
+                    <div className='col-span-7 ml-28 bg-no-repeat bg-contain w-auto h-auto' style={{ backgroundImage: "url(/Salon/offerimage.png)" }}>
+                        {/* <Image src={"/Salon/offerimage.png"} alt='offerimage' className='w-[861px]' width={861} height={224} /> */}
+                        <div className="flex flex-col justify-center items-center h-40">
+                            <h3 className="text-[24px] text-white">Flowless makeup <i className="text-[36px]">25% OFF</i></h3>
+                            <p className="text-[11px] text-white">Evening bridal or day time looks for everyoccasion</p>
+                        </div>
+
+                    </div>
+                    <div className='col-span-5 h-72 bg-no-repeat bg-contain' style={{ backgroundImage: "url(/Salon/sideoffer.png)" }}>
+                    </div>
+                </div>
+
+            </section>
+            <div className="container mx-auto max-w-7xl lg:px-16 px-4 sm:px-10 md:px-14">
+            <FreelancerServicesSection />
+<Testimonial />
+            </div>
         </>
     );
 }
