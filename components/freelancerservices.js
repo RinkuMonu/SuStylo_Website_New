@@ -13,7 +13,13 @@ export default function FreelancerServicesSection() {
   const femaleServices = [
     {
       title: "Hair Services",
-      items: [],
+      items: [
+         { name: "Full Body For Female (Rica)", price: 1200 },
+        { name: "Full Legs (Rica)", price: 1200 },
+        { name: "Full Hands (Rica)", price: 1200 },
+        { name: "Full Legs (Normal)", price: 1200 },
+        { name: "Full Hands (Normal)", price: 1200 },
+    ],
     },
     {
       title: "Waxing",
@@ -234,9 +240,9 @@ export default function FreelancerServicesSection() {
         </div>
 
         {/* Cart Section */}
-        <div>
-          <h3 className="font-semibold text-lg mb-4 underline">Cart</h3>
-          <div className="bg-[#F6EFE4] rounded-lg shadow-[0_4px_4px_0_#00000040] p-4 border border-[#CBAA87]">
+        <div className="">
+          <h3 className="font-semibold text-lg mb-4 underline sticky top-20">Cart</h3>
+          <div className="bg-[#F6EFE4] rounded-lg shadow-[0_4px_4px_0_#00000040] p-4 border border-[#CBAA87] sticky top-20">
             {cart.length === 0 ? (
               <p className="text-gray-500 text-sm">No items added</p>
             ) : (
