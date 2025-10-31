@@ -75,7 +75,7 @@ export default function Header() {
             <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />
             {/* <FaUser className="text-[#CBAA87] mx-2" size={16} /> */}
             <div className="lg:pr-10">
-              <Link href="/" className="px-7 py-2 text-[12px] rounded-full bg-[#9D9C9A] text-white font-medium shadow transition">
+              <Link href="/salonList" className="px-7 py-2 text-[12px] rounded-full bg-[#9D9C9A] text-white font-medium shadow transition">
                 BOOK AN APPOINTMENT
               </Link>
               <Link href="/" className="ml-3 px-5 py-2 rounded-full text-[12px] bg-[#E9E3D9] text-gray-900 font-medium shadow hover:bg-stone-300 transition">
