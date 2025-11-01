@@ -8,6 +8,7 @@ import DiscountSlider from "../../components/DiscountSlider";
 import Testimonial from "../../components/Testimonial";
 import HomeAbout from "../../components/HomeAbout";
 
+
 export default function Home() {
   const homeTabContent = {
     Threading: [
