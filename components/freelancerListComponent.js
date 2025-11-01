@@ -325,7 +325,7 @@ export default function FreelancerList() {
         gender: [],
         price: [],
         rating: [],
-        discount: [],
+        discount:[],
     });
 
     const handleCheckboxChange = (category, value) => {
@@ -350,63 +350,63 @@ export default function FreelancerList() {
     };
 
 
-   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("08/10/2025");
-  const [selectedTime, setSelectedTime] = useState("03:00 PM");
+    const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState("08/10/2025");
+    const [selectedTime, setSelectedTime] = useState("03:00 PM");
 
-  const [currentMonth, setCurrentMonth] = useState(9); // 0=Jan, 9=October
-  const [currentYear, setCurrentYear] = useState(2025);
+    const [currentMonth, setCurrentMonth] = useState(9); // 0=Jan, 9=October
+    const [currentYear, setCurrentYear] = useState(2025);
 
-  const timeSlots = [
-    "10:00 AM", "11:00 AM", "12:00 PM",
-    "01:00 PM", "02:00 PM", "03:00 PM",
-    "04:00 PM", "05:00 PM", "06:00 PM",
-    "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM"
-  ];
+    const timeSlots = [
+        "10:00 AM", "11:00 AM", "12:00 PM",
+        "01:00 PM", "02:00 PM", "03:00 PM",
+        "04:00 PM", "05:00 PM", "06:00 PM",
+        "07:00 PM", "08:00 PM", "09:00 PM", "10:00 PM"
+    ];
 
-  // 🔹 Month Names
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+    // 🔹 Month Names
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
 
-  // 🔹 Generate Days for Current Month
-  const getDaysInMonth = (month, year) => {
-    const date = new Date(year, month + 1, 0);
-    return date.getDate();
-  };
+    // 🔹 Generate Days for Current Month
+    const getDaysInMonth = (month, year) => {
+        const date = new Date(year, month + 1, 0);
+        return date.getDate();
+    };
 
-  const daysInMonth = getDaysInMonth(currentMonth, currentYear);
+    const daysInMonth = getDaysInMonth(currentMonth, currentYear);
 
-  // 🔹 Get first day of month (0=Sun, 1=Mon,...)
-  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-  const blankDays = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Adjust for Monday start
+    // 🔹 Get first day of month (0=Sun, 1=Mon,...)
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+    const blankDays = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Adjust for Monday start
 
-  // 🔹 Handle Month Change
-  const handlePrevMonth = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
+    // 🔹 Handle Month Change
+    const handlePrevMonth = () => {
+        if (currentMonth === 0) {
+            setCurrentMonth(11);
+            setCurrentYear(currentYear - 1);
+        } else {
+            setCurrentMonth(currentMonth - 1);
+        }
+    };
 
-  const handleNextMonth = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
+    const handleNextMonth = () => {
+        if (currentMonth === 11) {
+            setCurrentMonth(0);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(currentMonth + 1);
+        }
+    };
 
-  // 🔹 Handle Date Select
-  const handleDateSelect = (day) => {
-    const month = (currentMonth + 1).toString().padStart(2, "0");
-    const date = `${month}/${day.toString().padStart(2, "0")}/${currentYear}`;
-    setSelectedDate(date);
-  };
+    // 🔹 Handle Date Select
+    const handleDateSelect = (day) => {
+        const month = (currentMonth + 1).toString().padStart(2, "0");
+        const date = `${month}/${day.toString().padStart(2, "0")}/${currentYear}`;
+        setSelectedDate(date);
+    };
 
 
 
@@ -805,140 +805,139 @@ export default function FreelancerList() {
 
 
                             {/* Date Section */}
-                           {/* Date Section */}
-      <div
-        onClick={() => setIsDateModalOpen(true)}
-        className="flex items-center text-[#F6EFE4] text-[15px] mb-5 cursor-pointer hover:opacity-80 transition"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.6}
-          stroke="currentColor"
-          className="w-5 h-5 mr-2"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M8 7V3m8 4V3m-9 8h10m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
-          />
-        </svg>
-        {selectedDate} & {selectedTime}
-      </div>
+                            {/* Date Section */}
+                            <div
+                                onClick={() => setIsDateModalOpen(true)}
+                                className="flex items-center text-[#F6EFE4] text-[15px] mb-5 cursor-pointer hover:opacity-80 transition"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.6}
+                                    stroke="currentColor"
+                                    className="w-5 h-5 mr-2"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M8 7V3m8 4V3m-9 8h10m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
+                                    />
+                                </svg>
+                                {selectedDate} & {selectedTime}
+                            </div>
 
-      {/* Date Selection Modal */}
-      {isDateModalOpen && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
-          <div className="bg-[#E9E3D9] rounded-2xl shadow-2xl w-full max-w-3xl px-[10px] py-[21px] relative">
-            {/* Close Button */}
-            <button
-              onClick={() => setIsDateModalOpen(false)}
-              className="absolute top-3 right-4 text-[#5C6B63] hover:text-black transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-5 h-5"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+                            {/* Date Selection Modal */}
+                            {isDateModalOpen && (
+                                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+                                    <div className="bg-[#E9E3D9] rounded-2xl shadow-2xl w-full max-w-3xl px-[10px] py-[21px] relative">
+                                        {/* Close Button */}
+                                        <button
+                                            onClick={() => setIsDateModalOpen(false)}
+                                            className="absolute top-3 right-4 text-[#5C6B63] hover:text-black transition"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                strokeWidth={2}
+                                                stroke="currentColor"
+                                                className="w-5 h-5"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                        </button>
 
-            {/* Calendar + Slots */}
-            <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-[#d1c7b9]">
-              {/* Left - Calendar */}
-              <div className="flex-1 p-5">
-                {/* Month Header */}
-                <div className="flex justify-between items-center bg-[#5F3F31] text-white text-center py-2 rounded-md mb-4 font-semibold px-4">
-                  <button onClick={handlePrevMonth} className="hover:text-gray-200">
-                    ‹
-                  </button>
-                  <span>
-                    {months[currentMonth]} {currentYear}
-                  </span>
-                  <button onClick={handleNextMonth} className="hover:text-gray-200">
-                    ›
-                  </button>
-                </div>
+                                        {/* Calendar + Slots */}
+                                        <div className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-[#d1c7b9]">
+                                            {/* Left - Calendar */}
+                                            <div className="flex-1 p-5">
+                                                {/* Month Header */}
+                                                <div className="flex justify-between items-center bg-[#5F3F31] text-white text-center py-2 rounded-md mb-4 font-semibold px-4">
+                                                    <button onClick={handlePrevMonth} className="hover:text-gray-200">
+                                                        ‹
+                                                    </button>
+                                                    <span>
+                                                        {months[currentMonth]} {currentYear}
+                                                    </span>
+                                                    <button onClick={handleNextMonth} className="hover:text-gray-200">
+                                                        ›
+                                                    </button>
+                                                </div>
 
-                {/* Calendar Grid */}
-                <div className="grid grid-cols-7 text-center text-sm text-[#5C5C5C]">
-                  {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
-                    <div key={day} className="font-medium py-1">
-                      {day}
-                    </div>
-                  ))}
+                                                {/* Calendar Grid */}
+                                                <div className="grid grid-cols-7 text-center text-sm text-[#5C5C5C]">
+                                                    {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((day) => (
+                                                        <div key={day} className="font-medium py-1">
+                                                            {day}
+                                                        </div>
+                                                    ))}
 
-                  {/* Blank spaces for start of month */}
-                  {Array.from({ length: blankDays }).map((_, i) => (
-                    <div key={`blank-${i}`} className="py-2" />
-                  ))}
+                                                    {/* Blank spaces for start of month */}
+                                                    {Array.from({ length: blankDays }).map((_, i) => (
+                                                        <div key={`blank-${i}`} className="py-2" />
+                                                    ))}
 
-                  {/* Actual Days */}
-                  {Array.from({ length: daysInMonth }).map((_, i) => {
-                    const day = i + 1;
-                    const isSelected = selectedDate === `${(currentMonth + 1)
-                      .toString()
-                      .padStart(2, "0")}/${day.toString().padStart(2, "0")}/${currentYear}`;
+                                                    {/* Actual Days */}
+                                                    {Array.from({ length: daysInMonth }).map((_, i) => {
+                                                        const day = i + 1;
+                                                        const isSelected = selectedDate === `${(currentMonth + 1)
+                                                            .toString()
+                                                            .padStart(2, "0")}/${day.toString().padStart(2, "0")}/${currentYear}`;
 
-                    return (
-                      <div
-                        key={day}
-                        onClick={() => handleDateSelect(day)}
-                        className={`py-2 rounded-md cursor-pointer mx-auto w-8 h-8 flex items-center justify-center transition
+                                                        return (
+                                                            <div
+                                                                key={day}
+                                                                onClick={() => handleDateSelect(day)}
+                                                                className={`py-2 rounded-md cursor-pointer mx-auto w-8 h-8 flex items-center justify-center transition
                           ${isSelected
-                            ? "bg-[#5F3F31] text-white"
-                            : "hover:bg-[#E7DCCC] text-[#5C5C5C]"
-                          }`}
-                      >
-                        {day}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+                                                                        ? "bg-[#5F3F31] text-white"
+                                                                        : "hover:bg-[#E7DCCC] text-[#5C5C5C]"
+                                                                    }`}
+                                                            >
+                                                                {day}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
 
-              {/* Right - Slots */}
-              <div className="flex-1 p-5">
-                <div className="bg-[#5F3F31] text-white text-center py-2 rounded-md mb-4 font-semibold">
-                  Slots Available
-                </div>
+                                            {/* Right - Slots */}
+                                            <div className="flex-1 p-5">
+                                                <div className="bg-[#5F3F31] text-white text-center py-2 rounded-md mb-4 font-semibold">
+                                                    Slots Available
+                                                </div>
 
-                <div className="grid grid-cols-3 gap-3">
-                  {timeSlots.map((slot) => (
-                    <button
-                      key={slot}
-                      onClick={() => setSelectedTime(slot)}
-                      className={`py-2 rounded-md text-sm font-medium border transition-all duration-200 ${
-                        selectedTime === slot
-                          ? "bg-[#5F3F31] text-white border-[#70513D]"
-                          : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
-                      }`}
-                    >
-                      {slot}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+                                                <div className="grid grid-cols-3 gap-3">
+                                                    {timeSlots.map((slot) => (
+                                                        <button
+                                                            key={slot}
+                                                            onClick={() => setSelectedTime(slot)}
+                                                            className={`py-2 rounded-md text-sm font-medium border transition-all duration-200 ${selectedTime === slot
+                                                                    ? "bg-[#5F3F31] text-white border-[#70513D]"
+                                                                    : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
+                                                                }`}
+                                                        >
+                                                            {slot}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
 
-                         {/* Add More Services */}
-<div className="flex justify-center">
-    <a
-        href="/add-services" // 👉 yahan apna actual page path daal dena
-        className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6"
-    >
-        + Add More Services
-    </a>
-</div>
+                            {/* Add More Services */}
+                            <div className="flex justify-center">
+                                <a
+                                    href="/add-services" // 👉 yahan apna actual page path daal dena
+                                    className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6"
+                                >
+                                    + Add More Services
+                                </a>
+                            </div>
 
 
 
