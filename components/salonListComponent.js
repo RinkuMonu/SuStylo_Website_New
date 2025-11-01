@@ -606,7 +606,7 @@ export default function SalonList() {
     ];
 
     return (
-        <div className="bg-[#f2e7d7] px-[130px] py-6">
+        <div className="bg-[#f2e7d7] px-[20px] md:px-[130px] lg:px-[130px] py-6">
             {/* Header */}
             <span className="text-2xl font-semibold mb-6 text-[#1f1f1f] tracking-wide border-b-2 border-black">
                 SALON LIST
@@ -682,12 +682,24 @@ export default function SalonList() {
 
                     {/* More Filters Dropdown */}
                     {isMoreFiltersModalOpen && (
-                        <div className="absolute top-12 right-0 bg-white text-black rounded-lg shadow-xl border border-gray-200 z-50 w-[630px] p-5">
+                        <div
+                            className="
+                            absolute md:top-12 md:right-0 
+                            bg-white text-black rounded-lg shadow-xl border border-gray-200 z-50 
+                            w-[90vw] md:w-[630px] 
+                            p-5 
+                            
+                            -translate-x-54 md:translate-x-0
+                            top-[110%] md:top-12 
+                            max-h-[80vh] md:max-h-none 
+                            overflow-y-auto
+                            "
+                        >
                             {/* Filters Row */}
-                            <div className="grid grid-cols-4 gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                                 {/* Gender Section */}
-                                <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                <div className="border-b md:border-b-0 md:border-r md:pr-4 pb-3 md:pb-0">
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] text-[#617772] mb-3">
                                         Gender
                                     </h4>
                                     <div className="space-y-1">
@@ -706,8 +718,8 @@ export default function SalonList() {
                                 </div>
 
                                 {/* Price Section */}
-                                <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                <div className="border-b md:border-b-0 md:border-r md:pr-4 pb-3 md:pb-0">
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] text-[#617772] mb-3">
                                         Price
                                     </h4>
                                     <div className="space-y-1">
@@ -728,8 +740,8 @@ export default function SalonList() {
                                 </div>
 
                                 {/* Customer Rating Section */}
-                                <div className="border-r pr-4">
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                <div className="border-b md:border-b-0 md:border-r md:pr-4 pb-3 md:pb-0">
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] text-[#617772] mb-3">
                                         Customer Rating
                                     </h4>
                                     <div className="space-y-1">
@@ -751,7 +763,7 @@ export default function SalonList() {
 
                                 {/* Discount Section */}
                                 <div>
-                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] leading-[100%] tracking-[0] capitalize text-[#617772] mb-5">
+                                    <h4 className="font-['Inria_Serif'] font-normal text-[16px] text-[#617772] mb-3">
                                         Discount
                                     </h4>
                                     <div className="space-y-1">
@@ -773,7 +785,7 @@ export default function SalonList() {
                             </div>
 
                             {/* Bottom Buttons */}
-                            <div className="flex justify-end items-center gap-4 mt-4 text-sm text-gray-600">
+                            <div className="flex justify-end items-center gap-4 mt-4 text-sm text-gray-600 sticky bottom-0 bg-white pt-3">
                                 <button
                                     className="flex items-center gap-1 hover:text-gray-800"
                                     onClick={handleReset}
@@ -786,6 +798,7 @@ export default function SalonList() {
                             </div>
                         </div>
                     )}
+
 
                 </div>
             </div>
