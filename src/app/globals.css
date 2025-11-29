@@ -13,12 +13,12 @@ button, a{
   cursor: pointer;
 }
 
-.rotating-circle {
-  animation: rotate-circle 5s linear infinite;
-}
-
-@keyframes rotate-circle {
-  100% {
-    transform: rotate(360deg);
+  .rotating-circle {
+    animation: rotate-circle 5s linear infinite;
   }
-}
+
+  @keyframes rotate-circle {
+    100% {
+      transform: rotate(360deg);
+    }
+  }

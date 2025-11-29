@@ -541,9 +541,6 @@ export default function FreelancerList() {
                     >
                         <Funnel className="w-4 h-4" /> More Filters
                     </button>
-
-                   {/* More Filters Dropdown */}
-   {/* More Filters Dropdown */}
                     {isMoreFiltersModalOpen && (
                         <div
                             className="
