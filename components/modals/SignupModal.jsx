@@ -252,10 +252,10 @@ export default function SignupModal({ isOpen, onClose, onLogin }) {
                   disabled={loading}
                 >
                   <option value="">Select Gender</option>
-                  <option className="text-black" value="Male">Male</option>
-                  <option className="text-black" value="Female">Female</option>
+                  <option className="text-black" value="male">Male</option>
+                  <option className="text-black" value="female">Female</option>
                   <option className="text-black" value="Other">Other</option>
-                  <option className="text-black" value="Prefer not to say">Prefer not to say</option>
+                  {/* <option className="text-black" value="Prefer not to say">Prefer not to say</option> */}
                 </select>
                 {errors.gender && (
                   <p className="text-red-300 text-xs mt-1">{errors.gender}</p>

@@ -10,6 +10,11 @@ import AuthModalManager from "../components/modals/AuthModalManager";
 
 
 export default function Header() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); // true / false
+  }, []);
  
 
 
@@ -64,14 +69,25 @@ export default function Header() {
             <Link href="/contact" className="text-stone-300 font-light text-[12px] hover:text-white">CONTACT US</Link>
             <Link href="/blog" className="text-stone-300 font-light text-[12px] hover:text-white">BLOG</Link>
             {/* <Link href="/login" className="text-stone-300 font-light text-[12px] hover:text-white">LOGIN</Link> */}
-            <Link
+            {/* <Link
               href="#"
               // onClick={() => setOpenLogin(true)}
               onClick={() => setShowModal(true)}
               className="text-stone-300 font-light text-[12px] hover:text-white"
             >
               LOGIN
-            </Link>
+            </Link> */}
+
+                 {isLoggedIn ? (
+          <Link href="/profile" className="text-stone-300 font-light text-[12px] hover:text-white" >
+            PROFILE
+          </Link>
+        ) : (
+          <Link href="/login" className="text-stone-300 font-light text-[12px] hover:text-white" >
+            LOGIN
+          </Link>
+        )}
+
             <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />
             {/* <FaUser className="text-[#CBAA87] mx-2" size={16} /> */}
             <div className="lg:pr-10">
