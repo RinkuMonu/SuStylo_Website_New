@@ -83,7 +83,7 @@ export default function Header() {
             PROFILE
           </Link>
         ) : (
-          <Link href="/login" className="text-stone-300 font-light text-[12px] hover:text-white" >
+          <Link href="#" onClick={() => setShowModal(true)} className="text-stone-300 font-light text-[12px] hover:text-white" >
             LOGIN
           </Link>
         )}
