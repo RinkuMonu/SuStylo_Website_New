@@ -31,6 +31,8 @@ const extractShortDescription = (htmlContent, maxLength = 120) => {
 const BlogCard = ({ blog }) => {
   const blogUrl = `/blog/${blog?.slug || blog?._id}`;
 
+
+  
   return (
     <Link href={blogUrl}>
       <div className="bg-[#E5D3BF] rounded-xl shadow-[0_4px_4px_0_#00000040] overflow-hidden hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
