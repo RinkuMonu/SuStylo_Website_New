@@ -430,13 +430,11 @@ export default function Services() {
     setFilteredServices(filtered);
   }, [searchQuery, selectedLocation, selectedGender, services]);
 
-  // Handle service card click - navigate to salon list with service name
   const handleServiceClick = (service) => {
-    // Store selected service in localStorage or pass as query params
+    console.log("Service clicked service page = :", service);
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedService', service.title);
     }
-
 
     const original = service.title;                     // Men's facial
     const slug = slugify(original, { lower: true, strict: true });
