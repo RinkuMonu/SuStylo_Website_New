@@ -2,8 +2,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+
 // Make sure this path is correct for your project
 import axiosInstance from '../src/app/axios/axiosinstance'; 
+import slugify from "slugify";
 
 // Define the expected structure for the services data
 const formatService = (srv) => ({
@@ -12,6 +15,7 @@ const formatService = (srv) => ({
 });
 
 export default function Homeservices() {
+  const router = useRouter();
   // 1. servicesData को useState से replace करें
   const [servicesData, setServicesData] = useState({
     women: [],
@@ -21,7 +25,24 @@ export default function Homeservices() {
   const [loading, setLoading] = useState(true);
 
   const [tab, setTab] = useState('women');
-console.log("Current tab =", tab);
+  const getDefaultImage = (serviceName) => {
+    const name = serviceName.toLowerCase();
+    if (name.includes("colour") || name.includes("color")) {
+      return "/Image/allservices/colouring.png";
+    } else if (name.includes("thread")) {
+      return "/Image/allservices/threading.png";
+    } else if (name.includes("facial")) {
+      return "/Image/allservices/facial.png";
+    } else if (name.includes("pedicure")) {
+      return "/Image/allservices/pedicure.png";
+    } else if (name.includes("massage")) {
+      return "/Image/allservices/massage.png";
+    } else if (name.includes("wax")) {
+      return "/Image/allservices/facial.png";
+    } else {
+      return "/Image/allservices/facial.png";
+    }
+  };
   useEffect(() => {
     const fetchServices = async () => {
       console.log("Fetching services...");
@@ -58,6 +79,23 @@ console.log("Current tab =", tab);
     }
   }, [servicesData]);
   const currentServices = servicesData[tab];
+
+    const handleServiceClick = (service) => {
+      console.log("Service clicked:", service);
+      // Store selected service in localStorage or pass as query params
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('selectedService', service.name);
+      }
+  
+  
+      const original = service.name;                     // Men's facial
+      const slug = slugify(original, { lower: true, strict: true });
+      console.log("slugggg", slug);
+  
+      // Navigate to salon list page
+      // router.push(`/salonList?service=${encodeURIComponent(service.title)}`);
+      router.push(`/salonList?service=${slug}`);
+    };
   return (
     <section className="mt-8 px-2 sm:px-4 md:px-8">
       <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
@@ -90,11 +128,15 @@ console.log("Current tab =", tab);
         {loading ? (
           <p className="col-span-full text-center text-gray-500">Loading services...</p>
         ) : currentServices.length > 0 ? (
-          currentServices.map((srv) => (
-            <Link href={`/salonList?service=${srv.name}`} key={srv._id} className="flex flex-col items-center w-full">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 rounded-full relative overflow-hidden flex items-center justify-center shadow-sm bg-[#f5f5f5]">
+          currentServices.map((srv,index) => (
+           
+              <div key={srv.id || index}
+                  onClick={() => {
+                    handleServiceClick(srv);
+                  }}
+                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 rounded-full relative overflow-hidden flex items-center justify-center shadow-sm bg-[#f5f5f5]">
                 <Image
-                  src={srv?.image}
+                  src={srv?.image || getDefaultImage(srv?.name)}
                   alt={srv?.name}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width:1024px) 8vw, 176px"
@@ -104,7 +146,7 @@ console.log("Current tab =", tab);
                   {srv.name}
                 </span>
               </div>
-            </Link>
+           
           ))
         ) : (
           <p className="col-span-full text-center text-gray-500">No services found for {tab === 'women' ? 'women' : 'man'}.</p>
