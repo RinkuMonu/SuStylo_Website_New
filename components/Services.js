@@ -322,7 +322,7 @@ export default function Services() {
       try {
         setLoading(true);
         const response = await axiosInstance.get('/services');
-
+        console.log("Fetched services:",response.data.services);
         if (response.data.success) {
           // Transform API data to match your UI structure
           const transformedServices = response.data.services.map(service => ({
