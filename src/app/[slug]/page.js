@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import axiosInstance from "../../axios/axiosinstance";
-import BlogCards from "../../../../components/BlogCards";
+import axiosInstance from "../axios/axiosinstance";
+import BlogCards from "../../../components/BlogCards";
 
 // Helper function to format date
 const formatDate = (dateString) => {
