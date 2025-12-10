@@ -4,76 +4,75 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import axiosInstance from "../src/app/axios/axiosinstance"; // ⬅ adjust path if different
+import axiosInstance from "../src/app/axios/axiosinstance";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function NearBySalonSection() {
   const [salons, setSalons] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // we'll read coordinates from localStorage (we'll store them in login after successful login)
-  // and then hit /api/salons?lat=...&lng=...&radius=3000
   useEffect(() => {
     const fetchNearby = async () => {
       try {
         setLoading(true);
-        
-        // 1. get saved coords from login step
-        // make sure in your login success you do:
-        // localStorage.setItem("userLat", latitude);
-        // localStorage.setItem("userLng", longitude);
-        const lat = typeof window !== "undefined" ? localStorage.getItem("userLat") : null;
-        const lng = typeof window !== "undefined" ? localStorage.getItem("userLng") : null;
 
-        if (!lat || !lng) {
+        // -----------------------------
+        // 👉 1. Get current live location
+        // -----------------------------
+        const getLocation = () =>
+          new Promise((resolve, reject) => {
+            if (!navigator.geolocation) {
+              return reject("Geolocation not supported");
+            }
+
+            navigator.geolocation.getCurrentPosition(
+              (pos) => resolve(pos.coords),
+              (err) => reject(err.message)
+            );
+          });
+
+        let coords;
+        try {
+          coords = await getLocation();
+        } catch (err) {
+          toast.error("Please enable location access");
           setLoading(false);
-          // toast.error("Location not available");
           return;
         }
 
-        // 2. call backend
-        const res = await axiosInstance.get(
-          `/salons`,
-          {
-            params: {
-              lat,
-              lng,
-              radius: 3000, // 3km like your curl
-            },
-          }
-        );
+        const lat = coords.latitude;
+        const lng = coords.longitude;
+
+        // Save for future use (optional)
+        localStorage.setItem("userLat", lat);
+        localStorage.setItem("userLng", lng);
+
+        // -----------------------------
+        // 👉 2. Fetch nearby salons
+        // -----------------------------
+        const res = await axiosInstance.get("/salons", {
+          params: { lat, lng, radius: 3000 },
+        });
 
         if (res?.data?.success) {
-          // map response into clean card data shape
-          const cleaned = (res.data.salons || []).map((s) => {
-            return {
-              // card image: pick 1st of salon.photos OR first service.image OR fallback
-              imgUrl:
-                s.photos?.[0] ||
-                s.services?.[0]?.image ||
-                "/Home/salon1.png",
-
-              name: s.salonName || "Unnamed Salon",
-
-              // address subtitle: "{area}, {city}"
-              subtitle: s.address
-                ? [s.address.area, s.address.city].filter(Boolean).join(", ")
-                : "Location not available",
-            };
-          });
+          const cleaned = (res.data.salons || []).map((s) => ({
+            imgUrl:
+              s.photos?.[0] ||
+              s.services?.[0]?.image ||
+              "/Home/salon1.png",
+            name: s.salonName || "Unnamed Salon",
+            subtitle: s.address
+              ? [s.address.area, s.address.city].filter(Boolean).join(", ")
+              : "Location not available",
+          }));
 
           setSalons(cleaned);
         } else {
-          toast.error(res?.data?.message || "Failed to load salons");
+          toast.error("Failed to load salons");
         }
       } catch (err) {
         console.error("Nearby salons error:", err);
-        const msg =
-          err?.response?.data?.message ||
-          err?.response?.data?.error ||
-          err?.message ||
-          "Failed to load salons";
-        toast.error(msg);
+        toast.error("Something went wrong while fetching salons");
       } finally {
         setLoading(false);
       }
@@ -84,7 +83,6 @@ export default function NearBySalonSection() {
 
   return (
     <section className="pb-10">
-      {/* toaster for error/success */}
       <Toaster position="top-right" />
 
       <div className="flex justify-between items-center mb-4">
@@ -99,13 +97,10 @@ export default function NearBySalonSection() {
         </Link>
       </div>
 
-      {/* loading / empty states */}
       {loading ? (
         <div className="text-[#697070] text-center mt-8">Loading nearby salons...</div>
       ) : salons.length === 0 ? (
-        <div className="text-[#697070] text-center mt-8">
-          No salons found near you.
-        </div>
+        <div className="text-[#697070] text-center mt-8">No salons found near you.</div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-8 mx-auto">
           {salons.map((salon, idx) => (
@@ -113,25 +108,12 @@ export default function NearBySalonSection() {
               key={idx}
               className="bg-white rounded-[48px] flex flex-col border-[#CBAA87] border items-center overflow-hidden lg:w-max"
             >
-              <div
-                className="
-                  relative 
-                  w-full            
-                  h-36                  
-                  sm:h-44              
-                  md:h-48             
-                  lg:w-56               
-                  lg:h-52               
-                  rounded-t-[28px] 
-                  overflow-hidden
-                "
-              >
+              <div className="relative w-full h-36 sm:h-44 md:h-48 lg:w-56 lg:h-52 rounded-t-[28px] overflow-hidden">
                 <Image
                   src={salon.imgUrl}
                   alt={salon.name}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width:1024px) 350px, 224px"
                 />
               </div>
 
@@ -151,6 +133,7 @@ export default function NearBySalonSection() {
     </section>
   );
 }
+
 
 
 
