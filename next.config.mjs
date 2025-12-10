@@ -13,18 +13,18 @@
 // export default nextConfig;
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // output: 'export',
   trailingSlash: true,
 
   images: {
     unoptimized: true, // <-- Yahan hona chahiye
   },
 
-  experimental: {
-    staticGeneration: {
-      force: true,
-    },
-  },
+  // experimental: {
+  //   staticGeneration: {
+  //     force: true,
+  //   },
+  // },
 };
 
 export default nextConfig;
