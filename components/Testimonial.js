@@ -9,36 +9,37 @@ import React, { useRef } from "react";
 
 const testimonials = [
   {
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+    text: "I always had trouble finding good salons nearby, but booking through Sustylos is super easy. Got my service on time without any hassle.",
     img: "/Home/user1.png",
-    name: "ALISA MENON",
+    name: "PRIYA SHARMA",
     bgImg: "/Home/testimonial-bg1.png",
   },
   {
-    text: "Praesent commodo cursus magna, vel scelerisque nisl consectetur dolor.",
+    text: "This was my first time booking a freelancer stylist. Very professional and polite. The home service experience was really good.",
     img: "/Home/user2.png",
-    name: "ALISA MENON",
+    name: "ROHAN VERMA",
     bgImg: "/Home/testimonial-bg2.png",
   },
   {
-    text: "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.",
+    text: "Comparing salon prices and directly booking a slot saves so much time. The app is very convenient for quick bookings.",
     img: "/Home/user3.png",
-    name: "ALISA MENON",
+    name: "SNEHA KAPOOR",
     bgImg: "/Home/testimonial-bg3.png",
   },
   {
-    text: "Aenean lacinia bibendum nulla sed consectetur.",
+    text: "Booked after seeing the offers and discounts. The service I received was even better than expected. Totally worth it!",
     img: "/Home/user4.png",
-    name: "ALISA MENON",
+    name: "ADITYA SINGH",
     bgImg: "/Home/testimonial-bg4.png",
   },
   {
-    text: "Aenean lacinia bibendum nulla sed consectetur.",
+    text: "The platform is simple to use, salon details are clear, and the payment process is smooth. Works perfectly for me.",
     img: "/Home/user4.png",
-    name: "ALISA MENON",
-    bgImg: "/Home/testimonial-bg4.png",
+    name: "NISHA RATHORE",
+    bgImg: "/Home/testimonial-bg3.png",
   },
 ];
+
 
 export default function Testimonial({ heading = "OUR CLIENTS" }) {
   const prevRef = useRef(null);
@@ -91,10 +92,10 @@ export default function Testimonial({ heading = "OUR CLIENTS" }) {
               <div
                 className="relative w-full min-w-[210px] h-100 flex items-center px-6 pt-8 pb-10 rounded-t-[18px] bg-no-repeat bg-cover"
                 style={{
-  backgroundImage: `url("${t.bgImg}")`,
-  backgroundPosition: "center",
-  backgroundSize: "cover",
-}}
+                  backgroundImage: `url("${t.bgImg}")`,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
 
               >
                 <p className="text-base leading-8 font-serif text-[#363333] text-center z-10">

@@ -134,7 +134,7 @@ export default function Homeservices() {
                   onClick={() => {
                     handleServiceClick(srv);
                   }}
-                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 rounded-full relative overflow-hidden flex items-center justify-center shadow-sm bg-[#f5f5f5]">
+                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 rounded-full relative overflow-hidden flex items-center justify-center shadow-sm bg-[#f5f5f5] cursor-pointer">
                 <Image
                   src={srv?.image || getDefaultImage(srv?.name)}
                   alt={srv?.name}

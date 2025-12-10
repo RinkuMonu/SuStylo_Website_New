@@ -198,7 +198,7 @@ const handleSubmit = async (e) => {
           </div>
 
           <form onSubmit={handleSubmit}>
-            <label className="text-sm">Username</label>
+            <label className="text-sm">Email</label>
             <input
               type="text"
               value={formData.username}

@@ -644,7 +644,7 @@ export default function AccountPage() {
               <ul className="space-y-2">
                 {[
                   { key: "profile", label: "Profile", icon: <FaUser /> },
-                  { key: "addresses", label: "Addresses", icon: <FaMapMarkerAlt /> },
+                  // { key: "addresses", label: "Addresses", icon: <FaMapMarkerAlt /> },
                   { key: "history", label: "History", icon: <FaClock /> },
                 ].map((item) => (
                   <li
