@@ -700,6 +700,7 @@ export default function FreelancerList() {
         radius: 2000 // Default radius in meters
     });
     
+    
 
     // Get parameters from URL
     const nameFromURL = searchParams.get('name') || "";
