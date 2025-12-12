@@ -127,9 +127,11 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
         </div>
     );
 }
-    
+
 export default function SalonServicesSection({ serviceData }) {
-   
+   const [homeBooking, setHomeBooking] = useState({ date: "Select Date", time: "Select Time", isModalOpen: false });
+    const [salonBooking, setSalonBooking] = useState({ date: "Select Date", time: "Select Time", isModalOpen: false }); 
+    
     const [userAddress, setUserAddress] = useState(null); 
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
@@ -142,7 +144,6 @@ export default function SalonServicesSection({ serviceData }) {
     const [openMaleCategory, setOpenMaleCategory] = useState(null);
     const [cart, setCart] = useState([]);
     const hasAtHomeService = cart.some(item => item.atHome === true);
-    console.log("hasAtHomeService :", hasAtHomeService);
     // Modal states
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
@@ -158,7 +159,22 @@ export default function SalonServicesSection({ serviceData }) {
     const femaleServices = transformedFemaleServices;
     const maleServices = transformedMaleServices;
     // -------------------------------------------------------------
+    const groupedCart = cart.reduce((acc, item) => {
+        // atHome === true है तो 'home', वरना 'salon'
+        const location = item.atHome === true ? 'home' : 'salon';
 
+        if (!acc[location]) {
+            // Group state के लिए placeholder, जिसे आपको useState में manage करना होगा
+            acc[location] = {
+                items: [],
+                // यहां group-level bookingType को स्टोर करने के लिए एक state property जोड़ी जाएगी
+                bookingType: '', 
+            };
+        }
+        
+        acc[location].items.push(item);
+        return acc;
+    }, {});
     // Calendar data
     const months = [
         "January", "February", "March", "April", "May", "June",
@@ -252,7 +268,6 @@ export default function SalonServicesSection({ serviceData }) {
         // --- Function to save the address ---
         const handleAddressSubmit = (address) => {
             setUserAddress(address);
-            console.log("Address Saved:", address);
         }
         const bookingDetails = {
             cart,
@@ -266,6 +281,15 @@ export default function SalonServicesSection({ serviceData }) {
             console.log("Final Booking Details:", bookingDetails);
             alert("Booking Confirmed! (See console for details)");
         }
+        const handleBookingTypeChange = (index, newType) => {
+            const updatedCart = [...cart];
+            updatedCart[index].bookingType = newType;
+            setCart(updatedCart); 
+        };
+        const handleGroupBookingTypeChange = (locationKey,groupTotal,newType) => {
+            
+        }
+         
     return (
         <section className="bg-[#f6efe4] py-10">
             <h2 className="text-3xl font-bold mb-8 text-center text-[#5F3F31]">Services</h2>
@@ -308,7 +332,7 @@ export default function SalonServicesSection({ serviceData }) {
                                                         key={i}
                                                         className="flex justify-between items-center px-4 py-2 hover:bg-[#E7DCCC]"
                                                     >
-                                                        <span>{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                                        <span>{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                                         <div className="flex items-center gap-3">
                                                             <span className="text-sm font-medium">
                                                                 ₹{item.price}
@@ -367,7 +391,7 @@ export default function SalonServicesSection({ serviceData }) {
                                                         key={i}
                                                         className="flex justify-between items-center px-4 py-2 hover:bg-[#E7DCCC]"
                                                     >
-                                                        <span>{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                                        <span>{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                                         <div className="flex items-center gap-3">
                                                             <span className="text-sm font-medium">
                                                                 ₹{item.price}
@@ -403,7 +427,7 @@ export default function SalonServicesSection({ serviceData }) {
                                         key={i}
                                         className="flex justify-between items-center text-sm border-b border-[#E7DCCC] pb-2"
                                     >
-                                        <span className="w-1/2 font-medium text-[#5F3F31]">{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                        <span className="w-1/2 font-medium text-[#5F3F31]">{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                         <div className="flex items-center gap-3">
                                             <div className="flex items-center gap-1 border border-[#CBAA87] rounded">
                                                 <button
@@ -474,25 +498,108 @@ export default function SalonServicesSection({ serviceData }) {
 
                             {/* Service Info (Replace with actual selected item or cart summary) */}
                             {cart.length > 0 && (
-                              <div className="mb-4 space-y-2 max-h-40 overflow-y-auto pr-2"> {/* Scrollable area for services */}
-                                  {cart.map((item, index) => (
-                                      <div key={index} className="flex justify-between items-start bg-transparent text-[#F6EFE4] leading-relaxed border-b border-[#F6EFE4]/20 pb-1">
-                                          <span className="font-medium text-sm">
-                                              {item.name} ({item.atHome == true ? 'At home' : "At salon"}) x {item.qty}
-                                          </span>
-                                          <div className="flex items-center gap-2">
-                                              <span className="text-sm font-semibold">
-                                                  ₹{item.price * item.qty}
-                                              </span>
-                                              <span className="ml-2 text-[11px] bg-[#F6EFE4] text-[#5C6B63] px-2 py-[1px] rounded-md font-semibold whitespace-nowrap">
-                                                  {/* Gender identification logic - simplified */}
-                                                  {item.name.includes('Girls') || item.name.includes('Female') || femaleServices.some(c => c.items.some(i => i.name === item.name)) ? 'Female' : 'Male'}
-                                              </span>
-                                          </div>
-                                      </div>
-                                  ))}
+                              <div className="mb-4 space-y-2 max-h-40 overflow-y-auto pr-2">
+                                {Object.entries(groupedCart).map(([locationKey, groupData]) => {
+                                    if (groupData.items.length === 0) return null;
+                                    const groupName = locationKey === 'home' ? '🏠 Home Services' : '📍 Salon Services';
+                                    const groupTotal = groupData.items.reduce((total, item) => 
+                                        total + (item.price * item.qty), 0
+                                    );
+                                    return (
+                                        <div 
+                                            key={locationKey} 
+                                            className="mb-4 border border-[#F6EFE4]/30 rounded-lg p-3" // प्रत्येक ग्रुप के लिए एक बॉक्स
+                                        >
+                                            {/* === A. Group Header and Booking Select (Pre/Urgent) === */}
+                                            <div className="flex justify-between items-center pb-3 mb-3 border-b border-[#F6EFE4]/30">
+                                                <h3 className="text-base font-semibold text-[#F6EFE4]">
+                                                    {groupName} ({groupData.items.length})
+                                                </h3>
+                                                 {/* Date Section */}
+                                                <div
+                                                    onClick={() => setIsDateModalOpen(true)}
+                                                    className="flex items-center text-[#F6EFE4] text-[15px] mb-5 cursor-pointer hover:opacity-80 transition"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        strokeWidth={1.6}
+                                                        stroke="currentColor"
+                                                        className="w-5 h-5 mr-2"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            d="M8 7V3m8 4V3m-9 8h10m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
+                                                        />
+                                                    </svg>
+                                                    {selectedDate} & {selectedTime}
+                                                </div>
+                                                <span className="text-sm font-bold text-[#F6EFE4]/80 mt-1">
+                                                    Group Total: ₹{groupTotal}
+                                                </span>
+                                                {/* Pre/Urgent Select Box for the ENTIRE GROUP */}
+                                                <div className="flex items-center">
+                                                    <select
+                                                        value={groupData.bookingType || ''}
+                                                        onChange={(e) => handleGroupBookingTypeChange(locationKey,groupTotal, e.target.value)} 
+                                                        className="
+                                                            text-xs 
+                                                            text-[#1f1f1f] 
+                                                            bg-[#F6EFE4] 
+                                                            border border-[#a7a7a7] 
+                                                            rounded-md 
+                                                            p-1 
+                                                            focus:ring-[#614b3d] 
+                                                            focus:border-[#614b3d] 
+                                                            min-w-[120px]
+                                                        "
+                                                    >
+                                                        <option value="" disabled>Select Priority</option>
+                                                        <option value="pre">Pre Booking</option>
+                                                        <option value="urgent">Urgent Booking</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            {/* === B. Items within the Group === */}
+                                            <div className="space-y-2">
+                                                {groupData.items.map((item, itemIndex) => (
+                                                    <div 
+                                                        key={itemIndex} 
+                                                        className="flex justify-between items-center text-[#F6EFE4] leading-tight"
+                                                    >
+                                                        
+                                                        {/* Item Name and Quantity (Location is implicit in the group header) */}
+                                                        <div className="flex-1 min-w-0 pr-2">
+                                                            <span className="font-medium text-sm block">
+                                                                {item.name} 
+                                                            </span>
+                                                            <span className="text-xs opacity-70">
+                                                                Qty: {item.qty}
+                                                            </span>
+                                                        </div>
+                                                        
+                                                        {/* Price and Gender Tag */}
+                                                        <div className="flex items-center justify-end min-w-fit">
+                                                            <span className="text-sm font-semibold whitespace-nowrap mr-3">
+                                                                ₹{item.price * item.qty}
+                                                            </span>
+                                                            
+                                                            {/* Gender Tag */}
+                                                            <span className="text-[10px] bg-[#F6EFE4] text-[#5C6B63] px-2 py-[1px] rounded-full font-semibold whitespace-nowrap">
+                                                                {item.name.includes('Girls') || item.name.includes('Female') || femaleServices?.some(c => c.items?.some(i => i.name === item.name)) ? 'F' : 'M'}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                               </div>
-                          )}
+                            )}
 
                             {/* Price + Duration (Placeholder) */}
                             <div className="flex items-center gap-5 text-[#F6EFE4] mb-2">
@@ -512,30 +619,7 @@ export default function SalonServicesSection({ serviceData }) {
                                     Approx. 45min (Placeholder)
                                 </div>
                                 
-                            </div>
-                           
-                            {/* Date Section */}
-                            <div
-                                onClick={() => setIsDateModalOpen(true)}
-                                className="flex items-center text-[#F6EFE4] text-[15px] mb-5 cursor-pointer hover:opacity-80 transition"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.6}
-                                    stroke="currentColor"
-                                    className="w-5 h-5 mr-2"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M8 7V3m8 4V3m-9 8h10m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
-                                    />
-                                </svg>
-                                {selectedDate} & {selectedTime}
-                            </div>
-                            
+                            </div>                     
                             {/* --- ADD ADDRESS BUTTON & DISPLAY --- */}
                             <div className="flex items-center gap-5 text-[#F6EFE4] mb-2">
                                 <div className="flex items-center text-sm opacity-80">
@@ -673,9 +757,8 @@ export default function SalonServicesSection({ serviceData }) {
                                     className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6"
                                 >
                                     + Add More Services
-                                </button>
-                                
-                            </div>
+                                </button>                               
+                            </div>                            
                             
 
                             {/* White Box - Price Summary */}
@@ -707,7 +790,7 @@ export default function SalonServicesSection({ serviceData }) {
                     </div>
                 </div>
             )}
-            <AddressModal 
+            <AddressModal
                 isOpen={isAddressModalOpen}
                 onClose={() => setIsAddressModalOpen(false)}
                 onSubmit={handleAddressSubmit}
