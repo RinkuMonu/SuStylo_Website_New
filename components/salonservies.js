@@ -58,7 +58,7 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
                 <h2 className="text-[#5F3F31] text-2xl font-semibold mb-4 flex items-center">
                      Add Home Address
                 </h2>
-                <hr className="border-[#CBAA87] mb-6" />
+                <hr className="border-[#CBAA87] mb-6 " />
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -127,9 +127,13 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
         </div>
     );
 }
-    
+
 export default function SalonServicesSection({ serviceData }) {
-   
+    const [homeBooking, setHomeBooking] = useState({ date: "", time: "",bookingType:"", isModalOpen: false });
+    const [salonBooking, setSalonBooking] = useState({ date: "", time: "",bookingType:"", isModalOpen: false });
+    console.log("home booking data:", homeBooking);
+    console.log("salon booking data:", salonBooking);
+    const [currentGroup, setCurrentGroup] = useState(null);
     const [userAddress, setUserAddress] = useState(null); 
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
@@ -142,7 +146,6 @@ export default function SalonServicesSection({ serviceData }) {
     const [openMaleCategory, setOpenMaleCategory] = useState(null);
     const [cart, setCart] = useState([]);
     const hasAtHomeService = cart.some(item => item.atHome === true);
-    console.log("hasAtHomeService :", hasAtHomeService);
     // Modal states
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
@@ -158,7 +161,24 @@ export default function SalonServicesSection({ serviceData }) {
     const femaleServices = transformedFemaleServices;
     const maleServices = transformedMaleServices;
     // -------------------------------------------------------------
+    const groupedCart = cart.reduce((acc, item) => {
+        const location = item.atHome === true ? 'home' : 'salon';
+        const selectedDate = location === 'home' ? homeBooking.date : salonBooking.date;
+        const selectedTime = location === 'home' ? homeBooking.time : salonBooking.time;
+        const bookingType = location === 'home' ? homeBooking.bookingType : salonBooking.bookingType;
 
+        if (!acc[location]) {
+            acc[location] = {
+                items: [],
+                bookingType: bookingType,
+                selectedDate: selectedDate,
+                selectedTime: selectedTime,
+            };
+        }
+        
+        acc[location].items.push(item);
+        return acc;
+    }, {});
     // Calendar data
     const months = [
         "January", "February", "March", "April", "May", "June",
@@ -205,7 +225,13 @@ export default function SalonServicesSection({ serviceData }) {
 
     const handleDateSelect = (day) => {
         const formattedDate = `${(currentMonth + 1).toString().padStart(2, "0")}/${day.toString().padStart(2, "0")}/${currentYear}`;
-        setSelectedDate(formattedDate);
+
+        // currentGroup के आधार पर सही स्टेट को अपडेट करें
+        if (currentGroup === 'home') {
+            setHomeBooking(prev => ({ ...prev, date: formattedDate }));
+        } else if (currentGroup === 'salon') {
+            setSalonBooking(prev => ({ ...prev, date: formattedDate }));
+        }
     };
 
     const toggleFemaleCategory = (title) => {
@@ -215,15 +241,56 @@ export default function SalonServicesSection({ serviceData }) {
     const toggleMaleCategory = (title) => {
         setOpenMaleCategory(openMaleCategory === title ? null : title);
     };
-
+    const isCartEmpty = cart.length === 0;
+    const isCurrentItemInCart = (item) =>
+        !isCartEmpty && cart[0].name === item.name && cart[0].atHome === item.atHome;
+    const getCartItemQuantity = (item) => {
+        const foundItem = cart.find(
+            (p) => p.name === item.name && p.atHome === item.atHome
+        );
+        return foundItem ? foundItem.qty : 0;
+    };
+    const decreaseQuantity = (item) => {
+        setCart((prev) => {
+            const existing = prev.find(
+                (p) => p.name === item.name && p.atHome === item.atHome
+            );
+            if (existing) {
+                if (existing.qty > 1) {
+                    // Decrease quantity
+                    return prev.map((p) =>
+                        (p.name === item.name && p.atHome === item.atHome) ? { ...p, qty: p.qty - 1 } : p
+                    );
+                } else {
+                    // Remove item from cart if quantity is 1
+                    return prev.filter(
+                        (p) => !(p.name === item.name && p.atHome === item.atHome)
+                    );
+                }
+            }
+            return prev;
+        });
+    };
     const addToCart = (item) => {
         setCart((prev) => {
-            const existing = prev.find((p) => p.name === item.name);
+            const existing = prev.find(
+                (p) => p.name === item.name && p.atHome === item.atHome
+            );
+            
+            // 🚨 IMPORTANT CHECK: If cart is NOT empty AND the current item is NOT the one in the cart, do nothing.
+            if (prev.length > 0 && !existing) {
+                console.log("Only one service is allowed in the cart at a time.");
+                return prev; 
+            }
+
             if (existing) {
+                // Increase quantity of the existing item
                 return prev.map((p) =>
-                    p.name === item.name ? { ...p, qty: p.qty + 1 } : p
+                    (p.name === item.name && p.atHome === item.atHome) ? { ...p, qty: p.qty + 1 } : p
                 );
             }
+            
+            // Add new item with qty: 1 only if cart is empty
             return [...prev, { ...item, qty: 1 }];
         });
     };
@@ -252,20 +319,22 @@ export default function SalonServicesSection({ serviceData }) {
         // --- Function to save the address ---
         const handleAddressSubmit = (address) => {
             setUserAddress(address);
-            console.log("Address Saved:", address);
         }
         const bookingDetails = {
-            cart,
-            selectedDate,
-            selectedTime,
+            groupedCart,
             totalAmount: (total * 1.05).toFixed(2),
-            address: userAddress, // यहाँ एड्रेस स्टोर है
-            hasAtHomeService,
+            address: userAddress,
         };
+        console.log("Booking Details Prepared:", bookingDetails);
         const handlePayAndConfirm = () => {
             console.log("Final Booking Details:", bookingDetails);
             alert("Booking Confirmed! (See console for details)");
         }
+        
+        const handleGroupBookingTypeChange = (locationKey,groupTotal,newType) => {
+            
+        }
+         
     return (
         <section className="bg-[#f6efe4] py-10">
             <h2 className="text-3xl font-bold mb-8 text-center text-[#5F3F31]">Services</h2>
@@ -308,14 +377,33 @@ export default function SalonServicesSection({ serviceData }) {
                                                         key={i}
                                                         className="flex justify-between items-center px-4 py-2 hover:bg-[#E7DCCC]"
                                                     >
-                                                        <span>{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                                        <span>{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                                         <div className="flex items-center gap-3">
                                                             <span className="text-sm font-medium">
                                                                 ₹{item.price}
                                                             </span>
+                                                            {isCurrentItemInCart(item) && (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => decreaseQuantity(item)} // Assumed function to decrease quantity
+                                                                        className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                    >
+                                                                        -
+                                                                    </button>
+                                                                    <span className="font-semibold text-base">
+                                                                        {getCartItemQuantity(item)}
+                                                                    </span>
+                                                                </>
+                                                            )}
+
                                                             <button
                                                                 onClick={() => addToCart(item)}
-                                                                className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                disabled={!isCartEmpty && !isCurrentItemInCart(item)} // Logic for disabling
+                                                                className={`font-bold p-1 border rounded-full w-6 h-6 flex items-center justify-center transition 
+                                                                    ${(!isCartEmpty && !isCurrentItemInCart(item))
+                                                                        ? 'text-gray-400 border-gray-400 bg-gray-100 cursor-not-allowed'
+                                                                        : 'text-[#5F3F31] border-[#5F3F31] hover:bg-[#CBAA87] hover:text-white'
+                                                                    }`}
                                                             >
                                                                 +
                                                             </button>
@@ -367,14 +455,32 @@ export default function SalonServicesSection({ serviceData }) {
                                                         key={i}
                                                         className="flex justify-between items-center px-4 py-2 hover:bg-[#E7DCCC]"
                                                     >
-                                                        <span>{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                                        <span>{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                                         <div className="flex items-center gap-3">
                                                             <span className="text-sm font-medium">
                                                                 ₹{item.price}
                                                             </span>
+                                                            {isCurrentItemInCart(item) && (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => decreaseQuantity(item)} // Assumed function to decrease quantity
+                                                                        className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                    >
+                                                                        -
+                                                                    </button>
+                                                                    <span className="font-semibold text-base">
+                                                                        {getCartItemQuantity(item)}
+                                                                    </span>
+                                                                </>
+                                                            )}
                                                             <button
                                                                 onClick={() => addToCart(item)}
-                                                                className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                disabled={!isCartEmpty && !isCurrentItemInCart(item)} // Logic for disabling
+                                                                className={`font-bold p-1 border rounded-full w-6 h-6 flex items-center justify-center transition 
+                                                                    ${(!isCartEmpty && !isCurrentItemInCart(item))
+                                                                        ? 'text-gray-400 border-gray-400 bg-gray-100 cursor-not-allowed'
+                                                                        : 'text-[#5F3F31] border-[#5F3F31] hover:bg-[#CBAA87] hover:text-white'
+                                                                    }`}
                                                             >
                                                                 +
                                                             </button>
@@ -403,7 +509,7 @@ export default function SalonServicesSection({ serviceData }) {
                                         key={i}
                                         className="flex justify-between items-center text-sm border-b border-[#E7DCCC] pb-2"
                                     >
-                                        <span className="w-1/2 font-medium text-[#5F3F31]">{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                        <span className="w-1/2 font-medium text-[#5F3F31]">{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                         <div className="flex items-center gap-3">
                                             <div className="flex items-center gap-1 border border-[#CBAA87] rounded">
                                                 <button
@@ -474,25 +580,106 @@ export default function SalonServicesSection({ serviceData }) {
 
                             {/* Service Info (Replace with actual selected item or cart summary) */}
                             {cart.length > 0 && (
-                              <div className="mb-4 space-y-2 max-h-40 overflow-y-auto pr-2"> {/* Scrollable area for services */}
-                                  {cart.map((item, index) => (
-                                      <div key={index} className="flex justify-between items-start bg-transparent text-[#F6EFE4] leading-relaxed border-b border-[#F6EFE4]/20 pb-1">
-                                          <span className="font-medium text-sm">
-                                              {item.name} ({item.atHome == true ? 'At home' : "At salon"}) x {item.qty}
-                                          </span>
-                                          <div className="flex items-center gap-2">
-                                              <span className="text-sm font-semibold">
-                                                  ₹{item.price * item.qty}
-                                              </span>
-                                              <span className="ml-2 text-[11px] bg-[#F6EFE4] text-[#5C6B63] px-2 py-[1px] rounded-md font-semibold whitespace-nowrap">
-                                                  {/* Gender identification logic - simplified */}
-                                                  {item.name.includes('Girls') || item.name.includes('Female') || femaleServices.some(c => c.items.some(i => i.name === item.name)) ? 'Female' : 'Male'}
-                                              </span>
-                                          </div>
-                                      </div>
-                                  ))}
-                              </div>
-                          )}
+                                <div className="mb-4 space-y-2 max-h-40 overflow-y-auto pr-2">
+                                    {Object.keys(groupedCart).map((location) => {
+                                        // location 'home' या 'salon' होगा
+                                        const isHome = location === 'home';
+                                        const bookingState = isHome ? homeBooking : salonBooking;
+
+                                        const subtotal = groupedCart[location].items.reduce((total, item) => {
+                                            const price = parseFloat(item.price || 0);
+                                            const qty = parseInt(item.qty || 1, 10);
+                                            return total + (price * qty);
+                                        }, 0);
+
+                                        // 💡 नया हैंडलर: बुकिंग टाइप को अपडेट करने के लिए
+                                        const handleBookingTypeChange = (e) => {
+                                            const newType = e.target.value;
+                                            if (isHome) {
+                                                setHomeBooking(prev => ({ ...prev, bookingType: newType }));
+                                            } else {
+                                                setSalonBooking(prev => ({ ...prev, bookingType: newType }));
+                                            }
+                                        };
+
+                                        return (
+                                            <div key={location} className="my-4 p-4 border rounded-lg bg-white shadow-sm">
+                                                <h3 className="capitalize text-lg font-semibold mb-3 text-[#5F3F31]">
+                                                    {location} Services
+                                                </h3>
+
+                                                {/* 💡 1. बुकिंग टाइप सेलेक्शन ड्रॉपडाउन */}
+                                                <div className="mb-4">
+                                                    <label 
+                                                        htmlFor={`bookingType-${location}`} 
+                                                        className="block text-sm font-medium text-[#5F3F31] mb-1"
+                                                    >
+                                                        Select Booking Type for {location}:
+                                                    </label>
+                                                    <select
+                                                        id={`bookingType-${location}`}
+                                                        value={bookingState.bookingType || ''} // State से वैल्यू लें
+                                                        onChange={handleBookingTypeChange} // नया हैंडलर
+                                                        className="w-full p-2 border border-[#C9BFAF] rounded-md bg-white text-[#5C5C5C] focus:ring-[#5F3F31] focus:border-[#5F3F31] transition"
+                                                    >
+                                                        <option value="" disabled>Choose an option</option>
+                                                        <option value="pre">Pre-booking</option>
+                                                        <option value="urgent">Urgent Booking</option>
+                                                    </select>
+                                                    {/* 💡 Note: आप यहां एक शर्त (condition) जोड़ सकते हैं कि यदि 'urgent' चुना गया है तो क्या करना है। */}
+                                                </div>
+                                                
+                                                {/* Display and Edit Date/Time */}
+                                                <div className="flex justify-between items-center bg-[#E7DCCC] p-3 rounded-lg mb-4">
+                                                    <p className="text-[#5C5C5C] font-medium">
+                                                        {/* 💡 2. बुकिंग टाइप डिस्प्ले जोड़ें */}
+                                                        <span className="capitalize">{bookingState.bookingType }</span> <br/>
+                                                        {bookingState.date || "Select Date"} / {bookingState.time || "Select Time"}
+                                                    </p>
+                                                    <button
+                                                        onClick={() => {
+                                                            setCurrentGroup(location); // 'home' या 'salon' सेट करें
+                                                        }}
+                                                        className="bg-[#5F3F31] text-white px-3 py-1 rounded-md text-sm hover:bg-[#70513D] transition"
+                                                    >
+                                                        Edit Date & Time
+                                                    </button>
+                                                </div>
+
+                                                {/* Items List for this group (No change needed here) */}
+                                                <ul className="divide-y divide-[#E9E3D9]">
+                                                    {groupedCart[location].items.map((item, index) => (
+                                                        <li 
+                                                            key={index} 
+                                                            className="flex justify-between items-center py-2 text-[#5C5C5C] text-sm"
+                                                        >
+                                                            <span>
+                                                                {item.name} - ₹{item.price}
+                                                                <span className="text-xs text-gray-500 ml-2">x {item.qty}</span>
+                                                            </span>
+                                                            
+                                                            <span className="font-medium">
+                                                            ₹{(parseFloat(item.price || 0) * parseInt(item.qty || 1, 10)).toFixed(2)}
+                                                            </span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                                
+                                                {/* Subtotal Display (Rupee symbol correction) */}
+                                                <div className="mt-4 pt-3 border-t border-[#d1c7b9] flex justify-between items-center">
+                                                    <h4 className="text-base font-bold text-[#5F3F31]">
+                                                        {location} Subtotal:
+                                                    </h4>
+                                                    <span className="text-lg font-extrabold text-[#5F3F31]">
+                                                        {/* 💡 Subtotal में ₹ का उपयोग करें */}
+                                                        ₹{subtotal.toFixed(2)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
 
                             {/* Price + Duration (Placeholder) */}
                             <div className="flex items-center gap-5 text-[#F6EFE4] mb-2">
@@ -512,30 +699,7 @@ export default function SalonServicesSection({ serviceData }) {
                                     Approx. 45min (Placeholder)
                                 </div>
                                 
-                            </div>
-                           
-                            {/* Date Section */}
-                            <div
-                                onClick={() => setIsDateModalOpen(true)}
-                                className="flex items-center text-[#F6EFE4] text-[15px] mb-5 cursor-pointer hover:opacity-80 transition"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.6}
-                                    stroke="currentColor"
-                                    className="w-5 h-5 mr-2"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M8 7V3m8 4V3m-9 8h10m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
-                                    />
-                                </svg>
-                                {selectedDate} & {selectedTime}
-                            </div>
-                            
+                            </div>                     
                             {/* --- ADD ADDRESS BUTTON & DISPLAY --- */}
                             <div className="flex items-center gap-5 text-[#F6EFE4] mb-2">
                                 <div className="flex items-center text-sm opacity-80">
@@ -575,12 +739,12 @@ export default function SalonServicesSection({ serviceData }) {
                             </div>
                             {/* --- END ADDRESS BUTTON & DISPLAY --- */}
                             {/* Date Selection Modal */}
-                            {isDateModalOpen && (
+                            {currentGroup && (
                                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
                                     <div className="bg-[#E9E3D9] rounded-2xl shadow-2xl w-full max-w-3xl px-[10px] py-[21px] relative">
                                         {/* Close Button */}
                                         <button
-                                            onClick={() => setIsDateModalOpen(false)}
+                                            onClick={() => setCurrentGroup(null)}
                                             className="absolute top-3 right-4 text-[#5C6B63] hover:text-black transition"
                                         >
                                             <X size={22} />
@@ -619,9 +783,11 @@ export default function SalonServicesSection({ serviceData }) {
                                                     {/* Actual Days */}
                                                     {Array.from({ length: daysInMonth }).map((_, i) => {
                                                         const day = i + 1;
-                                                        const isSelected = selectedDate === `${(currentMonth + 1)
-                                                            .toString()
-                                                            .padStart(2, "0")}/${day.toString().padStart(2, "0")}/${currentYear}`;
+                                                        const formattedDate = `${(currentMonth + 1).toString()
+                                                        .padStart(2, "0")}/${day.toString().padStart(2, "0")}/${currentYear}`;
+                                                        const isSelected = currentGroup === 'home'
+                                                            ? homeBooking.date === formattedDate
+                                                            : salonBooking.date === formattedDate;
 
                                                         return (
                                                             <div
@@ -648,13 +814,20 @@ export default function SalonServicesSection({ serviceData }) {
 
                                                 <div className="grid grid-cols-3 gap-3">
                                                     {timeSlots.map((slot) => (
+                                                        console.log("currect group in slot:", currentGroup),
                                                         <button
                                                             key={slot}
-                                                            onClick={() => setSelectedTime(slot)}
-                                                            className={`py-2 rounded-md text-sm font-medium border transition-all duration-200 ${selectedTime === slot
-                                                                ? "bg-[#5F3F31] text-white border-[#70513D]"
-                                                                : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
-                                                                }`}
+                                                            onClick={() => {
+                                                                if (currentGroup === 'home') {
+                                                                    setHomeBooking(prev => ({ ...prev, time: slot }));
+                                                                } else if (currentGroup === 'salon') {
+                                                                    setSalonBooking(prev => ({ ...prev, time: slot }));
+                                                                }
+                                                            }}
+                                                            className={`py-2 rounded-md text-sm font-medium border transition-all duration-200 ${currentGroup === 'home' 
+                                                                ? homeBooking.time === slot ? "bg-[#5F3F31] text-white border-[#70513D]" : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
+                                                                : salonBooking.time === slot ? "bg-[#5F3F31] text-white border-[#70513D]" : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]" 
+                                                            }`}
                                                         >
                                                             {slot}
                                                         </button>
@@ -666,16 +839,15 @@ export default function SalonServicesSection({ serviceData }) {
                                 </div>
                             )}
 
-                            {/* Add More Services */}
+                            {/* Add More Services add serv */}
                             <div className="flex justify-center">
                                 <button
                                     onClick={() => setIsBookingModalOpen(false)} // Close modal to add more from main list
                                     className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6"
                                 >
                                     + Add More Services
-                                </button>
-                                
-                            </div>
+                                </button>                               
+                            </div>                       
                             
 
                             {/* White Box - Price Summary */}
@@ -707,7 +879,7 @@ export default function SalonServicesSection({ serviceData }) {
                     </div>
                 </div>
             )}
-            <AddressModal 
+            <AddressModal
                 isOpen={isAddressModalOpen}
                 onClose={() => setIsAddressModalOpen(false)}
                 onSubmit={handleAddressSubmit}

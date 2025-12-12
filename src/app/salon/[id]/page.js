@@ -1,12 +1,9 @@
-// File: ./src/app/salon/[id]/page.js
-
 "use client"; 
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import TopStylish from "../../../../components/TopStylish";
 import Image from "next/image";
-import FreelancerServicesSection from "../../../../components/freelancerservices";
 import SalonServicesSection from "../../../../components/salonservies"
 import Testimonial from "../../../../components/Testimonial";
 import axiosInstance from "../../axios/axiosinstance";
@@ -23,8 +20,7 @@ export default function SalonDetailPage() {
     const id = params.id; 
     // --- Data Fetching Logic ---
     useEffect(() => {
-        if (!id) return; // ID available hone par hi fetch karein
-
+        if (!id) return;
         const fetchSalonData = async () => {
             try {
                 // API Call
