@@ -18,7 +18,11 @@
     "react-dom": "19.2.0",
     "react-hot-toast": "^2.6.0",
     "react-icons": "^5.5.0",
+<<<<<<< HEAD
+    "react-toastify": "^11.0.5",
+=======
     "react-router-dom": "^7.10.1",
+>>>>>>> 2b22e862c2fc6446c896c610711d4f3f39f63865
     "slugify": "^1.6.6",
     "swiper": "^12.0.3"
   },
