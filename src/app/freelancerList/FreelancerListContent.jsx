@@ -1417,12 +1417,10 @@ export default function FreelancerList() {
                                     </div>
 
                                     {/* Book Now full-width button area */}
-                                    <button
-                                        onClick={() => setIsBookingModalOpen(true)}
-                                        className="bg-[#617772] w-full text-[#F6EFE4] font-medium py-8 border-t border-white/30 flex flex-col justify-center items-center text-lg hover:bg-[#3e5149] transition-all duration-300"
-                                    >
-                                        <span>Book Now</span>
-
+                                    
+                                        <Link href={`/freelancerprofile/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
+                                            <span>Book Now</span>
+                                        
                                         {/* Long Thin Arrow SVG */}
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -1432,7 +1430,7 @@ export default function FreelancerList() {
                                             <line x1="0" y1="5" x2="60" y2="5" />  {/* Horizontal line */}
                                             <polyline points="50,0 60,5 50,10" /> {/* Arrow head */}
                                         </svg>
-                                    </button>
+                                        </Link>
                                 </div>
                             </div>
 
