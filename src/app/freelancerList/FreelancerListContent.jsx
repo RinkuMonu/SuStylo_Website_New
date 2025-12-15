@@ -1382,7 +1382,7 @@ export default function FreelancerList() {
                             <div className="flex flex-col sm:flex-row">
                                 {/* Left: Image */}
                                 <div className="relative w-full h-64 sm:h-auto">
-                                    <Link href={`/freelancer/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
+                                    <Link href={`/freelancerprofile/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
                                         <Image
                                             src={freelancer.image}
                                             alt={freelancer.name}

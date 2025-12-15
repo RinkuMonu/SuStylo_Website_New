@@ -87,7 +87,7 @@ function page() {
       </section>
 
       <div className="container mx-auto max-w-7xl lg:px-16 px-4 sm:px-10 md:px-14">
-        <FreelancerServicesSection />
+       
 
       </div>
       <WorkGallery />
