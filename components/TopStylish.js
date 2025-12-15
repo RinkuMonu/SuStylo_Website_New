@@ -11,13 +11,13 @@ const stylists = [
     { src: "/Salon/6.png", name: "SAMIRA KHAN", role: "Hairdresser" },
 ];
 
-export default function TopStylish() {
+export default function TopStylish({staffData}) {
     return (
         <>
             <section className='mt-8'>
                 <h3 className='text-2xl sm:text-[28px] font-semibold decoration-[#363333]'><i className='font-normal'>Meet our </i>Top Stylist</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 my-5 mx-auto ">
-                    {stylists.map((stylist, idx) => (
+                    {staffData.map((stylist, idx) => (
                         <div key={idx} className='bg-transparent rounded-[14px] flex flex-col border-[#CBAA87] border items-center overflow-hidden '>
                             <div
                                 className="
@@ -33,7 +33,7 @@ export default function TopStylish() {
                             "
                             >
                                 <Image
-                                    src={stylist.src}
+                                    src={stylist.avatarUrl}
                                     alt={stylist.name}
                                     fill
                                     className="object-cover"
@@ -45,7 +45,7 @@ export default function TopStylish() {
                                     {stylist.name}
                                 </p>
                                 <small className='text-[12px] text-[#5F3F31]'>
-                                    {stylist.role}
+                                    {stylist.role || "Stylist"}
                                 </small>
                             </div>
                         </div>

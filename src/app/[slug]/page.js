@@ -7,6 +7,9 @@ import axiosInstance from "../axios/axiosinstance"; // Adjust import path
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import axiosInstance from "../axios/axiosinstance";
+import BlogCards from "../../../components/BlogCards";
 
 export default function BlogDetail() {
   const params = useParams();

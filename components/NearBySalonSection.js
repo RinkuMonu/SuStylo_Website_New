@@ -90,7 +90,7 @@ export default function NearBySalonSection() {
           NEAR BY SALON
         </h2>
         <Link
-          href="/salons"
+          href="/salonList"
           className="px-5 py-2 bg-[#536764] text-white text-sm rounded-lg font-medium shadow transition hover:bg-[#6e8782]"
         >
           View more

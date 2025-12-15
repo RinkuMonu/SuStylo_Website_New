@@ -671,7 +671,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Search, MapPin, SlidersHorizontal, Home, X, Funnel, ArrowRight, ChevronDown } from "lucide-react";
-import axiosInstance from "../src/app/axios/axiosinstance";
+import axiosInstance from "../axios/axiosinstance";
 
 export default function FreelancerList() {
     const searchParams = useSearchParams();
@@ -699,6 +699,7 @@ export default function FreelancerList() {
         location: null,
         radius: 2000 // Default radius in meters
     });
+    
     
 
     // Get parameters from URL
@@ -1381,7 +1382,7 @@ export default function FreelancerList() {
                             <div className="flex flex-col sm:flex-row">
                                 {/* Left: Image */}
                                 <div className="relative w-full h-64 sm:h-auto">
-                                    <Link href={`/freelancer/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
+                                    <Link href={`/freelancerprofile/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
                                         <Image
                                             src={freelancer.image}
                                             alt={freelancer.name}

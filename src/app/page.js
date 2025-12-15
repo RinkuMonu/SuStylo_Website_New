@@ -243,7 +243,7 @@ export default function Home() {
     try {
       setLoading(true);
       const response = await axiosInstance.get(`/search?query=${encodeURIComponent(searchQuery)}`);
-      
+
       if (response.data.success) {
         setSearchResults(response.data.results);
         setShowResults(true);
@@ -260,7 +260,7 @@ export default function Home() {
   const handleResultClick = (type, item) => {
     setShowResults(false);
     setSearchQuery("");
-    
+
     if (type === 'service') {
       // Navigate to salon list with service filter
       const slug = item.name.toLowerCase().replace(/'/g, '').replace(/\s+/g, '-');
@@ -283,7 +283,7 @@ export default function Home() {
         setShowResults(false);
       }
     };
-    
+
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, [showResults]);
@@ -316,14 +316,16 @@ export default function Home() {
       },
     ],
     "Manicure & Pedicure": [
-      { title: "Manicure", 
-        imgUrl: "/Home/manicure1.png", 
-        duration: "0.45hr" ,
+      {
+        title: "Manicure",
+        imgUrl: "/Home/manicure1.png",
+        duration: "0.45hr",
         link: "/services/manicure",
       },
-      { title: "Pedicure", 
-        imgUrl: "/Home/pedicure1.png", 
-        duration: "0.45hr" ,
+      {
+        title: "Pedicure",
+        imgUrl: "/Home/pedicure1.png",
+        duration: "0.45hr",
         link: "/services/pedicure",
       },
     ],
@@ -352,9 +354,10 @@ export default function Home() {
       },
     ],
     "Hair spa": [
-      { title: "Hair Spa", 
-        imgUrl: "/Home/manicure1.png", 
-        duration: "1.00hr" ,
+      {
+        title: "Hair Spa",
+        imgUrl: "/Home/manicure1.png",
+        duration: "1.00hr",
         link: "/services/hair-spa",
       },
     ],
@@ -445,7 +448,7 @@ export default function Home() {
           <h1 className="text-white text-[40px] sm:text-[60px] md:text-[80px] lg:text-[96px] leading-tight  drop-shadow-lg">
             Glow <br /> Beyond Limits
           </h1>
-          
+
           {/* Search Bar with Results Dropdown - FIXED POSITION */}
           <div className="search-container relative w-[80%] lg:w-full max-w-md sm:max-w-xl mt-auto mb-4 sm:mb-6">
             <div className="bg-[#CBAA87] p-2 sm:p-3 rounded-xl flex items-center justify-center gap-2 sm:gap-3 shadow-lg mt-10">
@@ -463,7 +466,7 @@ export default function Home() {
                   size={18}
                 />
               </div>
-              <button 
+              <button
                 onClick={handleSearch}
                 disabled={loading}
                 className="bg-white p-2 sm:p-4 rounded-xl text-base sm:text-xl font-medium text-[#8B8B8B] hover:bg-[#e9e3d9] transition disabled:opacity-50 disabled:cursor-not-allowed"
@@ -555,12 +558,12 @@ export default function Home() {
 
                 {/* No Results */}
                 {(!searchResults.services || searchResults.services.length === 0) &&
-                 (!searchResults.salons || searchResults.salons.length === 0) &&
-                 (!searchResults.freelancers || searchResults.freelancers.length === 0) && (
-                  <div className="p-4 text-center text-gray-500">
-                    No results found for "{searchQuery}"
-                  </div>
-                )}
+                  (!searchResults.salons || searchResults.salons.length === 0) &&
+                  (!searchResults.freelancers || searchResults.freelancers.length === 0) && (
+                    <div className="p-4 text-center text-gray-500">
+                      No results found for "{searchQuery}"
+                    </div>
+                  )}
 
                 {/* Close Button */}
                 <div className="p-3 border-t border-gray-100">
@@ -576,20 +579,35 @@ export default function Home() {
           </div>
         </div>
       </section>
-      
+
       <div className="container mx-auto max-w-7xl lg:px-16 px-4 sm:px-10 md:px-14">
         <Homeservices />
-        <ServiceSection
+        {/* <ServiceSection
           title="SERVICES AT HOME"
           tabContent={homeTabContent}
-          viewMoreUrl="/services"
+          viewMoreUrl="/allservices"
         />
         <ServiceSection
           title="SERVICES AT SALON"
           tabContent={salonTabContent}
-          viewMoreUrl="/services"
+          viewMoreUrl="/allservices"
+        /> */}
+
+
+        <ServiceSection
+          title="SERVICES AT HOME"
+          serviceType="home" // This will fetch atHome=true services
+          viewMoreUrl="/allservices"
         />
-        <HomeFreelancer />  
+
+        <ServiceSection
+          title="SERVICES AT SALON"
+          serviceType="salon" // This will fetch atHome=false services
+          viewMoreUrl="/allservices"
+        />
+
+
+        <HomeFreelancer />
         <NearBySalonSection />
       </div>
       <PopularSalon />
