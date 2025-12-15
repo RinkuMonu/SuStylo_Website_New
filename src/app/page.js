@@ -606,7 +606,6 @@ export default function Home() {
           viewMoreUrl="/allservices"
         />
 
-
         <HomeFreelancer />
         <NearBySalonSection />
       </div>
