@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 
 import LoginModal from '../components/modals/LoginModal';
 import AuthModalManager from "../components/modals/AuthModalManager";
-
+//h
 
 export default function Header() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);

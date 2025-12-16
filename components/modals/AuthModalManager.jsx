@@ -6,7 +6,7 @@ import ForgetPasswordModal from "./ForgetPasswordModal";
 import OTPModal from "./OTPModal";
 import ResetPasswordModal from "./ResetPasswordModal";
 import SuccessModal from "./SuccessModal";
-
+//h
 export default function AuthModalManager({ isOpen, onClose }) {
   const [currentModal, setCurrentModal] = useState("login");
   console.log(isOpen);
