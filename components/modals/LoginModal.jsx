@@ -143,6 +143,7 @@ const handleSubmit = async (e) => {
 
       // 🔥 show toast FIRST
       toast.success("Login successful!");
+       window.location.href = "/";
 
       // ⏳ then close the modal AFTER a tiny delay
       setTimeout(() => {
@@ -254,7 +255,7 @@ const handleSubmit = async (e) => {
             </button>
           </form>
 
-          <div className="my-4 flex items-center justify-center text-xs text-[#F6EFE4]/80">
+          {/* <div className="my-4 flex items-center justify-center text-xs text-[#F6EFE4]/80">
             <span className="w-1/4 h-px bg-[#F6EFE4]/30 mr-2" /> or continue with{" "}
             <span className="w-1/4 h-px bg-[#F6EFE4]/30 ml-2" />
           </div>
@@ -269,7 +270,7 @@ const handleSubmit = async (e) => {
             <div className="bg-white w-9 h-9 rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition">
               <FaApple className="text-black text-lg" />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

@@ -241,8 +241,9 @@ export default function HomeFreelancer() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                         {freelancers.map((freelancer, idx) => (
                             <Link 
-                                href={`/freelancerList${freelancer.id ? `?freelancer=${freelancer.id}` : ''}`} 
-                                key={freelancer.id || idx} 
+                                // href={`/freelancerList${freelancer.id ? `?freelancer=${freelancer.id}` : ''}`} 
+                                href={`/freelancerprofile/${freelancer.id}`} 
+                                key={freelancer.id || idx}
                                 className="rounded-2xl relative overflow-hidden flex flex-col items-center hover:transform hover:scale-[1.02] transition-transform duration-300"
                             >
                                 <div className="w-64 relative h-44 rounded-2xl overflow-hidden">
