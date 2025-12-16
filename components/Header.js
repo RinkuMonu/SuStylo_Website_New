@@ -10,12 +10,12 @@ import AuthModalManager from "../components/modals/AuthModalManager";
 
 
 export default function Header() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token); // true / false
   }, []);
- 
+
 
 
   const [open, setOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function Header() {
   // const [openLogin, setOpenLogin] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
- 
+
   const pathname = usePathname();
   const isHome = pathname === '/';
 
@@ -52,7 +52,7 @@ export default function Header() {
               Logo Here
             </div>
           </div>
-          
+
 
           {/* Hamburger Button (Mobile Only) */}
           <button
@@ -79,17 +79,17 @@ export default function Header() {
               LOGIN
             </Link> */}
 
-                 {isLoggedIn ? (
-          <Link href="/profile" className="text-stone-300 font-light text-[12px] hover:text-white" >
-            PROFILE
-          </Link>
-        ) : (
-          <Link href="#" onClick={() => setShowModal(true)} className="text-stone-300 font-light text-[12px] hover:text-white" >
-            LOGIN
-          </Link>
-        )}
+            {isLoggedIn ? (
+              <Link href="/profile" className="text-stone-300 font-light text-[12px] hover:text-white" >
+                PROFILE
+              </Link>
+            ) : (
+              <Link href="#" onClick={() => setShowModal(true)} className="text-stone-300 font-light text-[12px] hover:text-white" >
+                LOGIN
+              </Link>
+            )}
 
-            <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} />
+            {/* <FaShoppingCart className="text-[#CBAA87] mx-2" size={16} /> */}
             {/* <FaUser className="text-[#CBAA87] mx-2" size={16} /> */}
             <div className="lg:pr-10">
               <Link href="/salonList" className="px-7 py-2 text-[12px] rounded-full bg-[#9D9C9A] text-white font-medium shadow transition">

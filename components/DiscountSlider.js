@@ -457,7 +457,7 @@ export default function DiscountSlider() {
                             </div>
                             <p className={`flex justify-center mt-2 items-center gap-2 ${offer.text}`}>
                                 {offer.coupon}
-                                <span
+                                {/* <span
                                     onClick={() => handleCopy(offer.coupon, idx)}
                                     className="cursor-pointer text-lg hover:opacity-80 transition-opacity"
                                     title="Copy coupon code"
@@ -467,7 +467,9 @@ export default function DiscountSlider() {
                                     ) : (
                                         <IoCopyOutline />
                                     )}
-                                </span>
+                                </span> */}
+
+                                
                                 {/* {offer.usageLimit && offer.usedCount !== undefined && (
                                     <span className="text-xs text-gray-500 ml-2">
                                         ({offer.usedCount}/{offer.usageLimit} used)

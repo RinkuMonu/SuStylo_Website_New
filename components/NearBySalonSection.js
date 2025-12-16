@@ -11,6 +11,8 @@ export default function NearBySalonSection() {
   const [salons, setSalons] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  console.log("fsfsfsdf", salons);
+
   useEffect(() => {
     const fetchNearby = async () => {
       try {
@@ -51,11 +53,12 @@ export default function NearBySalonSection() {
         // 👉 2. Fetch nearby salons
         // -----------------------------
         const res = await axiosInstance.get("/salons", {
-          params: { lat, lng, radius: 3000 },
+          params: { lat, lng, radius: 9000 },
         });
 
         if (res?.data?.success) {
           const cleaned = (res.data.salons || []).map((s) => ({
+              _id: s._id,
             imgUrl:
               s.photos?.[0] ||
               s.services?.[0]?.image ||
@@ -104,29 +107,37 @@ export default function NearBySalonSection() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-8 mx-auto">
           {salons.map((salon, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-[48px] flex flex-col border-[#CBAA87] border items-center overflow-hidden lg:w-max"
-            >
-              <div className="relative w-full h-36 sm:h-44 md:h-48 lg:w-56 lg:h-52 rounded-t-[28px] overflow-hidden">
-                <Image
-                  src={salon.imgUrl}
-                  alt={salon.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
 
-              <div className="my-3 text-center">
-                <div className="text-[16px] font-serif font-semibold text-[#363333]">
-                  {salon.name}
+            <Link
+              key={idx}
+              href={`/salon/${salon._id}`}
+              className="block"
+            >
+
+              <div
+                key={idx}
+                className="bg-white rounded-[48px] flex flex-col border-[#CBAA87] border items-center overflow-hidden lg:w-max"
+              >
+                <div className="relative w-full h-36 sm:h-44 md:h-48 lg:w-56 lg:h-52 rounded-t-[28px] overflow-hidden">
+                  <Image
+                    src={salon.imgUrl}
+                    alt={salon.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <div className="flex items-center justify-center gap-2 text-[#697070] text-base mt-1 font-serif">
-                  <FaMapMarkerAlt className="text-[#697070] w-[14px]" />
-                  {salon.subtitle}
+
+                <div className="my-3 text-center">
+                  <div className="text-[16px] font-serif font-semibold text-[#363333]">
+                    {salon.name}
+                  </div>
+                  <div className="flex items-center justify-center gap-2 text-[#697070] text-base mt-1 font-serif">
+                    <FaMapMarkerAlt className="text-[#697070] w-[14px]" />
+                    {salon.subtitle}
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
@@ -179,14 +190,14 @@ export default function NearBySalonSection() {
 //           <div key={idx} className="bg-white rounded-[48px] flex flex-col border-[#CBAA87] border items-center overflow-hidden lg:w-max">
 //             <div
 //               className="
-//                 relative 
-//                 w-full            
-//                 h-36                  
-//                 sm:h-44              
-//                 md:h-48             
-//                 lg:w-56               
-//                 lg:h-52               
-//                 rounded-t-[28px] 
+//                 relative
+//                 w-full
+//                 h-36
+//                 sm:h-44
+//                 md:h-48
+//                 lg:w-56
+//                 lg:h-52
+//                 rounded-t-[28px]
 //                 overflow-hidden
 //               "
 //             >

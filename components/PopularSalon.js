@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import Link from "next/link";
 import axiosInstance from "../src/app/axios/axiosinstance";
 
 export default function PopularSalon() {
@@ -58,33 +59,36 @@ export default function PopularSalon() {
 
           {/* Right featured card */}
           <div className="md:w-[70%] w-full">
-            <div className="rounded-[30px] overflow-hidden bg-white shadow-xl border border-[#B1B1B1]">
-              <div className="relative w-full h-40 sm:h-56 md:h-80">
-                <Image
-                  // if no coverImage from API, fallback to your static
-                  src={
-                    mainSalon?.coverImage
-                      ? mainSalon.coverImage
-                      : "/Home/popular.png"
-                  }
-                  alt={mainSalon?.salonName || "Salon Image"}
-                  fill
-                  className="object-cover w-full h-full rounded-b-2xl"
-                  sizes="(max-width: 768px) 100vw, 700px"
-                />
-              </div>
-
-              <div className="px-4 sm:px-7 py-4">
-                <div className="text-[18px] sm:text-[20px] font-semibold text-[#1c1b1b]">
-                  {mainSalon?.salonName || "—"}
+            <Link href={`/salon/${mainSalon?._id || ""}`} className="block">
+              <div className="rounded-[30px] overflow-hidden bg-white shadow-xl border border-[#B1B1B1]">
+                <div className="relative w-full h-40 sm:h-56 md:h-80">
+                  <Image
+                    // if no coverImage from API, fallback to your static
+                    src={
+                      mainSalon?.coverImage
+                        ? mainSalon.coverImage
+                        : "/Home/popular.png"
+                    }
+                    alt={mainSalon?.salonName || "Salon Image"}
+                    fill
+                    className="object-cover w-full h-full rounded-b-2xl"
+                    sizes="(max-width: 768px) 100vw, 700px"
+                  />
                 </div>
 
-                <div className="flex items-center gap-2 text-[#697070] text-base mt-1">
-                  <FaMapMarkerAlt className="text-[#697070] w-[18px]" />
-                  {getAddressLine(mainSalon) || "—"}
+                <div className="px-4 sm:px-7 py-4">
+                  <div className="text-[18px] sm:text-[20px] font-semibold text-[#1c1b1b]">
+                    {mainSalon?.salonName || "—"}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-[#697070] text-base mt-1">
+                    <FaMapMarkerAlt className="text-[#697070] w-[18px]" />
+                    {getAddressLine(mainSalon) || "—"}
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
+
           </div>
         </div>
       </section>
@@ -93,35 +97,42 @@ export default function PopularSalon() {
       <section className="max-w-7xl mx-auto pb-5 px-14">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-8">
           {otherSalons.map((salon, idx) => (
-            <div
+            <Link
               key={salon?._id || idx}
-              className="rounded-[30px] overflow-hidden bg-white border border-[#B1B1B1] w-full h-full flex flex-col shadow-xl"
+              href={`/salon/${salon?._id}`}
+              className="block"
             >
-              <div className="relative w-full h-40 sm:h-44 md:h-52">
-                <Image
-                  src={
-                    salon?.coverImage
-                      ? salon.coverImage
-                      : "/Home/popular2.png" // fallback
-                  }
-                  alt={salon?.salonName || "Salon"}
-                  fill
-                  className="object-cover rounded-b-2xl"
-                  sizes="(max-width: 768px) 100vw, 350px"
-                />
-              </div>
-
-              <div className="px-4 sm:px-7 py-4 flex flex-col flex-1">
-                <div className="text-[16px] sm:text-[20px] font-semibold text-[#1c1b1b]">
-                  {salon?.salonName || "—"}
+              <div
+                key={salon?._id || idx}
+                className="rounded-[30px] overflow-hidden bg-white border border-[#B1B1B1] w-full h-full flex flex-col shadow-xl"
+              >
+                <div className="relative w-full h-40 sm:h-44 md:h-52">
+                  <Image
+                    src={
+                      salon?.coverImage
+                        ? salon.coverImage
+                        : "/Home/popular2.png" // fallback
+                    }
+                    alt={salon?.salonName || "Salon"}
+                    fill
+                    className="object-cover rounded-b-2xl"
+                    sizes="(max-width: 768px) 100vw, 350px"
+                  />
                 </div>
 
-                <div className="flex items-center gap-2 text-[#697070] text-base mt-1">
-                  <FaMapMarkerAlt className="text-[#697070] w-[18px]" />
-                  {getAddressLine(salon) || "—"}
+                <div className="px-4 sm:px-7 py-4 flex flex-col flex-1">
+                  <div className="text-[16px] sm:text-[20px] font-semibold text-[#1c1b1b]">
+                    {salon?.salonName || "—"}
+                  </div>
+
+                  <div className="flex items-center gap-2 text-[#697070] text-base mt-1">
+                    <FaMapMarkerAlt className="text-[#697070] w-[18px]" />
+                    {getAddressLine(salon) || "—"}
+                  </div>
                 </div>
               </div>
-            </div>
+
+            </Link>
           ))}
 
           {/* If we only got 1 salon from API, no others -> we show nothing extra */}

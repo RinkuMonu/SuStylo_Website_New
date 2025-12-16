@@ -13,7 +13,7 @@
 // export default nextConfig;
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // output: 'export',
+  output: 'export',
   trailingSlash: true,
 
   images: {

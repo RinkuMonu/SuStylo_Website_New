@@ -484,20 +484,28 @@
 
 
 
+//=============================
+
+
 
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { FaUser, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { FaUser, FaMapMarkerAlt, FaClock, FaWallet } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import axiosInstance from "../axios/axiosinstance";
 
 export default function AccountPage() {
-  const [activeSection, setActiveSection] = useState("profile");
+ const [activeSection, setActiveSection] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [profileData, setProfileData] = useState(null);
+  const [walletData, setWalletData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [walletLoading, setWalletLoading] = useState(false);
+  const [addBalanceModal, setAddBalanceModal] = useState(false);
+  const [addAmount, setAddAmount] = useState("");
+  const [addDescription, setAddDescription] = useState("Customer added balance");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -526,6 +534,10 @@ export default function AccountPage() {
         if (customer.avatarUrl) {
           setAvatarPreview(customer.avatarUrl);
         }
+        
+        
+        await fetchWalletData(customer._id);
+
       }
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -534,9 +546,55 @@ export default function AccountPage() {
     }
   };
 
+
+
+    // Fetch wallet data
+  const fetchWalletData = async (userId) => {
+    try {
+      setWalletLoading(true);
+      const response = await axiosInstance.get(`/wallet/${userId}`);
+      if (response.data.success) {
+        setWalletData(response.data.wallet);
+      }
+    } catch (error) {
+      console.error("Error fetching wallet:", error);
+    } finally {
+      setWalletLoading(false);
+    }
+  };
+
+  // Add balance to wallet
+  const handleAddBalance = async (e) => {
+    e.preventDefault();
+    if (!addAmount || isNaN(addAmount) || parseFloat(addAmount) <= 0) {
+      alert("Please enter a valid amount");
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post("/wallet/add", {
+        ownerId: profileData._id,
+        ownerModel: "User",
+        amount: parseFloat(addAmount),
+        description: addDescription
+      });
+
+      if (response.data.success) {
+        setWalletData(response.data.wallet);
+        setAddBalanceModal(false);
+        setAddAmount("");
+        alert("Balance added successfully!");
+      }
+    } catch (error) {
+      console.error("Error adding balance:", error);
+      alert("Failed to add balance. Please try again.");
+    }
+  };
+
   useEffect(() => {
     fetchProfileData();
   }, []);
+
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -562,7 +620,7 @@ export default function AccountPage() {
     e.preventDefault();
     try {
       const formDataToSend = new FormData();
-      
+
       // Append form fields
       Object.keys(formData).forEach(key => {
         if (formData[key]) {
@@ -617,6 +675,17 @@ export default function AccountPage() {
     setIsEditing(false);
   };
 
+  const handleLogout = () => {
+    // Remove auth data
+    localStorage.removeItem("token");
+    localStorage.removeItem("userLat");
+    localStorage.removeItem("userLng");
+
+    // Redirect to home
+    window.location.href = "/"; // ya "/"
+  };
+
+
   if (loading) {
     return (
       <div className="bg-[#F6EFE4] font-serif py-[85px] min-h-screen flex items-center justify-center">
@@ -644,6 +713,8 @@ export default function AccountPage() {
               <ul className="space-y-2">
                 {[
                   { key: "profile", label: "Profile", icon: <FaUser /> },
+                  { key: "wallet", label: "Wallet", icon: <FaWallet /> },
+
                   // { key: "addresses", label: "Addresses", icon: <FaMapMarkerAlt /> },
                   { key: "history", label: "History", icon: <FaClock /> },
                 ].map((item) => (
@@ -681,6 +752,16 @@ export default function AccountPage() {
                   Privacy Center
                 </li>
               </ul>
+
+              <ul className="space-y-2 mt-6">
+                <li
+                  onClick={handleLogout}
+                  className="cursor-pointer flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-800"
+                >
+                  Logout
+                </li>
+              </ul>
+
             </div>
           </div>
 
@@ -871,6 +952,227 @@ export default function AccountPage() {
                     </div>
                   </form>
                 )}
+              </div>
+            )}
+
+
+             {/* WALLET SECTION */}
+            {activeSection === "wallet" && (
+              <div className="border border-[#D0BFAF] bg-[#F6EFE4] px-[20px] md:px-[88px] lg:px-[88px] py-[19px] mt-8">
+                <div className="flex justify-between items-center mb-6">
+                  <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
+                    My Wallet
+                  </h3>
+                  <button
+                    onClick={() => setAddBalanceModal(true)}
+                    className="bg-[#5B3923] text-[#F6EFE4] px-4 py-2 rounded-sm text-sm hover:opacity-90 transition"
+                  >
+                    Add Balance
+                  </button>
+                </div>
+
+                {walletLoading ? (
+                  <div className="text-center py-8">
+                    <div className="text-[#5B3923]">Loading wallet...</div>
+                  </div>
+                ) : walletData ? (
+                  <>
+                    {/* Wallet Summary */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                      <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
+                        <div className="text-[#7A6F63] text-sm mb-1">Total Balance</div>
+                        <div className="text-2xl font-bold text-[#5B3923]">
+                          ₹{walletData.balance?.toFixed(2) || "0.00"}
+                        </div>
+                      </div>
+                      <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
+                        <div className="text-[#7A6F63] text-sm mb-1">Pending Cash</div>
+                        <div className="text-2xl font-bold text-[#5B3923]">
+                          ₹{walletData.cashPending?.toFixed(2) || "0.00"}
+                        </div>
+                      </div>
+                      <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
+                        <div className="text-[#7A6F63] text-sm mb-1">Available Balance</div>
+                        <div className="text-2xl font-bold text-[#5B3923]">
+                          ₹{(walletData.balance - walletData.cashPending)?.toFixed(2) || "0.00"}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Transaction History */}
+                    <div>
+                      <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4 border-b border-[#D0BFAF] pb-2">
+                        Transaction History
+                      </h4>
+                      
+                      {walletData.transactions && walletData.transactions.length > 0 ? (
+                        <div className="space-y-3">
+                          {walletData.transactions.map((transaction, index) => (
+                            <div 
+                              key={index} 
+                              className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]"
+                            >
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className={`px-2 py-1 rounded-full text-xs ${
+                                      transaction.type === 'credit' 
+                                        ? 'bg-green-100 text-green-800' 
+                                        : 'bg-red-100 text-red-800'
+                                    }`}>
+                                      {transaction.type === 'credit' ? 'Credit' : 'Debit'}
+                                    </span>
+                                    <span className="text-sm text-[#7A6F63]">
+                                      {transaction.method || 'N/A'}
+                                    </span>
+                                  </div>
+                                  <div className="text-[#1E1E1E] font-medium text-sm">
+                                    {transaction.description || 'Transaction'}
+                                  </div>
+                                  {transaction.relatedUser && (
+                                    <div className="text-xs text-[#7A6F63] mt-1">
+                                      Related User: {transaction.relatedUser}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="text-right">
+                                  <div className={`text-lg font-bold ${
+                                    transaction.type === 'credit' 
+                                      ? 'text-green-600' 
+                                      : 'text-red-600'
+                                  }`}>
+                                    {transaction.type === 'credit' ? '+' : '-'}₹{transaction.amount?.toFixed(2)}
+                                  </div>
+                                  <div className="text-xs text-[#7A6F63] mt-1">
+                                    {new Date(transaction.createdAt).toLocaleDateString('en-IN', {
+                                      day: '2-digit',
+                                      month: 'short',
+                                      year: 'numeric'
+                                    })} at {new Date(transaction.createdAt).toLocaleTimeString('en-IN', {
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8 text-[#7A6F63]">
+                          No transactions yet
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Wallet Information */}
+                    <div className="mt-8 pt-6 border-t border-[#D0BFAF]">
+                      <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4">
+                        Wallet Information
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-[#7A6F63]">Wallet ID:</span>
+                          <span className="text-[#1E1E1E] font-medium">{walletData._id}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#7A6F63]">Owner ID:</span>
+                          <span className="text-[#1E1E1E] font-medium">{walletData.owner}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#7A6F63]">Created:</span>
+                          <span className="text-[#1E1E1E] font-medium">
+                            {new Date(walletData.createdAt).toLocaleDateString('en-IN')}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-[#7A6F63]">Last Updated:</span>
+                          <span className="text-[#1E1E1E] font-medium">
+                            {new Date(walletData.updatedAt).toLocaleDateString('en-IN')}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-8 text-[#7A6F63]">
+                    No wallet data found
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Add Balance Modal */}
+            {addBalanceModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                <div className="bg-[#F6EFE4] w-[90%] md:w-[500px] p-8 mt-10 rounded-md relative border border-[#D0BFAF]">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
+                      Add Balance to Wallet
+                    </h3>
+                    <button
+                      onClick={() => {
+                        setAddBalanceModal(false);
+                        setAddAmount("");
+                        setAddDescription("Customer added balance");
+                      }}
+                      className="text-[#7A6F63] hover:text-[#1E1E1E]"
+                    >
+                      <IoClose size={24} />
+                    </button>
+                  </div>
+
+                  <form onSubmit={handleAddBalance} className="space-y-4">
+                    <div>
+                      <label className="block text-sm text-[#1E1E1E] mb-2">
+                        Amount (₹)
+                      </label>
+                      <input
+                        type="number"
+                        value={addAmount}
+                        onChange={(e) => setAddAmount(e.target.value)}
+                        className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E]"
+                        placeholder="Enter amount"
+                        min="1"
+                        step="0.01"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm text-[#1E1E1E] mb-2">
+                        Description
+                      </label>
+                      <input
+                        type="text"
+                        value={addDescription}
+                        onChange={(e) => setAddDescription(e.target.value)}
+                        className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E]"
+                        placeholder="Enter description"
+                      />
+                    </div>
+
+                    <div className="flex gap-2 mt-6">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAddBalanceModal(false);
+                          setAddAmount("");
+                          setAddDescription("Customer added balance");
+                        }}
+                        className="border border-[#5B3923] text-[#5B3923] px-6 py-2 rounded-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="bg-[#5B3923] text-[#F6EFE4] px-6 py-2 rounded-sm flex-1 hover:opacity-90 transition"
+                      >
+                        Add Balance
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             )}
 
@@ -1124,3 +1426,5 @@ export default function AccountPage() {
     </div>
   );
 }
+
+
