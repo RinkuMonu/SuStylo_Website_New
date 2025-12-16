@@ -401,6 +401,7 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                 console.error("Token decoding or ID extraction failed:", error);
                 alert("Session expired or token is invalid. Please log in again.");
                 setShow(true); 
+                setShowModal(true);
                 return;
             }
 
@@ -409,6 +410,7 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
             
         } else {
             setShow(true); 
+            setShowModal(true);
             setSelectedPaymentType(type);
         }
     };
@@ -428,11 +430,15 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                 console.error("Token decoding or ID extraction failed:", error);
                 alert("Session expired or token is invalid. Please log in again.");
                 setShow(true); 
+                setShowModal(true);
+
                 return;
             }
             createBookingAPI(null, salon_id, userId);         
         } else {
             setShow(true); 
+            setShowModal(true);
+
         }
     }
     const createBookingAPI = async (paymentType = null, salonId, userId) => {

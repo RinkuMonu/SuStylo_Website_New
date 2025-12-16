@@ -509,7 +509,7 @@ export default function ServiceSection({
   }
 
   return (
-    <section className='my-12'>
+    <section className='my-12' id="services-section">
       <h3 className="text-[24px] font-bold uppercase underline decoration-[#717171] ">{title}</h3>
       <div className='flex justify-between items-center'>
         <nav className="flex flex-wrap gap-5 items-center text-lg my-4 ">

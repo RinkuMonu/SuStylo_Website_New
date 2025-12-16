@@ -143,7 +143,7 @@ const handleSubmit = async (e) => {
 
       // 🔥 show toast FIRST
       toast.success("Login successful!");
-       window.location.href = "/";
+      //  window.location.href = "/";
 
       // ⏳ then close the modal AFTER a tiny delay
       setTimeout(() => {
