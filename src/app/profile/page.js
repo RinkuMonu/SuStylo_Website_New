@@ -491,6 +491,7 @@ import Image from "next/image";
 import { FaUser, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import axiosInstance from "../axios/axiosinstance";
+import { jwtDecode } from 'jwt-decode';
 
 export default function AccountPage() {
   const [activeSection, setActiveSection] = useState("profile");
@@ -507,7 +508,10 @@ export default function AccountPage() {
   });
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState("");
-
+const [upcomingBookings, setUpcomingBookings] = useState([]);
+    const [historyBookings, setHistoryBookings] = useState([]);
+    const [historyLoading, setHistoryLoading] = useState(false);
+    const [historyError, setHistoryError] = useState(null);
   // Fetch profile data
   const fetchProfileData = async () => {
     try {
@@ -538,6 +542,103 @@ export default function AccountPage() {
     fetchProfileData();
   }, []);
 
+  // --- 2. BOOKING HISTORY LOGIC (Corrected) ---
+  const classifyBookings = (bookings) => {
+      const upcoming = [];
+      const history = [];
+
+      bookings.forEach(booking => {
+          // Statuses considered 'Upcoming' (modify as per your backend states)
+          const upcomingStatuses = ['pending', 'approved', 'confirmed', 'inProgress'];
+          const status = booking.status ? booking.status.toLowerCase() : '';
+
+          // Check if status is defined and is in the list of upcoming statuses
+          if (upcomingStatuses.includes(status)) {
+              upcoming.push(booking);
+          } else { 
+              // Assuming 'completed', 'cancelled', 'rejected', etc., fall into History
+              history.push(booking);
+          }
+      });
+
+      setUpcomingBookings(upcoming);
+      setHistoryBookings(history);
+  };
+
+  const fetchBookings = async () => {
+      setHistoryLoading(true);
+      setHistoryError(null);
+
+      try {
+          const token = localStorage.getItem('token'); 
+          if (!token) {
+              setHistoryError("User not authenticated. Please log in.");
+              setHistoryLoading(false);
+              return;
+          }
+
+          // NOTE: Since the backend fetches the user ID from the JWT token, 
+          // we use the simple route /booking/user/
+          const response = await axiosInstance.get(`/booking/user/`);
+          
+          if (response.data.success) {
+              // Ensure response.data.bookings is an array before classifying
+              if (Array.isArray(response.data.bookings)) {
+                  classifyBookings(response.data.bookings);
+              } else {
+                  setHistoryError("Received invalid data structure from server.");
+              }
+          } else {
+              setHistoryError(response.data.message || "Failed to fetch bookings.");
+          }
+
+      } catch (err) {
+          console.error("Fetch Bookings Error:", err);
+          // Display a more user-friendly error if the request fails (e.g., 401, 500)
+          const errorMessage = err.response?.data?.message || "Error loading booking history. Check your network/server.";
+          setHistoryError(errorMessage);
+      } finally {
+          setHistoryLoading(false);
+      }
+  };
+
+  // Fetch bookings only when the 'history' section is active
+  useEffect(() => {
+      if (activeSection === 'history' && !historyBookings.length) {
+          fetchBookings();
+      }
+  }, [activeSection]);
+    
+    // Helper function to get service names from nested structure
+    const getServiceNames = (services) => {
+      if (!Array.isArray(services)) return "No Services";
+      return services.map(s => s.serviceId?.name || s.name || 'Service').join(', ');
+    };
+    
+    // Helper function to format status
+    const getStatusDisplay = (status) => {
+      if (!status) return "N/A";
+      const statusMap = {
+          'pending': '⏳ Pending Approval',
+          'pendingapproval': '⏳ Waiting Approval',
+          'approved': '✅ Approved',
+          'confirmed': '✅ Confirmed',
+          'inprogress': '🛠️ In Progress',
+          'completed': '🎉 Completed',
+          'cancelled': '❌ Cancelled',
+          'rejected': '🚫 Rejected',
+          'refunded': '💸 Refunded',
+      };
+      const lowerStatus = status.toLowerCase();
+      // यदि statusMap में है, तो रंगीन/इमोजी वाला टेक्स्ट दिखाएं, अन्यथा Capitalize करें
+      return statusMap[lowerStatus] || status.charAt(0).toUpperCase() + status.slice(1);
+    };
+    const getBookingLocation = (booking) => {
+      if (booking.isAtHome) {
+          return "Home Service";
+      }
+      return booking.salonId?.salonName || "Salon Service"; 
+    };
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -1079,45 +1180,108 @@ export default function AccountPage() {
             )}
 
             {/* HISTORY SECTION */}
-            {activeSection === "history" && (
-              <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-                <div>
-                  <span className="font-semibold text-[20px] border-b border-black ">
-                    Upcoming Bookings
-                  </span>
-                  {[1, 2].map((i) => (
-                    <div
-                      key={i}
-                      className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 mb-4 text-sm text-[#1E1E1E]"
-                    >
-                      <div>
-                        <p className="font-semibold">Facial, Legs Waxing</p>
-                        <p className="text-[#7A6F63]">Upcoming • Nov 16, 2025</p>
-                      </div>
-                      <p>₹1200</p>
-                    </div>
-                  ))}
-                </div>
+            {/* HISTORY SECTION (Updated to use fetched data) */}
+              {activeSection === "history" && (
+                <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
+                  {historyLoading && <div className="text-center text-[#7A6F63]">Loading booking history...</div>}
+                  {historyError && <div className="text-center text-red-600">Error: {historyError}</div>}
+                  
+                  {!historyLoading && !historyError && (
+                      <>
+                          {/* UPCOMING BOOKINGS */}
+                          <div>
+                              <span className="font-semibold text-[20px] border-b border-black ">
+                                  Upcoming Bookings ({upcomingBookings.length})
+                              </span>
+                              
+                              {/* UPCOMING BOOKINGS DISPLAY */}
+                              {upcomingBookings.length === 0 ? (
+                                  <p className="mt-3 text-[#7A6F63] text-sm">You have no upcoming bookings.</p>
+                                ) : (
+                                    upcomingBookings.map((booking) => (
+                                        <div
+                                            key={booking._id}
+                                            className="border border-[#D0BFAF] px-6 py-4 mt-3 mb-4 bg-white shadow-sm" // Added bg-white for contrast
+                                        >
+                                            <div className="flex justify-between items-start text-sm mb-2">
+                                                {/* LEFT COLUMN - Primary Details */}
+                                                <div>
+                                                    {/* Salon Name or Home Service */}
+                                                    <p className="font-bold text-lg text-[#5F3F31]">
+                                                        {getBookingLocation(booking)}
+                                                    </p>
+                                                    
+                                                    {/* Services */}
+                                                    <p className="text-[#1E1E1E] text-base mt-1">
+                                                        Services: {getServiceNames(booking.services)}
+                                                    </p>
 
-                <div>
-                  <span className="font-semibold text-[20px] border-b border-black mt-4">
-                    History
-                  </span>
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <div
-                      key={i}
-                      className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 text-sm text-[#1E1E1E]"
-                    >
-                      <div>
-                        <p className="font-semibold">Facial, Legs Waxing</p>
-                        <p className="text-[#7A6F63]">Completed • Nov 16, 2025</p>
-                      </div>
-                      <p>₹1200</p>
-                    </div>
-                  ))}
+                                                    {/* Booking Type and Date */}
+                                                    <p className="text-[#7A6F63] text-xs mt-1">
+                                                        Type: {booking.bookingType || 'N/A'} • Booked On: {new Date(booking.createdAt).toLocaleDateString()}
+                                                    </p>
+
+                                                    {/* Status Display */}
+                                                    <p className="text-sm mt-2 font-semibold">
+                                                        Status: {getStatusDisplay(booking.status)}
+                                                    </p>
+                                                </div>
+
+                                                {/* RIGHT COLUMN - Financials */}
+                                                <div className="text-right">
+                                                    <p className="text-xl font-extrabold text-[#5F3F31]">
+                                                        ₹{booking.totalAmount?.toFixed(2) || 'N/A'}
+                                                    </p>
+                                                    <p className="text-xs text-[#7A6F63] mt-1">
+                                                        Payment: {booking.paymentType?.toUpperCase() || 'N/A'} ({booking.paymentStatus?.toUpperCase() || 'N/A'})
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* ADDITIONAL DETAILS (e.g., Address for Home Booking) */}
+                                            {booking.isAtHome && booking.address && (
+                                              <div className="mt-3 pt-3 border-t border-[#E9E3D9]">
+                                                  <p className="text-[#7A6F63] text-xs">
+                                                      Service Address: {booking.address.line1}, {booking.address.city}, {booking.address.pincode}
+                                                  </p>
+                                              </div>
+                                            )}
+                                        </div>
+                                    ))
+                                )}
+                          </div>
+
+                          {/* HISTORY BOOKINGS */}
+                          <div className="mt-6">
+                              <span className="font-semibold text-[20px] border-b border-black">
+                                  History ({historyBookings.length})
+                              </span>
+                              
+                              {historyBookings.length === 0 ? (
+                                  <p className="mt-3 text-[#7A6F63] text-sm">No past bookings found.</p>
+                              ) : (
+                                  historyBookings.map((booking) => (
+                                      <div
+                                          key={booking._id}
+                                          className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 text-sm text-[#1E1E1E]"
+                                      >
+                                          <div>
+                                              <p className="font-semibold">
+                                                  {getServiceNames(booking.services)}
+                                              </p>
+                                              <p className="text-[#7A6F63]">
+                                                  {getStatusDisplay(booking.status)} • {new Date(booking.createdAt).toLocaleDateString()}
+                                              </p>
+                                          </div>
+                                          <p>₹{booking.totalAmount?.toFixed(2) || 'N/A'}</p>
+                                      </div>
+                                  ))
+                              )}
+                          </div>
+                      </>
+                  )}
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       </div>

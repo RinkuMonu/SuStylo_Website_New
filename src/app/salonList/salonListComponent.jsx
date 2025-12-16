@@ -2278,12 +2278,12 @@ export default function SalonList() {
                                         <MapPin className="w-4 h-4" /> {salon.club}
                                     </p>
 
-                                    <button
-                                        onClick={() => setIsBookingModalOpen(true)}
+                                    <Link
+                                        href={`/salon/${salon.salonId || salon.id}`}
                                         className="border border-white text-white rounded-full px-5 py-1 text-sm hover:bg-white hover:text-[#425550] transition-all duration-300"
                                     >
                                         Book us
-                                    </button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

@@ -291,17 +291,19 @@
 
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+
 import { Plus, Minus, X } from "lucide-react";
 
-const transformServices = (serviceData,genderKey) => {
+const transformServices = (serviceData, genderKey) => {
     const genderServices = serviceData[genderKey];
     if (!genderServices) return [];
     return Object.keys(genderServices).map(categoryTitle => {
         const categoryData = genderServices[categoryTitle];
         return {
-            title: categoryTitle, 
+            title: categoryTitle,
             items: categoryData.services.map(service => ({
+                serviceId: service._id,
                 name: service.name,
                 price: service.price,
                 atHome: service.atHome,
@@ -337,7 +339,7 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 px-4 bg-black/70">
             <div className="relative bg-[#F6EFE4] w-full max-w-md rounded-xl shadow-2xl p-6">
-                
+
                 {/* Close Button */}
                 <button
                     onClick={onClose}
@@ -347,9 +349,9 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
                 </button>
 
                 <h2 className="text-[#5F3F31] text-2xl font-semibold mb-4 flex items-center">
-                     Add Home Address
+                    Add Home Address
                 </h2>
-                <hr className="border-[#CBAA87] mb-6" />
+                <hr className="border-[#CBAA87] mb-6 " />
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -420,25 +422,36 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
 }
     
 export default function FreelancerServicesSection({ serviceData }) {
-   console.log("FreelancerServicesSection serviceData:", serviceData);
-    const [userAddress, setUserAddress] = useState(null); 
+const [showModal, setShowModal] = useState(false);
+    const [show, setShow] = useState(false);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [selectedPaymentType, setSelectedPaymentType] = useState(null);
+    const [isProcessing, setIsProcessing] = useState(false);
+    // BookingSection.jsx के अंदर, अन्य state variables के पास
+    const [availableSlots, setAvailableSlots] = useState([]);
+    const [salonSchedule, setSalonSchedule] = useState(null);
+    const [isLoadingSlots, setIsLoadingSlots] = useState(false);
+    const [slotsError, setSlotsError] = useState(null);
+    const [homeBooking, setHomeBooking] = useState({ date: "", time: "", bookingType: "", isModalOpen: false });
+    const [salonBooking, setSalonBooking] = useState({ date: "", time: "", bookingType: "", isModalOpen: false });
+    const [currentGroup, setCurrentGroup] = useState(null);
+    const [userAddress, setUserAddress] = useState(null);
     const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
-    const transformedFemaleServices = transformServices(serviceData,'female');
-    const transformedMaleServices = transformServices(serviceData,'male');
+    const transformedFemaleServices = transformServices(serviceData, 'female');
+    const transformedMaleServices = transformServices(serviceData, 'male');
 
     // Separate states for each section
     const [openFemaleCategory, setOpenFemaleCategory] = useState(null);
 
     const [openMaleCategory, setOpenMaleCategory] = useState(null);
     const [cart, setCart] = useState([]);
-    const hasAtHomeService = cart.some(item => item.atHome === true);
-    console.log("hasAtHomeService :", hasAtHomeService);
+    const hasAtHomeService = cart?.[0]?.atHome === true;
     // Modal states
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [isDateModalOpen, setIsDateModalOpen] = useState(false);
     // ध्यान दें: मैंने यहां डिफ़ॉल्ट तिथि को वर्तमान तिथि पर सेट करने के लिए लॉजिक नहीं जोड़ा है
-    const [selectedDate, setSelectedDate] = useState("01/01/2024"); 
+    const [selectedDate, setSelectedDate] = useState("01/01/2024");
     const [selectedTime, setSelectedTime] = useState("10:00 AM");
 
     // Calendar states
@@ -449,7 +462,20 @@ export default function FreelancerServicesSection({ serviceData }) {
     const femaleServices = transformedFemaleServices;
     const maleServices = transformedMaleServices;
     // -------------------------------------------------------------
+    // const groupedCart = cart.reduce((acc, item) => {
+    //     const location = item.atHome === true ? 'home' : 'salon';
+    //     const bookingType = location === 'home' ? homeBooking.bookingType : salonBooking.bookingType;
 
+    //     if (!acc[location]) {
+    //         acc[location] = {
+    //             items: [],
+    //             bookingType: bookingType,
+    //         };
+    //     }
+
+    //     acc[location].items.push(item);
+    //     return acc;
+    // }, {});
     // Calendar data
     const months = [
         "January", "February", "March", "April", "May", "June",
@@ -461,7 +487,45 @@ export default function FreelancerServicesSection({ serviceData }) {
         "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"
     ];
 
-    // Calendar functions
+
+    // useEffect(() => {
+    //     if (!salonBooking.date) {
+    //         return;
+    //     }
+    //     const fetchSalonSchedule = async () => {
+    //         setIsLoadingSlots(true);
+    //         setSlotsError(null);
+    //         setAvailableSlots([]);
+    //         const apiUrl = `/schedules/getSalonSchedule/${salon_id}`;
+    //         try {
+    //             const response = await axiosInstance.get(apiUrl, {
+    //                 params: {
+    //                     date: salonBooking.date
+    //                 }
+    //             });
+    //             const data = response.data;
+    //             if (data.success && data.schedules.length > 0) {
+    //                 const scheduleForDay = data.schedules[0];
+    //                 setSalonSchedule(scheduleForDay);
+    //                 const slots = scheduleForDay.slots
+    //                     .filter(slot => slot.status === 'available')
+    //                     .map(slot => slot.time);
+    //                 setAvailableSlots(slots);
+    //             } else {
+    //                 setAvailableSlots([]);
+    //                 setSalonSchedule(null);
+    //                 setSlotsError("No available slots for this date.");
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching salon schedule:", error);
+    //             setSlotsError("Error fetching slots. Please try again.");
+    //         } finally {
+    //             setIsLoadingSlots(false);
+    //         }
+    //     };
+    //     fetchSalonSchedule();
+    // }, [salonBooking.date, salon_id, axiosInstance]);
+
     const getDaysInMonth = (month, year) => {
         return new Date(year, month + 1, 0).getDate();
     };
@@ -496,7 +560,15 @@ export default function FreelancerServicesSection({ serviceData }) {
 
     const handleDateSelect = (day) => {
         const formattedDate = `${(currentMonth + 1).toString().padStart(2, "0")}/${day.toString().padStart(2, "0")}/${currentYear}`;
-        setSelectedDate(formattedDate);
+
+        if (currentGroup === 'home') {
+            setHomeBooking(prev => ({ ...prev, date: formattedDate, time: null }));
+        } else if (currentGroup === 'salon') {
+            setSalonBooking(prev => ({ ...prev, date: formattedDate, time: null }));
+            // API call अब useEffect द्वारा ट्रिगर होगा जब salonBooking.date अपडेट होगा
+        }
+        // टाइम स्लॉट क्लियर करें ताकि यूजर को नए स्लॉट चुनने पड़ें
+        // setAvailableSlots([]); // यह useEffect में किया जा रहा है
     };
 
     const toggleFemaleCategory = (title) => {
@@ -506,15 +578,56 @@ export default function FreelancerServicesSection({ serviceData }) {
     const toggleMaleCategory = (title) => {
         setOpenMaleCategory(openMaleCategory === title ? null : title);
     };
-
+    const isCartEmpty = cart.length === 0;
+    const isCurrentItemInCart = (item) =>
+        !isCartEmpty && cart[0].name === item.name && cart[0].atHome === item.atHome;
+    const getCartItemQuantity = (item) => {
+        const foundItem = cart.find(
+            (p) => p.name === item.name && p.atHome === item.atHome
+        );
+        return foundItem ? foundItem.qty : 0;
+    };
+    const decreaseQuantity = (item) => {
+        setCart((prev) => {
+            const existing = prev.find(
+                (p) => p.name === item.name && p.atHome === item.atHome
+            );
+            if (existing) {
+                if (existing.qty > 1) {
+                    // Decrease quantity
+                    return prev.map((p) =>
+                        (p.name === item.name && p.atHome === item.atHome) ? { ...p, qty: p.qty - 1 } : p
+                    );
+                } else {
+                    // Remove item from cart if quantity is 1
+                    return prev.filter(
+                        (p) => !(p.name === item.name && p.atHome === item.atHome)
+                    );
+                }
+            }
+            return prev;
+        });
+    };
     const addToCart = (item) => {
         setCart((prev) => {
-            const existing = prev.find((p) => p.name === item.name);
+            const existing = prev.find(
+                (p) => p.name === item.name && p.atHome === item.atHome
+            );
+
+            // 🚨 IMPORTANT CHECK: If cart is NOT empty AND the current item is NOT the one in the cart, do nothing.
+            if (prev.length > 0 && !existing) {
+                console.log("Only one service is allowed in the cart at a time.");
+                return prev;
+            }
+
             if (existing) {
+                // Increase quantity of the existing item
                 return prev.map((p) =>
-                    p.name === item.name ? { ...p, qty: p.qty + 1 } : p
+                    (p.name === item.name && p.atHome === item.atHome) ? { ...p, qty: p.qty + 1 } : p
                 );
             }
+
+            // Add new item with qty: 1 only if cart is empty
             return [...prev, { ...item, qty: 1 }];
         });
     };
@@ -533,30 +646,128 @@ export default function FreelancerServicesSection({ serviceData }) {
 
     const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
     const addAddressForHome = () => {
-            if (hasAtHomeService) {
-                setIsAddressModalOpen(true);
-            } else {
-                console.log("Cannot add address: No 'At Home' service in cart.");
+        if (hasAtHomeService) {
+            setIsAddressModalOpen(true);
+        } else {
+            console.log("Cannot add address: No 'At Home' service in cart.");
+        }
+    }
+    // --- Function to save the address ---
+    const handleAddressSubmit = (address) => {
+        setUserAddress(address);
+    }
+    const bookingDetails = {
+        // salon_id: salon_id,
+        cart,
+        schedule_id: '68c7ff969528eb71d6ad0ddf',
+        totalAmount: (total * 1.05).toFixed(2),
+        address: userAddress,
+        bookingType:''
+    };
+    console.log("Booking Details Prepared:", bookingDetails);
+    const handlePayAndConfirm = () => {
+        setShowPaymentModal(true);
+    }
+
+    const handleGroupBookingTypeChange = (locationKey, groupTotal, newType) => {
+
+    }
+
+    const handlePaymentSelection = (type, salonId) => {
+        const token = localStorage.getItem('token'); 
+        const isUserAuthenticated = !!token;
+
+        if (isUserAuthenticated) {
+            let userId = null;
+            try {
+                const decodedToken = jwtDecode(token);
+                userId = decodedToken.id || decodedToken._id;                
+                if (!userId) {
+                    throw new Error("User ID missing in token payload.");
+                }                
+            } catch (error) {
+                console.error("Token decoding or ID extraction failed:", error);
+                alert("Session expired or token is invalid. Please log in again.");
+                setShow(true); 
+                return;
             }
+
+            setSelectedPaymentType(type);
+            createBookingAPI(type, salonId, userId); 
+            
+        } else {
+            setShow(true); 
+            setSelectedPaymentType(type);
         }
+    };
+    const confirmBooking = async ()=>{
+        const token = localStorage.getItem('token'); 
+        const isUserAuthenticated = !!token;
+
+        if (isUserAuthenticated) {
+            let userId = null;
+            try {
+                const decodedToken = jwtDecode(token);
+                userId = decodedToken.id || decodedToken._id;                
+                if (!userId) {
+                    throw new Error("User ID missing in token payload.");
+                }                
+            } catch (error) {
+                console.error("Token decoding or ID extraction failed:", error);
+                alert("Session expired or token is invalid. Please log in again.");
+                setShow(true); 
+                return;
+            }
+            // createBookingAPI(null, salon_id, userId);         
+        } else {
+            setShow(true); 
+        }
+    }
+    const createBookingAPI = async (paymentType = null, salonId, userId) => {
+        setIsProcessing(true);
         
-        // --- Function to save the address ---
-        const handleAddressSubmit = (address) => {
-            setUserAddress(address);
-            console.log("Address Saved:", address);
-        }
-        const bookingDetails = {
-            cart,
-            selectedDate,
-            selectedTime,
-            totalAmount: (total * 1.05).toFixed(2),
-            address: userAddress, // यहाँ एड्रेस स्टोर है
-            hasAtHomeService,
+        const servicesPayload = bookingDetails.cart.map(item => ({
+            serviceId: item.serviceId,
+            quantity: item.qty,
+            price: item.price
+        }));
+        
+        const payload = {
+            address:bookingDetails.address,
+            bookingType: bookingDetails.cart.bookingType || "preBooking",
+            salonId: salonId, 
+            services: servicesPayload,
+            scheduleId: bookingDetails.schedule_id,
+            totalAmount: parseFloat(bookingDetails.totalAmount),
+            baseAmount: total,
+            paymentType: paymentType || 'cash',
+            isAtHome: bookingDetails.cart?.[0]?.atHome || false,
+            userId: userId,
         };
-        const handlePayAndConfirm = () => {
-            console.log("Final Booking Details:", bookingDetails);
-            alert("Booking Confirmed! (See console for details)");
+        try {
+            const response = await axiosInstance.post('/booking', payload);
+            if (response.data.success) {
+                alert(`Booking successful!`);
+                window.location.href='/';
+            } else {
+                alert(`Booking failed: ${response.data.message || "Unknown error."}`);
+            }            
+        } catch (error) {
+            console.error("Booking API Call Error:", error);            
+            let errorMessage = "An unknown error occurred.";            
+            if (error.response) {
+                errorMessage = error.response.data?.message || `Server responded with status ${error.response.status}`;
+            } else if (error.request) {
+                errorMessage = "No response from the server. Please check the network connection or backend status.";
+            } else {
+                errorMessage = error.message;
+            }
+            alert(`Error: Could not complete booking. Reason: ${errorMessage}`);            
+        } finally {
+            setIsProcessing(false);
+            setShowPaymentModal(false);
         }
+    };
     return (
         <section className="bg-[#f6efe4] py-10">
             <h2 className="text-3xl font-bold mb-8 text-center text-[#5F3F31]">Services</h2>
@@ -599,14 +810,33 @@ export default function FreelancerServicesSection({ serviceData }) {
                                                         key={i}
                                                         className="flex justify-between items-center px-4 py-2 hover:bg-[#E7DCCC]"
                                                     >
-                                                        <span>{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                                        <span>{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                                         <div className="flex items-center gap-3">
                                                             <span className="text-sm font-medium">
                                                                 ₹{item.price}
                                                             </span>
+                                                            {isCurrentItemInCart(item) && (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => decreaseQuantity(item)} // Assumed function to decrease quantity
+                                                                        className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                    >
+                                                                        -
+                                                                    </button>
+                                                                    <span className="font-semibold text-base">
+                                                                        {getCartItemQuantity(item)}
+                                                                    </span>
+                                                                </>
+                                                            )}
+
                                                             <button
                                                                 onClick={() => addToCart(item)}
-                                                                className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                disabled={!isCartEmpty && !isCurrentItemInCart(item)} // Logic for disabling
+                                                                className={`font-bold p-1 border rounded-full w-6 h-6 flex items-center justify-center transition 
+                                                                    ${(!isCartEmpty && !isCurrentItemInCart(item))
+                                                                        ? 'text-gray-400 border-gray-400 bg-gray-100 cursor-not-allowed'
+                                                                        : 'text-[#5F3F31] border-[#5F3F31] hover:bg-[#CBAA87] hover:text-white'
+                                                                    }`}
                                                             >
                                                                 +
                                                             </button>
@@ -654,18 +884,37 @@ export default function FreelancerServicesSection({ serviceData }) {
                                         {openMaleCategory === cat.title && cat.items?.length > 0 && (
                                             <div className="bg-[#FAEFDE] divide-y divide-[#d8c2aa] text-gray-700">
                                                 {cat.items.map((item, i) => (
+
                                                     <div
                                                         key={i}
                                                         className="flex justify-between items-center px-4 py-2 hover:bg-[#E7DCCC]"
                                                     >
-                                                        <span>{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                                        <span>{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                                         <div className="flex items-center gap-3">
                                                             <span className="text-sm font-medium">
                                                                 ₹{item.price}
                                                             </span>
+                                                            {isCurrentItemInCart(item) && (
+                                                                <>
+                                                                    <button
+                                                                        onClick={() => decreaseQuantity(item)} // Assumed function to decrease quantity
+                                                                        className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                    >
+                                                                        -
+                                                                    </button>
+                                                                    <span className="font-semibold text-base">
+                                                                        {getCartItemQuantity(item)}
+                                                                    </span>
+                                                                </>
+                                                            )}
                                                             <button
                                                                 onClick={() => addToCart(item)}
-                                                                className="text-[#5F3F31] font-bold p-1 border border-[#5F3F31] rounded-full w-6 h-6 flex items-center justify-center hover:bg-[#CBAA87] hover:text-white transition"
+                                                                disabled={!isCartEmpty && !isCurrentItemInCart(item)} // Logic for disabling
+                                                                className={`font-bold p-1 border rounded-full w-6 h-6 flex items-center justify-center transition 
+                                                                    ${(!isCartEmpty && !isCurrentItemInCart(item))
+                                                                        ? 'text-gray-400 border-gray-400 bg-gray-100 cursor-not-allowed'
+                                                                        : 'text-[#5F3F31] border-[#5F3F31] hover:bg-[#CBAA87] hover:text-white'
+                                                                    }`}
                                                             >
                                                                 +
                                                             </button>
@@ -677,7 +926,7 @@ export default function FreelancerServicesSection({ serviceData }) {
                                     </div>
                                 ))}
                             </div>
-                         )}
+                        )}
                     </div>
                 </div>
 
@@ -694,7 +943,7 @@ export default function FreelancerServicesSection({ serviceData }) {
                                         key={i}
                                         className="flex justify-between items-center text-sm border-b border-[#E7DCCC] pb-2"
                                     >
-                                        <span className="w-1/2 font-medium text-[#5F3F31]">{item.name}({item.atHome == true ? 'At home' : "At salon"})</span>
+                                        <span className="w-1/2 font-medium text-[#5F3F31]">{item.name}({item.atHome == true ? 'Home' : "Salon"})</span>
                                         <div className="flex items-center gap-3">
                                             <div className="flex items-center gap-1 border border-[#CBAA87] rounded">
                                                 <button
@@ -764,26 +1013,91 @@ export default function FreelancerServicesSection({ serviceData }) {
                             </h3>
 
                             {/* Service Info (Replace with actual selected item or cart summary) */}
-                            {cart.length > 0 && (
-                              <div className="mb-4 space-y-2 max-h-40 overflow-y-auto pr-2"> {/* Scrollable area for services */}
-                                  {cart.map((item, index) => (
-                                      <div key={index} className="flex justify-between items-start bg-transparent text-[#F6EFE4] leading-relaxed border-b border-[#F6EFE4]/20 pb-1">
-                                          <span className="font-medium text-sm">
-                                              {item.name} ({item.atHome == true ? 'At home' : "At salon"}) x {item.qty}
-                                          </span>
-                                          <div className="flex items-center gap-2">
-                                              <span className="text-sm font-semibold">
-                                                  ₹{item.price * item.qty}
-                                              </span>
-                                              <span className="ml-2 text-[11px] bg-[#F6EFE4] text-[#5C6B63] px-2 py-[1px] rounded-md font-semibold whitespace-nowrap">
-                                                  {/* Gender identification logic - simplified */}
-                                                  {item.name.includes('Girls') || item.name.includes('Female') || femaleServices.some(c => c.items.some(i => i.name === item.name)) ? 'Female' : 'Male'}
-                                              </span>
-                                          </div>
-                                      </div>
-                                  ))}
-                              </div>
-                          )}
+                            {cart.length > 0 && (() => {
+                            const handleBookingTypeChange = (event) => {
+                                const newBookingType = event.target.value;
+                                setHomeBooking(prev => ({
+                                    ...prev,
+                                    bookingType: newBookingType,
+                                }));
+                                bookingDetails.bookingType = newBookingType === 'pre' ? 'preBooking' : 'urgentBooking';
+                            };
+                            // 1. Logic Definitions
+                            const isHome = cart[0]?.atHome;
+                            const location = isHome ? 'home' : 'salon'; 
+                            const bookingState = isHome ? homeBooking : salonBooking;
+
+                            const subtotal = cart.reduce((total, item) => {
+                                const price = parseFloat(item.price || 0);
+                                const qty = parseInt(item.qty || 1, 10);
+                                return total + (price * qty);
+                            }, 0);
+
+                            // 2. JSX Rendering (वापस करें)
+                            return (
+                                <div className="mb-4 space-y-2 max-h-40 overflow-y-auto pr-2">
+                                    <div className="my-4 p-4 border rounded-lg bg-white shadow-sm">
+                                        <h3 className="capitalize text-lg font-semibold mb-3 text-[#5F3F31]">
+                                            {/* Display location of the items */}
+                                            {location} Services
+                                        </h3>
+
+                                        {/* 5. बुकिंग टाइप सेलेक्शन ड्रॉपडाउन (केवल Home के लिए) */}
+                                        {isHome ? (
+                                            <div className="mb-4">
+                                                <label
+                                                    htmlFor={`bookingType-${location}`}
+                                                    className="block text-sm font-medium text-[#5F3F31] mb-1"
+                                                >
+                                                    Select Booking Type for {location}:
+                                                </label>
+                                                <select
+                                                    id={`bookingType-${location}`}
+                                                    // State से वैल्यू लें 
+                                                    value={bookingState.bookingType || ''} 
+                                                    onChange={handleBookingTypeChange} 
+                                                    className="w-full p-2 border border-[#C9BFAF] rounded-md bg-white text-[#5C5C5C] focus:ring-[#5F3F31] focus:border-[#5F3F31] transition"
+                                                >
+                                                    <option value="" disabled>Choose an option</option>
+                                                    <option value="pre">Pre-booking</option>
+                                                    <option value="urgent">Urgent Booking</option>
+                                                </select>
+                                            </div>
+                                        ) : null}
+
+                                        {/* 6. Items List for this group (सीधे cart पर मैप करें) */}
+                                        <ul className="divide-y divide-[#E9E3D9]">
+                                            {cart.map((item, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="flex justify-between items-center py-2 text-[#5C5C5C] text-sm"
+                                                >
+                                                    <span>
+                                                        {item.name} - ₹{parseFloat(item.price || 0).toFixed(2)}
+                                                        <span className="text-xs text-gray-500 ml-2">x {item.qty}</span>
+                                                    </span>
+
+                                                    <span className="font-medium">
+                                                        ₹{(parseFloat(item.price || 0) * parseInt(item.qty || 1, 10)).toFixed(2)}
+                                                    </span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        {/* Subtotal Display */}
+                                        <div className="mt-4 pt-3 border-t border-[#d1c7b9] flex justify-between items-center">
+                                            <h4 className="text-base font-bold text-[#5F3F31]">
+                                                Total Subtotal:
+                                            </h4>
+                                            <span className="text-lg font-extrabold text-[#5F3F31]">
+                                                {/* Subtotal में ₹ का उपयोग करें */}
+                                                ₹{subtotal.toFixed(2)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })()}
 
                             {/* Price + Duration (Placeholder) */}
                             <div className="flex items-center gap-5 text-[#F6EFE4] mb-2">
@@ -802,31 +1116,8 @@ export default function FreelancerServicesSection({ serviceData }) {
                                     </svg>
                                     Approx. 45min (Placeholder)
                                 </div>
-                                
+
                             </div>
-                           
-                            {/* Date Section */}
-                            <div
-                                onClick={() => setIsDateModalOpen(true)}
-                                className="flex items-center text-[#F6EFE4] text-[15px] mb-5 cursor-pointer hover:opacity-80 transition"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.6}
-                                    stroke="currentColor"
-                                    className="w-5 h-5 mr-2"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M8 7V3m8 4V3m-9 8h10m-9 8h10M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"
-                                    />
-                                </svg>
-                                {selectedDate} & {selectedTime}
-                            </div>
-                            
                             {/* --- ADD ADDRESS BUTTON & DISPLAY --- */}
                             <div className="flex items-center gap-5 text-[#F6EFE4] mb-2">
                                 <div className="flex items-center text-sm opacity-80">
@@ -836,7 +1127,7 @@ export default function FreelancerServicesSection({ serviceData }) {
                                             <span className="text-[13px] font-medium max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
                                                 {userAddress.line1}, {userAddress.city} - {userAddress.pincode}
                                             </span>
-                                            <button 
+                                            <button
                                                 onClick={addAddressForHome} // Use this to edit existing address
                                                 className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-0 ml-2"
                                             >
@@ -844,7 +1135,7 @@ export default function FreelancerServicesSection({ serviceData }) {
                                             </button>
                                         </div>
                                     ) : (
-                                        <button 
+                                        <button
                                             onClick={addAddressForHome}
                                             disabled={!hasAtHomeService} // Button disable logic
                                             className={`
@@ -853,9 +1144,9 @@ export default function FreelancerServicesSection({ serviceData }) {
                                                 underline-offset-2 
                                                 text-sm 
                                                 mb-6 
-                                                ${hasAtHomeService 
-                                                    ? 'hover:opacity-90' 
-                                                    : 'opacity-50 cursor-not-allowed' 
+                                                ${hasAtHomeService
+                                                    ? 'hover:opacity-90'
+                                                    : 'opacity-50 cursor-not-allowed'
                                                 }
                                             `}
                                         >
@@ -866,12 +1157,12 @@ export default function FreelancerServicesSection({ serviceData }) {
                             </div>
                             {/* --- END ADDRESS BUTTON & DISPLAY --- */}
                             {/* Date Selection Modal */}
-                            {isDateModalOpen && (
+                            {currentGroup && (
                                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
                                     <div className="bg-[#E9E3D9] rounded-2xl shadow-2xl w-full max-w-3xl px-[10px] py-[21px] relative">
                                         {/* Close Button */}
                                         <button
-                                            onClick={() => setIsDateModalOpen(false)}
+                                            onClick={() => setCurrentGroup(null)}
                                             className="absolute top-3 right-4 text-[#5C6B63] hover:text-black transition"
                                         >
                                             <X size={22} />
@@ -910,9 +1201,11 @@ export default function FreelancerServicesSection({ serviceData }) {
                                                     {/* Actual Days */}
                                                     {Array.from({ length: daysInMonth }).map((_, i) => {
                                                         const day = i + 1;
-                                                        const isSelected = selectedDate === `${(currentMonth + 1)
-                                                            .toString()
+                                                        const formattedDate = `${(currentMonth + 1).toString()
                                                             .padStart(2, "0")}/${day.toString().padStart(2, "0")}/${currentYear}`;
+                                                        const isSelected = currentGroup === 'home'
+                                                            ? homeBooking.date === formattedDate
+                                                            : salonBooking.date === formattedDate;
 
                                                         return (
                                                             <div
@@ -937,27 +1230,58 @@ export default function FreelancerServicesSection({ serviceData }) {
                                                     Slots Available
                                                 </div>
 
-                                                <div className="grid grid-cols-3 gap-3">
-                                                    {timeSlots.map((slot) => (
-                                                        <button
-                                                            key={slot}
-                                                            onClick={() => setSelectedTime(slot)}
-                                                            className={`py-2 rounded-md text-sm font-medium border transition-all duration-200 ${selectedTime === slot
-                                                                ? "bg-[#5F3F31] text-white border-[#70513D]"
-                                                                : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
-                                                                }`}
-                                                        >
-                                                            {slot}
-                                                        </button>
-                                                    ))}
-                                                </div>
+                                                {/* Dynamic Content: Loading, Error, or Slots */}
+                                                {isLoadingSlots ? (
+                                                    <div className="text-center text-[#5C5C5C]">
+                                                        Loading slots...
+                                                    </div>
+                                                ) : slotsError ? (
+                                                    <div className="text-center text-red-600">
+                                                        {slotsError}
+                                                    </div>
+                                                ) : (
+                                                    <div className="grid grid-cols-3 gap-3">
+                                                        {/* 💡 उपलब्ध स्लॉट्स को मैप करें (availableSlots) */}
+                                                        {availableSlots.length > 0 ? (
+                                                            availableSlots.map((slot) => {
+                                                                const bookingState = currentGroup === 'home' ? homeBooking : salonBooking;
+
+                                                                return (
+                                                                    <button
+                                                                        key={slot}
+                                                                        onClick={() => {
+                                                                            // Time को सेट करें
+                                                                            if (currentGroup === 'home') {
+                                                                                setHomeBooking(prev => ({ ...prev, time: slot }));
+                                                                            } else if (currentGroup === 'salon') {
+                                                                                setSalonBooking(prev => ({ ...prev, time: slot }));
+                                                                            }
+                                                                        }}
+                                                                        className={`py-2 rounded-md text-sm font-medium border transition-all duration-200 
+                                                                            ${bookingState.time === slot
+                                                                                ? "bg-[#5F3F31] text-white border-[#70513D]"
+                                                                                : "bg-white text-[#70513D] border-[#C9BFAF] hover:bg-[#E7DCCC]"
+                                                                            }`}
+                                                                    >
+                                                                        {slot}
+                                                                    </button>
+                                                                );
+                                                            })
+                                                        ) : (
+                                                            // यदि कोई स्लॉट उपलब्ध नहीं है
+                                                            <div className="col-span-3 text-center text-[#5C5C5C]">
+                                                                No time slots available for the selected date.
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             )}
 
-                            {/* Add More Services */}
+                            {/* Add More Services add serv */}
                             <div className="flex justify-center">
                                 <button
                                     onClick={() => setIsBookingModalOpen(false)} // Close modal to add more from main list
@@ -965,9 +1289,8 @@ export default function FreelancerServicesSection({ serviceData }) {
                                 >
                                     + Add More Services
                                 </button>
-                                
                             </div>
-                            
+
 
                             {/* White Box - Price Summary */}
                             <div className="bg-[#F6EFE4] rounded-t-xl px-6 py-5 text-[#1f1f1f]">
@@ -988,22 +1311,108 @@ export default function FreelancerServicesSection({ serviceData }) {
                                 </div>
 
                                 {/* Pay Button */}
+                                
+                                        
                                 <div className="flex justify-end mt-5">
-                                    <button onClick={handlePayAndConfirm} className="bg-[#614b3d] hover:bg-[#49372d] text-white text-base font-semibold rounded-full px-8 py-2 transition-all duration-300">
-                                        Pay & Confirm Booking
-                                    </button>
+                                    {cart?.[0]?.atHome == true ?
+                                        <button onClick={confirmBooking} className="bg-[#614b3d] hover:bg-[#49372d] text-white text-base font-semibold rounded-full px-8 py-2 transition-all duration-300">
+                                            Confirm Booking
+                                            </button>
+                                        :
+                                            <button onClick={handlePayAndConfirm} className="bg-[#614b3d] hover:bg-[#49372d] text-white text-base font-semibold rounded-full px-8 py-2 transition-all duration-300">
+                                            Pay & Confirm Booking
+                                        </button>
+                                    }
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
-            <AddressModal 
+            <AddressModal
                 isOpen={isAddressModalOpen}
                 onClose={() => setIsAddressModalOpen(false)}
                 onSubmit={handleAddressSubmit}
                 currentAddress={userAddress}
             />
+
+            {showPaymentModal && (
+                <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md"> {/* Modal size increased */}
+                        <h3 className="text-2xl font-bold mb-4 text-[#614b3d]">Final Booking Confirmation</h3>
+
+                        {/* --- 1. Booking Details Summary --- */}
+                        <div className="border p-4 rounded-lg mb-4 bg-gray-50">
+                            <h4 className="text-lg font-semibold mb-2">Booking Summary:</h4>
+
+                            {/* Salon/Service Section */}
+                            {bookingDetails.cart.map((item, index) => (
+                                <div key={index} className="flex justify-between text-sm py-1 border-b last:border-b-0">
+                                    <span className="text-gray-600">{item.name} (x{item.qty})</span>
+                                    <span className="font-medium">₹{(item.price * item.qty).toFixed(2)}</span>
+                                </div>
+                            ))}
+
+                            <div className="flex justify-between text-sm pt-2">
+                                <span className="font-semibold text-gray-700">Total Amount:</span>
+                                <span className="font-bold text-lg text-green-600">
+                                    ₹{bookingDetails.totalAmount} {/* This includes tax/charges */}
+                                </span>
+                            </div>
+
+                            {/* Schedule ID & Address */}
+                            <div className="mt-3 text-xs text-gray-600 space-y-1 border-t pt-2">
+                                <p><strong>Scheduled ID:</strong> {bookingDetails.schedule_id}</p>
+                                <p><strong>Address:</strong> {bookingDetails.address || 'N/A'}</p>
+                            </div>
+                        </div>
+
+                        {/* --- 2. Payment Options --- */}
+                        <h4 className="text-lg font-semibold mb-3">Select Payment Method:</h4>
+
+                        <div className="space-y-3">
+                            <button
+                                onClick={() => handlePaymentSelection('wallet')}
+                                disabled={isProcessing}
+                                className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-md transition duration-300 disabled:opacity-50 flex justify-center items-center"
+                            >
+                                {isProcessing && selectedPaymentType === 'wallet' ? (
+                                    <>Processing...</> // Spinner can be added here
+                                ) : (
+                                    `Pay with Wallet (₹${bookingDetails.totalAmount})`
+                                )}
+                            </button>
+
+                            <button
+                                onClick={() => handlePaymentSelection('cash')}
+                                disabled={isProcessing}
+                                className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-md transition duration-300 disabled:opacity-50 flex justify-center items-center"
+                            >
+                                {isProcessing && selectedPaymentType === 'cash' ? (
+                                    <>Processing...</> // Spinner can be added here
+                                ) : (
+                                    `Pay Cash at Salon (₹${bookingDetails.totalAmount})`
+                                )}
+                            </button>
+                        </div>
+
+                        {/* --- 3. Cancel Button --- */}
+                        <button
+                            onClick={() => setShowPaymentModal(false)}
+                            disabled={isProcessing}
+                            className="mt-4 w-full text-sm text-gray-500 hover:text-gray-700"
+                        >
+                            Cancel Booking
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {
+                show && (
+                    <AuthModalManager isOpen={showModal} onClose={() => setShowModal(false)} />
+                )
+            }
         </section>
     );
 }

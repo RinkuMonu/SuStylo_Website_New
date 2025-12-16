@@ -16,16 +16,15 @@ function Page() {
         'female': [],
         'male': []
     });
-console.log("employeeData Data State:", employeeData);
-console.log("serviceData Data State:", serviceData);
+    console.log("employeeData Data State:", employeeData);
+    console.log("serviceData Data State:", serviceData);
 
     const params = useParams();
     const id = params.id; 
 
     // --- Data Fetching Logic ---
     useEffect(() => {
-        if (!id) return; // ID available होने पर ही fetch करें
-
+        if (!id) return;
         const fetchFreelancerData = async () => {
             try {
                 const response = await axiosInstance.get(`/freelancer/${id}`);

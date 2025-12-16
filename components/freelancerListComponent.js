@@ -1476,7 +1476,7 @@ export default function FreelancerList() {
 
                             {/* Confirm Section */}
                             <h3 className="text-[#dcd8d3] text-[20px] mb-4 font-['Inria_Serif']">
-                                Confirm Your Services
+                                Confirm Your Servicesad
                             </h3>
 
                             {/* Service Info */}
