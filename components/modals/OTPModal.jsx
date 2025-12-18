@@ -229,11 +229,10 @@ export default function OTPModal({ isOpen, onClose, onNext }) {
                   onFocus={() => setError("")}
                   maxLength={1}
                   disabled={loading}
-                  className={`w-10 h-10 text-center rounded-md bg-[#F6EFE4] text-[#2E3A35] font-semibold outline-none focus:ring-2 ${
-                    error
+                  className={`w-10 h-10 text-center rounded-md bg-[#F6EFE4] text-[#2E3A35] font-semibold outline-none focus:ring-2 ${error
                       ? "border-2 border-red-400"
                       : "focus:ring-[#F6EFE4]/50"
-                  }`}
+                    }`}
                 />
               ))}
             </div>
@@ -252,19 +251,17 @@ export default function OTPModal({ isOpen, onClose, onNext }) {
           </form>
 
           <p className="text-center text-[14px] mt-4">
-            Didn't receive any code?{" "}
+            Didn&apos;t receive any code?{" "}
             <span
               onClick={handleResend}
-              className={`underline cursor-pointer mr-14 ${
-                timer > 0 ? "text-gray-400" : "text-[#F6EFE4]"
-              }`}
+              className={`underline mr-14 ${timer > 0
+                  ? "text-gray-400 cursor-not-allowed pointer-events-none"
+                  : "text-[#F6EFE4] cursor-pointer"
+                }`}
             >
               Resend
             </span>{" "}
-            ⏱️
-            {timer > 0
-              ? `00:${timer.toString().padStart(2, "0")}`
-              : "00:00"}
+            ⏱️{timer > 0 ? `00:${timer.toString().padStart(2, "0")}` : "00:00"}
           </p>
         </div>
       </div>

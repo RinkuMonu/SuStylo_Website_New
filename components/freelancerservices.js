@@ -300,10 +300,15 @@ import axiosInstance from "../src/app/axios/axiosinstance";
 import { Plus, Minus, X } from "lucide-react";
 
 const transformServices = (serviceData, genderKey) => {
+    if (!serviceData || !serviceData[genderKey]) return [];
+    
     const genderServices = serviceData[genderKey];
-    if (!genderServices) return [];
+    
     return Object.keys(genderServices).map(categoryTitle => {
         const categoryData = genderServices[categoryTitle];
+        // 🔥 Ensure categoryData and services array exist
+        if (!categoryData || !categoryData.services) return null;
+
         return {
             title: categoryTitle,
             items: categoryData.services.map(service => ({
@@ -316,7 +321,7 @@ const transformServices = (serviceData, genderKey) => {
                 description: service.description || '',
             })),
         };
-    });
+    }).filter(Boolean); // Null items ko remove karne ke liye
 };
 function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
     const [address, setAddress] = useState(currentAddress || {
@@ -668,7 +673,6 @@ const [showModal, setShowModal] = useState(false);
         address: userAddress,
         bookingType:''
     };
-    console.log("Booking Details Prepared:", bookingDetails);
     const handlePayAndConfirm = () => {
         setShowPaymentModal(true);
     }

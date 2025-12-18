@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import axiosInstance from "../../src/app/axios/axiosinstance";
 import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 export default function SignupModal({ isOpen, onClose, onLogin }) {
   const [formData, setFormData] = useState({
@@ -113,7 +114,6 @@ export default function SignupModal({ isOpen, onClose, onLogin }) {
       });
 
       if (res?.data?.success) {
-        console.log("Signup success response:", res.data);
 
         toast.success(res?.data?.message || "Signup successful");
 
@@ -198,12 +198,13 @@ export default function SignupModal({ isOpen, onClose, onLogin }) {
 
               <div>
                 <label className="text-sm">Mobile Number</label>
-                <div className={`w-full mt-1 flex items-center border rounded-md px-3 py-2 text-sm bg-transparent ${errors.mobile ? "border-red-400" : "border-[#F6EFE4]/30"
-                  }`}>
-                  <img
+                <div className={`w-full mt-1 flex items-center border rounded-md px-3 py-2 text-sm bg-transparent ${errors.mobile ? "border-red-400" : "border-[#F6EFE4]/30"}`}>
+                  <Image
                     src="https://flagcdn.com/w20/in.png"
                     alt="India Flag"
-                    className="w-6 h-4 rounded-sm mr-2"
+                    width={24}
+                    height={16}
+                    className="rounded-sm mr-2"
                   />
                   <select
                     className="bg-transparent text-[#F6EFE4] text-sm outline-none"
@@ -226,6 +227,7 @@ export default function SignupModal({ isOpen, onClose, onLogin }) {
                   <p className="text-red-300 text-xs mt-1">{errors.mobile}</p>
                 )}
               </div>
+
 
               <div>
                 <label className="text-sm">Email</label>

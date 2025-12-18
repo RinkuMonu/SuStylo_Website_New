@@ -22,14 +22,24 @@ const BookingModal = ({
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // Reset states when modal opens/changes
-    useEffect(() => {
-        if (isOpen) {
-            setDate(initialDate);
-            setTime(initialTime);
-            setCurrentAddress(address);
-            setBookingType('pre'); // Default to Pre-Booking
-        }
-    }, [isOpen, initialDate, initialTime, address]);
+    // useEffect(() => {
+    //     if (isOpen) {
+    //         setDate(initialDate);
+    //         setTime(initialTime);
+    //         setCurrentAddress(address);
+    //         setBookingType('pre'); // Default to Pre-Booking
+    //     }
+    // }, [isOpen, initialDate, initialTime, address]);
+
+useEffect(() => {
+    if (!isOpen) return;
+
+    setDate(initialDate);
+    setTime(initialTime);
+    setCurrentAddress(address);
+    setBookingType('pre');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [isOpen]);
 
     // Calculate totals, including urgent charges
     const { totalServicesPrice, urgentCharge, totalAmount, hasAtHome, hasAtSalon } = useMemo(() => {
@@ -104,7 +114,6 @@ const BookingModal = ({
             urgentCharge: urgentCharge.toFixed(2)
         };
 
-        console.log("Submitting Booking Details:", bookingDetails);
 
         // Simulate API call delay
         setTimeout(() => {

@@ -68,6 +68,7 @@ import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import axiosInstance from "../../src/app/axios/axiosinstance";
 import toast, { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 export default function ForgetPasswordModal({ isOpen, onClose, onNext }) {
   const [mobile, setMobile] = useState("");
@@ -174,7 +175,7 @@ export default function ForgetPasswordModal({ isOpen, onClose, onNext }) {
           <form onSubmit={handleSubmit}>
             <label className="text-sm">Enter Your Mobile Number</label>
 
-            <div
+            {/* <div
               className={`w-full mt-2 mb-1 flex items-center border rounded-md px-3 py-2 text-sm bg-transparent ${
                 error ? "border-red-400" : "border-[#F6EFE4]/30"
               }`}
@@ -200,7 +201,44 @@ export default function ForgetPasswordModal({ isOpen, onClose, onNext }) {
                 maxLength={10}
                 disabled={loading}
               />
+            </div> */}
+
+            <div
+              className={`w-full mt-2 mb-1 flex items-center border rounded-md px-3 py-2 text-sm bg-transparent ${error ? "border-red-400" : "border-[#F6EFE4]/30"
+                }`}
+            >
+              <Image
+                src="https://flagcdn.com/w20/in.png"
+                alt="India Flag"
+                className="w-6 h-4 rounded-sm mr-2"
+              />
+
+              <select
+                className="bg-transparent text-[#F6EFE4] text-sm outline-none cursor-not-allowed"
+                disabled
+              >
+                <option value="+91">+91</option>
+              </select>
+
+              <input
+                type="tel"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={mobile}
+                onChange={(e) => handleMobileChange(e.target.value)}
+                placeholder="Enter mobile number"
+                className="flex-1 bg-transparent outline-none ml-2 text-[#F6EFE4] placeholder-[#F6EFE4]/50"
+                maxLength={10}
+                disabled={loading}
+              />
             </div>
+
+            {error && (
+              <p className="text-xs text-red-400 mt-1">
+                Please enter a valid 10-digit mobile number
+              </p>
+            )}
+
 
             {error && (
               <p className="text-red-300 text-xs mb-4">{error}</p>

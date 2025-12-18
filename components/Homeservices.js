@@ -45,7 +45,6 @@ export default function Homeservices() {
   };
   useEffect(() => {
     const fetchServices = async () => {
-      console.log("Fetching services...");
       setLoading(true); 
       try {
         const response = await axiosInstance.get('/services');
@@ -55,8 +54,7 @@ export default function Homeservices() {
           .filter(srv => srv.gender && srv.gender.toLowerCase() === 'male'); 
         const womenServices = services
           .filter(srv => srv.gender && srv.gender.toLowerCase() === 'female'); 
-        console.log("menServices = ", menServices);
-        console.log("womenServices = ", womenServices);
+        
 
         setServicesData({
           man: menServices,
@@ -81,7 +79,6 @@ export default function Homeservices() {
   const currentServices = servicesData[tab];
 
     const handleServiceClick = (service) => {
-      console.log("Service clicked:", service);
       // Store selected service in localStorage or pass as query params
       if (typeof window !== 'undefined') {
         localStorage.setItem('selectedService', service.name);
@@ -90,7 +87,6 @@ export default function Homeservices() {
   
       const original = service.name;                     // Men's facial
       const slug = slugify(original, { lower: true, strict: true });
-      console.log("slugggg", slug);
   
       // Navigate to salon list page
       // router.push(`/salonList?service=${encodeURIComponent(service.title)}`);

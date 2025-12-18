@@ -103,7 +103,7 @@ export default function ServiceSection({
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to load services. Please try again.");
-        useFallbackData();
+        handleFallbackData();
       } finally {
         setLoading(false);
       }
@@ -205,7 +205,7 @@ export default function ServiceSection({
       setServices(servicesData);
     };
 
-    const useFallbackData = () => {
+    const handleFallbackData = () => {
       // Use your static fallback categories
       const fallbackCategories = [
         { _id: "threading", name: "Threading" },

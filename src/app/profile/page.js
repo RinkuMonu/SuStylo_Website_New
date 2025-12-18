@@ -489,7 +489,7 @@
 
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import Image from "next/image";
 import { FaUser, FaMapMarkerAlt, FaClock, FaWallet } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -521,7 +521,25 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
     const [historyLoading, setHistoryLoading] = useState(false);
     const [historyError, setHistoryError] = useState(null);
   // Fetch profile data
-  const fetchProfileData = async () => {
+  
+
+
+
+    // Fetch wallet data
+  const fetchWalletData = useCallback(async (userId) => {
+    try {
+      setWalletLoading(true);
+      const response = await axiosInstance.get(`/wallet/${userId}`);
+      if (response.data.success) {
+        setWalletData(response.data.wallet);
+      }
+    } catch (error) {
+      console.error("Error fetching wallet:", error);
+    } finally {
+      setWalletLoading(false);
+    }
+  },[]);
+const fetchProfileData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get("/customers/profile");
@@ -548,25 +566,7 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
     } finally {
       setLoading(false);
     }
-  };
-
-
-
-    // Fetch wallet data
-  const fetchWalletData = async (userId) => {
-    try {
-      setWalletLoading(true);
-      const response = await axiosInstance.get(`/wallet/${userId}`);
-      if (response.data.success) {
-        setWalletData(response.data.wallet);
-      }
-    } catch (error) {
-      console.error("Error fetching wallet:", error);
-    } finally {
-      setWalletLoading(false);
-    }
-  };
-
+  },[fetchWalletData]);
   // Add balance to wallet
   const handleAddBalance = async (e) => {
     e.preventDefault();
@@ -597,7 +597,7 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
 
   useEffect(() => {
     fetchProfileData();
-  }, []);
+  }, [fetchProfileData]);
 
 
   // --- 2. BOOKING HISTORY LOGIC (Corrected) ---
@@ -623,7 +623,7 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
       setHistoryBookings(history);
   };
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
       setHistoryLoading(true);
       setHistoryError(null);
 
@@ -658,14 +658,14 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
       } finally {
           setHistoryLoading(false);
       }
-  };
+  },[]);
 
   // Fetch bookings only when the 'history' section is active
   useEffect(() => {
       if (activeSection === 'history' && !historyBookings.length) {
           fetchBookings();
       }
-  }, [activeSection]);
+  }, [activeSection, fetchBookings, historyBookings.length]);
     
     // Helper function to get service names from nested structure
     const getServiceNames = (services) => {
@@ -1525,9 +1525,12 @@ const getProviderImage = (booking) => {
                                       >
                                         {/* इमेज सेक्शन */}
                                         <div className="w-20 h-20 flex-shrink-0">
-                                          <img 
+                                          <Image 
                                             src={getProviderImage(booking)} 
                                             alt="provider" 
+                                            width={80}  // 20 * 4 = 80px
+                                            height={80} // 20 * 4 = 80px
+                                            unoptimized={true} // Static export ke liye ye zaroori hai
                                             className="w-full h-full object-cover rounded-md border border-[#E9E3D9]"
                                           />
                                         </div>

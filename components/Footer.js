@@ -177,13 +177,13 @@ export default function Footer() {
 
           {/* Right side */}
           <div className="flex items-center gap-3 text-center md:text-right">
-            <a href="/" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Privacy Policy
-            </a>
+            </Link>
 
-            <a href="/" className="hover:underline">
+            <Link href="/" className="hover:underline">
               Terms of Use
-            </a>
+            </Link>
           </div>
         </div>
       </div>

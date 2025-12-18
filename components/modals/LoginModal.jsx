@@ -113,7 +113,6 @@ const handleSubmit = async (e) => {
       longitude: longitude,
     };
 
-    console.log("login payload sending >>>", payload); // debug
 
     const res = await axiosInstance.post(
       "/customers/login",

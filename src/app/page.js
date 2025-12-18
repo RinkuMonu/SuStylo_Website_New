@@ -561,7 +561,7 @@ export default function Home() {
                   (!searchResults.salons || searchResults.salons.length === 0) &&
                   (!searchResults.freelancers || searchResults.freelancers.length === 0) && (
                     <div className="p-4 text-center text-gray-500">
-                      No results found for "{searchQuery}"
+                      No results found for `{searchQuery}`
                     </div>
                   )}
 

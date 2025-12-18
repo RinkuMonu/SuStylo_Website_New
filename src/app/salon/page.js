@@ -3,7 +3,6 @@ import TopStylish from "../../../components/TopStylish";
 import Image from "next/image";
 import FreelancerServicesSection from "../../../components/freelancerservices";
 import Testimonial from "../../../components/Testimonial";
-import axiosInstance from "../axios/axiosinstance";
 
 export default function page() {
     return (
