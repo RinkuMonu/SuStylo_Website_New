@@ -11,7 +11,6 @@ export default function NearBySalonSection() {
   const [salons, setSalons] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  console.log("fsfsfsdf", salons);
 
   useEffect(() => {
     const fetchNearby = async () => {

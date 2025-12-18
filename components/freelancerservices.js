@@ -291,15 +291,24 @@
 
 "use client";
 import Link from "next/link";
+import { useParams } from 'react-router-dom';
 import React, { useEffect, useState, useCallback } from "react";
+import AuthModalManager from "./modals/AuthModalManager";
+import { jwtDecode } from 'jwt-decode';
+import axiosInstance from "../src/app/axios/axiosinstance";
 
 import { Plus, Minus, X } from "lucide-react";
 
 const transformServices = (serviceData, genderKey) => {
+    if (!serviceData || !serviceData[genderKey]) return [];
+    
     const genderServices = serviceData[genderKey];
-    if (!genderServices) return [];
+    
     return Object.keys(genderServices).map(categoryTitle => {
         const categoryData = genderServices[categoryTitle];
+        // 🔥 Ensure categoryData and services array exist
+        if (!categoryData || !categoryData.services) return null;
+
         return {
             title: categoryTitle,
             items: categoryData.services.map(service => ({
@@ -312,7 +321,7 @@ const transformServices = (serviceData, genderKey) => {
                 description: service.description || '',
             })),
         };
-    });
+    }).filter(Boolean); // Null items ko remove karne ke liye
 };
 function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
     const [address, setAddress] = useState(currentAddress || {
@@ -421,7 +430,7 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
     );
 }
     
-export default function FreelancerServicesSection({ serviceData }) {
+export default function FreelancerServicesSection({ serviceData,freelancer_id }) {
 const [showModal, setShowModal] = useState(false);
     const [show, setShow] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -664,7 +673,6 @@ const [showModal, setShowModal] = useState(false);
         address: userAddress,
         bookingType:''
     };
-    console.log("Booking Details Prepared:", bookingDetails);
     const handlePayAndConfirm = () => {
         setShowPaymentModal(true);
     }
@@ -673,7 +681,7 @@ const [showModal, setShowModal] = useState(false);
 
     }
 
-    const handlePaymentSelection = (type, salonId) => {
+    const handlePaymentSelection = (type) => {
         const token = localStorage.getItem('token'); 
         const isUserAuthenticated = !!token;
 
@@ -689,14 +697,16 @@ const [showModal, setShowModal] = useState(false);
                 console.error("Token decoding or ID extraction failed:", error);
                 alert("Session expired or token is invalid. Please log in again.");
                 setShow(true); 
+                setShowModal(true);
                 return;
             }
 
             setSelectedPaymentType(type);
-            createBookingAPI(type, salonId, userId); 
+            createBookingAPI('cash', freelancer_id, userId,'freelancer'); 
             
         } else {
             setShow(true); 
+            setShowModal(true);
             setSelectedPaymentType(type);
         }
     };
@@ -716,14 +726,16 @@ const [showModal, setShowModal] = useState(false);
                 console.error("Token decoding or ID extraction failed:", error);
                 alert("Session expired or token is invalid. Please log in again.");
                 setShow(true); 
+                setShowModal(true);
                 return;
             }
-            // createBookingAPI(null, salon_id, userId);         
+            createBookingAPI(cash, freelancer_id, userId,'freelancer');         
         } else {
-            setShow(true); 
+            setShow(true);
+            setShowModal(true);
         }
     }
-    const createBookingAPI = async (paymentType = null, salonId, userId) => {
+    const createBookingAPI = async (paymentType, freelancerId, userId,userType) => {
         setIsProcessing(true);
         
         const servicesPayload = bookingDetails.cart.map(item => ({
@@ -731,15 +743,29 @@ const [showModal, setShowModal] = useState(false);
             quantity: item.qty,
             price: item.price
         }));
-        
+        let finalSalonId = null;
+        let finalFreelancerId = null;
+
+        if (userType === 'freelancer') {
+            // अगर userType 'freelancer' है, तो freelancerId payload में जाएगा।
+            finalFreelancerId = freelancerId || null;
+        } else {
+            // अगर userType 'salon' (या कुछ और) है, तो salonId payload में जाएगा।
+            finalSalonId = salonId || null; 
+        }
+    
+        // 3. Payload बनाना (final IDs का उपयोग करके)
         const payload = {
-            address:bookingDetails.address,
+            address: bookingDetails.address,
             bookingType: bookingDetails.cart.bookingType || "preBooking",
-            salonId: salonId, 
+            // यहां updated IDs का उपयोग करें
+            salonId: finalSalonId, 
+            freelancerId: finalFreelancerId,
+            userType: userType || 'salon',
             services: servicesPayload,
             scheduleId: bookingDetails.schedule_id,
             totalAmount: parseFloat(bookingDetails.totalAmount),
-            baseAmount: total,
+            baseAmount: total, // सुनिश्चित करें कि 'total' यहाँ परिभाषित है
             paymentType: paymentType || 'cash',
             isAtHome: bookingDetails.cart?.[0]?.atHome || false,
             userId: userId,

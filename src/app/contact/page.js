@@ -583,6 +583,7 @@ export default function ContactPage() {
               <InputField
                 label="Full name*"
                 name="fullName"
+                data-nordpass-ignore="true"
                 value={formData.fullName}
                 onChange={handleChange}
                 error={errors.fullName}

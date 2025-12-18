@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { FaShoppingCart, FaUser } from 'react-icons/fa';
 import { HiOutlineMenuAlt3, HiX } from 'react-icons/hi';
 import { usePathname } from 'next/navigation';
+import Image from "next/image";
 
 import LoginModal from '../components/modals/LoginModal';
 import AuthModalManager from "../components/modals/AuthModalManager";
@@ -13,8 +14,9 @@ export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // true / false
+    setTimeout(() => setIsLoggedIn(!!token), 0);
   }, []);
+
 
 
 
@@ -48,8 +50,8 @@ export default function Header() {
         <div className="max-w-6xl flex items-center justify-between mx-auto">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="bg-white rounded-lg px-3 py-2 sm:px-6 sm:py-2 shadow font-semibold text-base sm:text-xl text-gray-800">
-              Logo Here
+            <div className="rounded-lg px-3 py-2 sm:px-6 sm:py-2 shadow font-semibold text-base sm:text-xl text-gray-800">
+                <Image src="/logo.png" alt="Sustylo Logo" width={120} height={120} />              
             </div>
           </div>
 

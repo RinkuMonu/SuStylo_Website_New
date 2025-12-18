@@ -322,7 +322,6 @@ export default function Services() {
       try {
         setLoading(true);
         const response = await axiosInstance.get('/services');
-        console.log("Fetched services:",response.data.services);
         if (response.data.success) {
           // Transform API data to match your UI structure
           const transformedServices = response.data.services.map(service => ({
@@ -431,14 +430,12 @@ export default function Services() {
   }, [searchQuery, selectedLocation, selectedGender, services]);
 
   const handleServiceClick = (service) => {
-    console.log("Service clicked service page = :", service);
     if (typeof window !== 'undefined') {
       localStorage.setItem('selectedService', service.title);
     }
 
     const original = service.title;                     // Men's facial
     const slug = slugify(original, { lower: true, strict: true });
-    console.log("slugggg", slug);
 
     // Navigate to salon list page
     // router.push(`/salonList?service=${encodeURIComponent(service.title)}`);

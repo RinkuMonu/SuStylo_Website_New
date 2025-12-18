@@ -113,7 +113,6 @@ const handleSubmit = async (e) => {
       longitude: longitude,
     };
 
-    console.log("login payload sending >>>", payload); // debug
 
     const res = await axiosInstance.post(
       "/customers/login",
@@ -143,7 +142,7 @@ const handleSubmit = async (e) => {
 
       // 🔥 show toast FIRST
       toast.success("Login successful!");
-       window.location.href = "/";
+      //  window.location.href = "/";
 
       // ⏳ then close the modal AFTER a tiny delay
       setTimeout(() => {

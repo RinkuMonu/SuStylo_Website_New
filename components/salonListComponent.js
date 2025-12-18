@@ -1511,7 +1511,6 @@ export default function SalonList() {
     const serviceFromURL = searchParams.get('service') || "";
     const nameFromURL = searchParams.get('name') || "";
 
-    console.log("salon nameee : ", nameFromURL);
 
 
     // Fetch user location from localStorage on component mount

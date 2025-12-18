@@ -5,7 +5,7 @@ import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useState } from "react";
 
 const testimonials = [
   {
@@ -40,10 +40,10 @@ const testimonials = [
   },
 ];
 
-
 export default function Testimonial({ heading = "OUR CLIENTS" }) {
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
+  // Build error fix karne ke liye state ka use
+  const [prevEl, setPrevEl] = useState(null);
+  const [nextEl, setNextEl] = useState(null);
 
   return (
     <section className="relative pb-5 pt-10 lg:px-12">
@@ -51,9 +51,9 @@ export default function Testimonial({ heading = "OUR CLIENTS" }) {
         {heading}
       </h2>
 
-      {/* Previous Button */}
+      {/* Previous Button - ref as a callback function */}
       <button
-        ref={prevRef}
+        ref={(node) => setPrevEl(node)}
         className="absolute left-[-10px] top-1/2 -translate-y-1/2 z-10 block
         w-12 h-12 border rounded-full flex items-center justify-center
         bg-transparent text-[#222] transition hover:bg-[#f6f2e9] focus:outline-none"
@@ -70,13 +70,13 @@ export default function Testimonial({ heading = "OUR CLIENTS" }) {
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         spaceBetween={32}
         slidesPerView={4}
+        // State variables pass kiye gaye hain taaki render error na aaye
         navigation={{
-          prevEl: prevRef.current,
-          nextEl: nextRef.current,
+          prevEl: prevEl,
+          nextEl: nextEl,
         }}
         onInit={(swiper) => {
-          swiper.params.navigation.prevEl = prevRef.current;
-          swiper.params.navigation.nextEl = nextRef.current;
+          // Navigation ko manually refresh karna zaroori hai
           swiper.navigation.init();
           swiper.navigation.update();
         }}
@@ -96,7 +96,6 @@ export default function Testimonial({ heading = "OUR CLIENTS" }) {
                   backgroundPosition: "center",
                   backgroundSize: "cover",
                 }}
-
               >
                 <p className="text-base leading-8 font-serif text-[#363333] text-center z-10">
                   {t.text}
@@ -117,9 +116,9 @@ export default function Testimonial({ heading = "OUR CLIENTS" }) {
         ))}
       </Swiper>
 
-      {/* Next Button */}
+      {/* Next Button - ref as a callback function */}
       <button
-        ref={nextRef}
+        ref={(node) => setNextEl(node)}
         className="absolute right-[-10px] top-1/2 -translate-y-1/2 z-10
         w-12 h-12 rounded-full flex items-center justify-center
         bg-transparent text-[#222] border border-black transition hover:bg-[#f6f2e9] focus:outline-none"

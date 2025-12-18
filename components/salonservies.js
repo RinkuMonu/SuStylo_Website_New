@@ -200,43 +200,52 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
     ];
 
 
-    useEffect(() => {
-        if (!salonBooking.date) {
-            return;
-        }
-        const fetchSalonSchedule = async () => {
-            setIsLoadingSlots(true);
-            setSlotsError(null);
-            setAvailableSlots([]);
-            const apiUrl = `/schedules/getSalonSchedule/${salon_id}`;
-            try {
-                const response = await axiosInstance.get(apiUrl, {
-                    params: {
-                        date: salonBooking.date
-                    }
-                });
-                const data = response.data;
-                if (data.success && data.schedules.length > 0) {
-                    const scheduleForDay = data.schedules[0];
-                    setSalonSchedule(scheduleForDay);
-                    const slots = scheduleForDay.slots
-                        .filter(slot => slot.status === 'available')
-                        .map(slot => slot.time);
-                    setAvailableSlots(slots);
-                } else {
-                    setAvailableSlots([]);
-                    setSalonSchedule(null);
-                    setSlotsError("No available slots for this date.");
-                }
-            } catch (error) {
+useEffect(() => {
+    if (!salonBooking.date) return;
+
+    const controller = new AbortController();
+
+    const fetchSalonSchedule = async () => {
+        setIsLoadingSlots(true);
+        setSlotsError(null);
+        setAvailableSlots([]);
+
+        try {
+            const response = await axiosInstance.get(`/schedules/getSalonSchedule/${salon_id}`, {
+                params: { date: salonBooking.date },
+                signal: controller.signal
+            });
+
+            const data = response.data;
+            if (data.success && data.schedules.length > 0) {
+                const scheduleForDay = data.schedules[0];
+                setSalonSchedule(scheduleForDay);
+                const slots = scheduleForDay.slots
+                    .filter(slot => slot.status === 'available')
+                    .map(slot => slot.time);
+                setAvailableSlots(slots);
+            } else {
+                setSalonSchedule(null);
+                setAvailableSlots([]);
+                setSlotsError("No available slots for this date.");
+            }
+        } catch (error) {
+            if (error.name !== "CanceledError") {
                 console.error("Error fetching salon schedule:", error);
                 setSlotsError("Error fetching slots. Please try again.");
-            } finally {
-                setIsLoadingSlots(false);
             }
-        };
-        fetchSalonSchedule();
-    }, [salonBooking.date, salon_id, axiosInstance]);
+        } finally {
+            setIsLoadingSlots(false);
+        }
+    };
+
+    fetchSalonSchedule();
+
+    return () => {
+        controller.abort(); // cancel request if date changes or component unmounts
+    };
+}, [salonBooking.date, salon_id]);
+
 
     const getDaysInMonth = (month, year) => {
         return new Date(year, month + 1, 0).getDate();
@@ -328,7 +337,6 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
 
             // 🚨 IMPORTANT CHECK: If cart is NOT empty AND the current item is NOT the one in the cart, do nothing.
             if (prev.length > 0 && !existing) {
-                console.log("Only one service is allowed in the cart at a time.");
                 return prev;
             }
 
@@ -376,7 +384,6 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
         address: userAddress,
         bookingType:''
     };
-    console.log("Booking Details Prepared:", bookingDetails);
     const handlePayAndConfirm = () => {
         setShowPaymentModal(true);
     }
@@ -401,6 +408,7 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                 console.error("Token decoding or ID extraction failed:", error);
                 alert("Session expired or token is invalid. Please log in again.");
                 setShow(true); 
+                setShowModal(true);
                 return;
             }
 
@@ -409,6 +417,7 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
             
         } else {
             setShow(true); 
+            setShowModal(true);
             setSelectedPaymentType(type);
         }
     };
@@ -428,11 +437,15 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                 console.error("Token decoding or ID extraction failed:", error);
                 alert("Session expired or token is invalid. Please log in again.");
                 setShow(true); 
+                setShowModal(true);
+
                 return;
             }
             createBookingAPI(null, salon_id, userId);         
         } else {
             setShow(true); 
+            setShowModal(true);
+
         }
     }
     const createBookingAPI = async (paymentType = null, salonId, userId) => {

@@ -489,7 +489,7 @@
 
 
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useCallback } from "react";
 import Image from "next/image";
 import { FaUser, FaMapMarkerAlt, FaClock, FaWallet } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
@@ -521,7 +521,25 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
     const [historyLoading, setHistoryLoading] = useState(false);
     const [historyError, setHistoryError] = useState(null);
   // Fetch profile data
-  const fetchProfileData = async () => {
+  
+
+
+
+    // Fetch wallet data
+  const fetchWalletData = useCallback(async (userId) => {
+    try {
+      setWalletLoading(true);
+      const response = await axiosInstance.get(`/wallet/${userId}`);
+      if (response.data.success) {
+        setWalletData(response.data.wallet);
+      }
+    } catch (error) {
+      console.error("Error fetching wallet:", error);
+    } finally {
+      setWalletLoading(false);
+    }
+  },[]);
+const fetchProfileData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get("/customers/profile");
@@ -548,25 +566,7 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
     } finally {
       setLoading(false);
     }
-  };
-
-
-
-    // Fetch wallet data
-  const fetchWalletData = async (userId) => {
-    try {
-      setWalletLoading(true);
-      const response = await axiosInstance.get(`/wallet/${userId}`);
-      if (response.data.success) {
-        setWalletData(response.data.wallet);
-      }
-    } catch (error) {
-      console.error("Error fetching wallet:", error);
-    } finally {
-      setWalletLoading(false);
-    }
-  };
-
+  },[fetchWalletData]);
   // Add balance to wallet
   const handleAddBalance = async (e) => {
     e.preventDefault();
@@ -597,7 +597,7 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
 
   useEffect(() => {
     fetchProfileData();
-  }, []);
+  }, [fetchProfileData]);
 
 
   // --- 2. BOOKING HISTORY LOGIC (Corrected) ---
@@ -623,7 +623,7 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
       setHistoryBookings(history);
   };
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
       setHistoryLoading(true);
       setHistoryError(null);
 
@@ -658,14 +658,14 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
       } finally {
           setHistoryLoading(false);
       }
-  };
+  },[]);
 
   // Fetch bookings only when the 'history' section is active
   useEffect(() => {
       if (activeSection === 'history' && !historyBookings.length) {
           fetchBookings();
       }
-  }, [activeSection]);
+  }, [activeSection, fetchBookings, historyBookings.length]);
     
     // Helper function to get service names from nested structure
     const getServiceNames = (services) => {
@@ -794,7 +794,25 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
       </div>
     );
   }
+// 1. नाम दिखाने के लिए (Salon या Freelancer)
+const getProviderName = (booking) => {
+  if (booking.salonId) return booking.salonId.name || "Salon Service";
+  if (booking.freelancerId) return booking.freelancerId.fullName || "Freelancer Service";
+  return "Unknown Provider";
+};
 
+// 2. प्रोफाइल फोटो दिखाने के लिए
+const getProviderImage = (booking) => {
+  if (booking.salonId && booking.salonId.photos?.length > 0) return booking.salonId.photos[0];
+  if (booking.freelancerId && booking.freelancerId.photos?.length > 0) return booking.freelancerId.photos[0];
+  return "https://via.placeholder.com/50"; // Default image
+};
+
+// 3. Service Names को फॉर्मेट करने के लिए
+// const getServiceNames = (services) => {
+//   if (!services || services.length === 0) return "No services selected";
+//   return services.map(s => s.serviceId?.name || "Service").join(", ");
+// };
   return (
     <div className="bg-[#F6EFE4] font-serif py-[85px] min-h-screen">
       <div className="max-w-6xl mx-auto px-6">
@@ -1501,54 +1519,68 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
                                   <p className="mt-3 text-[#7A6F63] text-sm">You have no upcoming bookings.</p>
                                 ) : (
                                     upcomingBookings.map((booking) => (
-                                        <div
-                                            key={booking._id}
-                                            className="border border-[#D0BFAF] px-6 py-4 mt-3 mb-4 bg-white shadow-sm" // Added bg-white for contrast
-                                        >
-                                            <div className="flex justify-between items-start text-sm mb-2">
-                                                {/* LEFT COLUMN - Primary Details */}
-                                                <div>
-                                                    {/* Salon Name or Home Service */}
-                                                    <p className="font-bold text-lg text-[#5F3F31]">
-                                                        {getBookingLocation(booking)}
-                                                    </p>
-                                                    
-                                                    {/* Services */}
-                                                    <p className="text-[#1E1E1E] text-base mt-1">
-                                                        Services: {getServiceNames(booking.services)}
-                                                    </p>
+                                      <div
+                                        key={booking._id}
+                                        className="border border-[#D0BFAF] px-6 py-4 mt-3 mb-4 bg-white shadow-sm flex flex-col md:flex-row gap-4"
+                                      >
+                                        {/* इमेज सेक्शन */}
+                                        <div className="w-20 h-20 flex-shrink-0">
+                                          <Image 
+                                            src={getProviderImage(booking)} 
+                                            alt="provider" 
+                                            width={80}  // 20 * 4 = 80px
+                                            height={80} // 20 * 4 = 80px
+                                            unoptimized={true} // Static export ke liye ye zaroori hai
+                                            className="w-full h-full object-cover rounded-md border border-[#E9E3D9]"
+                                          />
+                                        </div>
 
-                                                    {/* Booking Type and Date */}
-                                                    <p className="text-[#7A6F63] text-xs mt-1">
-                                                        Type: {booking.bookingType || 'N/A'} • Booked On: {new Date(booking.createdAt).toLocaleDateString()}
-                                                    </p>
+                                        {/* मुख्य जानकारी */}
+                                        <div className="flex-grow">
+                                          <div className="flex justify-between items-start">
+                                            <div>
+                                              <div className="flex items-center gap-2">
+                                                <p className="font-bold text-lg text-[#5F3F31]">
+                                                  {getProviderName(booking)}
+                                                </p>
+                                                {/* Tag दिखाने के लिए कि ये Salon है या Freelancer */}
+                                                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${booking.salonId ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                                                  {booking.salonId ? 'Salon' : 'Freelancer'}
+                                                </span>
+                                              </div>
+                                              
+                                              <p className="text-[#1E1E1E] text-base mt-1">
+                                                <span className="font-medium text-[#7A6F63]">Services:</span> {getServiceNames(booking.services)}
+                                              </p>
 
-                                                    {/* Status Display */}
-                                                    <p className="text-sm mt-2 font-semibold">
-                                                        Status: {getStatusDisplay(booking.status)}
-                                                    </p>
-                                                </div>
-
-                                                {/* RIGHT COLUMN - Financials */}
-                                                <div className="text-right">
-                                                    <p className="text-xl font-extrabold text-[#5F3F31]">
-                                                        ₹{booking.totalAmount?.toFixed(2) || 'N/A'}
-                                                    </p>
-                                                    <p className="text-xs text-[#7A6F63] mt-1">
-                                                        Payment: {booking.paymentType?.toUpperCase() || 'N/A'} ({booking.paymentStatus?.toUpperCase() || 'N/A'})
-                                                    </p>
-                                                </div>
+                                              <p className="text-[#7A6F63] text-xs mt-1">
+                                                Booking ID: #{booking._id.slice(-6).toUpperCase()} • 
+                                                Date: {new Date(booking.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                              </p>
                                             </div>
 
-                                            {/* ADDITIONAL DETAILS (e.g., Address for Home Booking) */}
-                                            {booking.isAtHome && booking.address && (
-                                              <div className="mt-3 pt-3 border-t border-[#E9E3D9]">
-                                                  <p className="text-[#7A6F63] text-xs">
-                                                      Service Address: {booking.address.line1}, {booking.address.city}, {booking.address.pincode}
-                                                  </p>
-                                              </div>
-                                            )}
+                                            {/* Financials */}
+                                            <div className="text-right">
+                                              <p className="text-xl font-extrabold text-[#5F3F31]">
+                                                ₹{booking.totalAmount?.toFixed(2)}
+                                              </p>
+                                              <span className={`text-[11px] px-2 py-1 rounded font-medium ${booking.paymentStatus === 'paid' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
+                                                {booking.paymentType?.toUpperCase()} - {booking.paymentStatus?.toUpperCase()}
+                                              </span>
+                                            </div>
+                                          </div>
+
+                                          {/* एड्रेस सेक्शन (Freelancer Home Service के लिए या Salon Address के लिए) */}
+                                          <div className="mt-3 pt-3 border-t border-[#E9E3D9] flex items-center gap-2 text-[#7A6F63] text-xs">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                            <span>
+                                              {booking.isAtHome 
+                                                ? `Home Service: ${booking.address?.line1 || ''} ${booking.address?.city || ''}` 
+                                                : `Visit: ${booking.salonId?.address?.area || booking.freelancerId?.address?.area || 'Location not specified'}`}
+                                            </span>
+                                          </div>
                                         </div>
+                                      </div>
                                     ))
                                 )}
                           </div>
