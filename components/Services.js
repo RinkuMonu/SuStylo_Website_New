@@ -679,7 +679,7 @@ export default function Services() {
                   ></div>
 
                   {/* Title fixed at bottom */}
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white text-lg font-semibold z-10">
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-[#f6efe4] rounded-md w-[90%] text-center text-lg font-semibold z-10">
                     {item.title}
                   </div>
 

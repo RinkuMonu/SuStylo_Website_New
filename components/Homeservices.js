@@ -130,7 +130,7 @@ export default function Homeservices() {
                   onClick={() => {
                     handleServiceClick(srv);
                   }}
-                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 rounded-full relative overflow-hidden flex items-center justify-center shadow-sm bg-[#f5f5f5] cursor-pointer">
+                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 rounded-lg relative overflow-hidden flex items-center justify-center shadow-sm bg-[#f5f5f5] cursor-pointer">
                 <Image
                   src={srv?.image || getDefaultImage(srv?.name)}
                   alt={srv?.name}
@@ -138,7 +138,7 @@ export default function Homeservices() {
                   sizes="(max-width: 640px) 100vw, (max-width:1024px) 8vw, 176px"
                   className="object-cover w-full h-full"
                 />
-                <span className="absolute bottom-2 w-full text-center text-white text-sm sm:text-lg font-semibold shadow-sm px-1">
+                <span className="absolute bottom-2 w-[90%] rounded-md text-center text-black bg-[#f6efe4] text-sm sm:text-lg font-semibold shadow-sm px-1">
                   {srv.name}
                 </span>
               </div>
