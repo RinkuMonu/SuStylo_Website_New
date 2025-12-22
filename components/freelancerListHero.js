@@ -63,7 +63,7 @@ export default function HeroSection() {
   return (
     <section className="relative bg-[#587066] pb-[49px]">
       {/* ✅ Inner Black Box */}
-      <div className="relative bg-black text-white shadow-2xl w-[90%] max-w-[1300px] h-[600px] py-12 px-8">
+      <div className="relative bg-black text-white shadow-2xl w-[100%]  h-auto py-12 px-8">
 
         {/* ✅ Floating images (show only on md and up) */}
         <div className="hidden md:block">

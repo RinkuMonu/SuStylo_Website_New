@@ -24,3 +24,6 @@ button, a{
       transform: rotate(360deg);
     }
   }
+.ConfirmBookin::-webkit-scrollbar {
+  width: 8px;
+}

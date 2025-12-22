@@ -69,7 +69,7 @@ const profession = "Haircut Specialist";
     <>
     <section className="bg-[#F6EFE4] flex flex-col md:flex-row items-center justify-between overflow-hidden">
                 {/* Left Content */}
-                <div className="w-full md:w-1/2 px-6 md:px-12 lg:px-20 pt-20 lg:mt-14">
+                <div className="w-full md:w-1/2 px-4 md:px-8 lg:px-16 pt-10 mt-10 lg:mt-14">
                     <h1 className="text-4xl md:text-5xl font-serif italic mb-3">
                         {fullName} {/* Dynamic Name */}
                     </h1>
@@ -116,8 +116,8 @@ const profession = "Haircut Specialist";
                             </div>
                         </div>
 
-                        {/* Right: Small Image */}
-                        <div className="w-full sm:w-1/3 flex justify-center float-end mt-6 sm:mt-0 hidden sm:block">
+                     
+                        {/* <div className="w-full sm:w-1/3 flex justify-center float-end mt-6 sm:mt-0 hidden sm:block">
                             <Image
                                 src={smallImageUrl}
                                 alt="Small img"
@@ -125,12 +125,12 @@ const profession = "Haircut Specialist";
                                 height={160}
                                 className="w-34 h-38 sm:w-28 sm:h-32 object-contain"
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
                 {/* Right Image */}
-                <div className="w-full md:w-1/2 relative h-[450px] md:h-[600px] flex items-center justify-center">
+                <div className="w-full md:w-1/2 relative h-[450px] md:h-[560px] flex items-center justify-center">
                     <div className="absolute top-0 right-0 w-[80%] h-full rounded-l-[50%] hidden md:block"></div>
                     <Image
                         src={mainImageUrl}
