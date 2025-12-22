@@ -442,16 +442,17 @@ export default function Home() {
     <>
       <section
         className="h-[87vh] relative bg-no-repeat bg-cover bg-top pt-0 mt-0 flex flex-col items-center justify-center"
-        style={{ backgroundImage: "url(./Home/HomeBanner.png)" }}
+        style={{ backgroundImage: "url(/Home/HomeBanner.png)" }}
+
       >
         <div className="flex flex-col items-center justify-center ">
-          <h1 className="text-white text-[40px] sm:text-[60px] md:text-[80px] lg:text-[96px] leading-tight  drop-shadow-lg">
+          <h1 className="text-white text-[36px] sm:text-[60px] md:text-[70px] lg:text-[92px] leading-tight  drop-shadow-lg">
             Glow <br /> Beyond Limits
           </h1>
 
           {/* Search Bar with Results Dropdown - FIXED POSITION */}
           <div className="search-container relative w-[80%] lg:w-full max-w-md sm:max-w-xl mt-auto mb-4 sm:mb-6">
-            <div className="bg-[#CBAA87] p-2 sm:p-3 rounded-xl flex items-center justify-center gap-2 sm:gap-3 shadow-lg mt-10">
+            <div className="bg-[#CBAA87] p-2 sm:p-3 rounded-xl flex items-center justify-center gap-2 sm:gap-3 shadow-lg mt-10 md:mt-14">
               <div className="relative flex-1">
                 <input
                   className="bg-white text-[#8B8B8B] p-2 sm:p-4 rounded-xl w-full text-base sm:text-xl pl-8 sm:pl-10 focus:outline-none"

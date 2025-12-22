@@ -105,7 +105,7 @@ export default function LeadModal({ isOpen, onClose, type }) {
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center z-[100] p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-xl">
+      <div className="bg-[#f6efe4] rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto shadow-xl">
         <h2 className="text-xl font-bold mb-4 text-gray-800">Register as {type}</h2>
         
         <form onSubmit={handleSubmit} className="space-y-3">
@@ -114,7 +114,7 @@ export default function LeadModal({ isOpen, onClose, type }) {
             <label className="text-xs font-semibold text-gray-500">Owner Name*</label>
             <input 
               name="ownerName"
-              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
               placeholder="Full Name (Alphabets only)" 
               required 
               value={formData.ownerName}
@@ -127,7 +127,7 @@ export default function LeadModal({ isOpen, onClose, type }) {
             <label className="text-xs font-semibold text-gray-500">Email Address*</label>
             <input 
               name="email"
-              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
               type="email" 
               placeholder="example@mail.com" 
               required 
@@ -141,7 +141,7 @@ export default function LeadModal({ isOpen, onClose, type }) {
             <label className="text-xs font-semibold text-gray-500">Contact Number*</label>
             <input 
               name="contact"
-              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
               placeholder="10 digit number (starts with 6-9)" 
               required 
               value={formData.contact}
@@ -152,7 +152,7 @@ export default function LeadModal({ isOpen, onClose, type }) {
           {type === "Salon" ? (
             <>
               <input 
-                className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+                className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
                 placeholder="Salon Name" 
                 required 
                 value={formData.salonName}
@@ -160,20 +160,20 @@ export default function LeadModal({ isOpen, onClose, type }) {
               />
               <p className="font-semibold text-sm text-gray-600">Address Details:</p>
               <input 
-                className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+                className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
                 placeholder="Street Address" 
                 value={formData.address.street}
                 onChange={(e) => setFormData({...formData, address: {...formData.address, street: e.target.value}})} 
               />
               <div className="grid grid-cols-2 gap-2">
                 <input 
-                  className="border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+                  className="border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
                   placeholder="City" 
                   value={formData.address.city}
                   onChange={(e) => setFormData({...formData, address: {...formData.address, city: e.target.value}})} 
                 />
                 <input 
-                  className="border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+                  className="border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
                   placeholder="Pin Code" 
                   value={formData.address.pinCode}
                   onChange={(e) => setFormData({...formData, address: {...formData.address, pinCode: e.target.value.replace(/\D/g,"")}})} 
@@ -182,7 +182,7 @@ export default function LeadModal({ isOpen, onClose, type }) {
             </>
           ) : (
             <input 
-              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-blue-500 outline-none" 
+              className="w-full border border-gray-300 text-black p-2 rounded focus:ring-1 focus:ring-[#cbaa87] outline-none" 
               placeholder="Service Area (e.g. Jaipur City)" 
               required 
               value={formData.serviceArea}
@@ -201,7 +201,7 @@ export default function LeadModal({ isOpen, onClose, type }) {
             <button 
               type="submit" 
               disabled={loading} 
-              className="flex-1 bg-blue-600 text-white font-bold p-2 rounded hover:bg-blue-700 disabled:bg-blue-300 transition"
+              className="flex-1 bg-[#604223] text-white font-bold p-2 rounded hover:bg-[#cbaa87] disabled:bg-[#cbaa87] transition"
             >
               {loading ? "Sending..." : "Submit"}
             </button>

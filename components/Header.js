@@ -31,7 +31,7 @@ export default function Header() {
   const isHome = pathname === '/';
 
   const headerClass = `
-    fixed top-0 left-0 z-50 w-full py-3 px-4 sm:px-10 md:px-16 lg:px-16 border-b-2 border-[#717171] transition-colors duration-300
+    fixed top-0 left-0 z-50 w-full py-1 px-4 sm:px-10 md:px-16 lg:px-16 border-b-2 border-[#717171] transition-colors duration-300
     ${scrolled ? 'bg-[#181818]/90 backdrop-blur border-0' : isHome ? 'bg-transparent' : 'bg-[#181818]'}
   `;
 
@@ -50,8 +50,8 @@ export default function Header() {
         <div className="max-w-6xl flex items-center justify-between mx-auto">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="rounded-lg px-3 py-2 sm:px-6 sm:py-2 shadow font-semibold text-base sm:text-xl text-gray-800">
-                <Image src="/logo.png" alt="Sustylo Logo" width={120} height={120} />              
+            <div className="rounded-lg px-3 py-2 sm:px-6 sm:py-2 bg-[#f6efe4] rounded-md shadow font-semibold text-base sm:text-xl text-gray-800">
+                <Image src="/logo.png" alt="Sustylo Logo" width={80} height={80} />              
             </div>
           </div>
 

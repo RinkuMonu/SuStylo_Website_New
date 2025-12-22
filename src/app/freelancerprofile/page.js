@@ -24,7 +24,7 @@ function page() {
           </p>
 
 
-          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-2 mt-8">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-2 mt-8 md:mt-20">
             {/* Left: Stats */}
             <div className="w-full sm:w-2/3">
             <div
@@ -60,7 +60,7 @@ function page() {
             </div>
 
             {/* Right: Small Image */}
-            <div className="w-full sm:w-1/3 flex justify-center float-end mt-6 sm:mt-0 hidden sm:block">
+            <div className="w-full sm:w-1/4 flex justify-center float-end mt-6 sm:mt-0 hidden sm:block">
               <Image
                 src="/Image/freelancer/female-img2.png"
                 alt="img"
