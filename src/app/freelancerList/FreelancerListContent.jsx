@@ -1366,85 +1366,86 @@ export default function FreelancerList() {
                 </div>
             </div>
 
-            {/* Freelancer Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mt-8">
-                {filteredFreelancers.length === 0 ? (
+           
+
+
+
+
+
+
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mt-8">
+                 {filteredFreelancers.length === 0 ? (
                     <div className="col-span-2 text-center py-12">
                         <p className="text-gray-500">No freelancers found matching your criteria.</p>
                     </div>
                 ) : (
-                    filteredFreelancers.map((freelancer) => (
+                   filteredFreelancers.map((freelancer) => (
                         <div
-                            key={freelancer.id}
-                            className="bg-[#F6EFE4] rounded-2xl border border-[#617772] overflow-hidden flex flex-col shadow-sm"
+                           key={freelancer.id}
+                            className="bg-[#617772] rounded-xl overflow-hidden shadow-md relative border border-gray-200"
                         >
-                            {/* Top Section */}
-                            <div className="flex flex-col sm:flex-row">
-                                {/* Left: Image */}
-                                <div className="relative w-full h-64 sm:h-auto">
-                                    <Link href={`/freelancerprofile/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
-                                        <Image
-                                            src={freelancer.image}
+                            {/* Image Section */}
+                            <div className="relative h-56 w-full">
+                                <Link href={`/freelancerprofile/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
+                                    <Image
+                                       src={freelancer.image}
                                             alt={freelancer.name}
-                                            fill
-                                            className="object-cover rounded-t-lg cursor-pointer"
-                                        />
-                                    </Link>
+                                        fill
+                                        className="object-cover rounded-t-lg cursor-pointer"
+                                    />
+                                </Link>
 
-                                    {/* Popular Badge */}
-                                    {freelancer.popular && (
+                                {/* Popular Badge */}
+                                {freelancer.popular && (
                                         <div className="w-[180px] h-[34px] absolute top-0 right-0 text-white text-sm font-semibold text-center py-2 rounded-bl-lg bg-[linear-gradient(90deg,rgba(202,60,60,0)_6.5%,#FF3636_70.41%)]">
                                             Popular
                                         </div>
                                     )}
+                            </div>
 
-                                    {/* Rating Badge */}
-                                    <div className="absolute bottom-3 right-3 bg-white rounded-full shadow px-2 py-[2px] flex items-center text-xs">
+                            {/* Content Section */}
+                            <div className="px-10 py-6 text-white font-['Inria_Serif']">
+                                {/* Name + Rating in One Row */}
+                                <div className="flex items-center justify-between mb-2">
+                                
+                                     <div className="absolute top-60 right-4 bg-white rounded-full shadow px-2 py-[2px] flex items-center text-xs text-black">
                                         <span className="mr-1">⭐</span>
                                         {freelancer.rating}
                                     </div>
                                 </div>
 
-                                {/* Right: Experience + Book Now full section */}
-                                <div className="sm:w-1/2 w-full flex flex-col justify-between text-black">
-                                    <div className="flex flex-col items-center justify-center py-6 text-center w-full flex-1">
-                                        <h3 className="text-[#617772] text-5xl font-light mb-1">
-                                            {freelancer.experience}
-                                        </h3>
-                                        <p className="text-[#617772] text-md tracking-wide font-medium">
-                                            YEARS EXPERIENCE
-                                        </p>
-                                    </div>
+                                {/* Details */}
 
-                                    {/* Book Now full-width button area */}
-                                    
-                                        <Link href={`/freelancerprofile/${freelancer.freelancerId || freelancer.id}`} className="block w-full h-full">
-                                            <span>Book Now</span>
-                                        
-                                        {/* Long Thin Arrow SVG */}
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 60 10"
-                                            className="mt-3 w-14 h-[10px] fill-none stroke-[#F6EFE4] stroke-[2]"
-                                        >
-                                            <line x1="0" y1="5" x2="60" y2="5" />  {/* Horizontal line */}
-                                            <polyline points="50,0 60,5 50,10" /> {/* Arrow head */}
-                                        </svg>
-                                        </Link>
-                                </div>
-                            </div>
-
-                            {/* Bottom Details */}
-                            <div className="flex flex-col sm:flex-row justify-between items-center bg-[#f8f3ec] px-6 py-1 border-t border-[#d9d5cf]">
-                                <div className="text-center sm:text-left ml-14">
-                                    <h2 className="text-lg italic font-semibold text-gray-800">
+                                 <h2 className="text-3xl italic font-semibold text-[#F6EFE4] mb-2">
                                         {freelancer.name}
                                     </h2>
-                                    <p className="text-gray-700 text-sm">{freelancer.specialization}</p>
-                                </div>
-                                <p className="text-gray-600 text-sm mt-2 sm:mt-0">
+                                   
+                                     <p
+                                    className="font-bold text-[20px] leading-[100%] tracking-[0] capitalize text-[#F6EFE4] py-1 mb-2"
+                                >
+                                     {freelancer.specialization}
+                                </p>
+                                <p
+                                    className="font-bold text-[20px] leading-[100%] tracking-[0] capitalize text-[#F6EFE4] py-1 mb-2"
+                                >
+                                    Experience : <span className="font-medium">{freelancer.experience}</span>
+                                </p>
+
+                                <p className="font-normal text-[16px] text-[#F6EFE4] leading-[100%] tracking-[0] capitalize mb-2">
                                     Timing : {freelancer.timing}
                                 </p>
+                             
+                                {/* Bottom Row — Club + Button */}
+                                <div className="flex items-center justify-between mt-2">
+                                    
+
+                                   <Link href={`/freelancerprofile/${freelancer.freelancerId || freelancer.id}`}
+                                        className="border border-white text-white rounded-full px-5 mt-2 py-1 text-sm hover:bg-white hover:text-[#425550] transition-all duration-300 ml-auto"
+                                    >
+                                        Book us
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     ))

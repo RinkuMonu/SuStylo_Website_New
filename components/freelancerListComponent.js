@@ -1405,7 +1405,7 @@ export default function FreelancerList() {
                                 </div>
 
                                 {/* Right: Experience + Book Now full section */}
-                                <div className="sm:w-1/2 w-full flex flex-col justify-between text-black">
+                                <div className=" text-black">
                                     <div className="flex flex-col items-center justify-center py-6 text-center w-full flex-1">
                                         <h3 className="text-[#617772] text-5xl font-light mb-1">
                                             {freelancer.experience}

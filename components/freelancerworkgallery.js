@@ -31,28 +31,7 @@ export default function WorkGallery() {
         }}
       ></div>
 
-      {/* See More Button */}
-      <div
-        className="
-          absolute 
-          bottom-2 right-4 
-          sm:bottom-4 sm:right-8 
-          md:bottom-22 md:right-40 
-          bg-[#F6EFE4] 
-          shadow-[0px_4px_4px_0px_#00000040]
-          border border-[#617772]
-          px-8 sm:px-12 md:px-20
-          py-2 sm:py-3
-          text-base sm:text-lg
-        "
-        style={{
-          borderBottomLeftRadius: "60px",
-        }}
-      >
-        <Link href="/" className="block text-center font-serif">
-          See More
-        </Link>
-      </div>
+    
     </section>
   );
 }
