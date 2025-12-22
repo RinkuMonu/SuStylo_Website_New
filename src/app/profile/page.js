@@ -1,503 +1,17 @@
-// "use client";
-// import React, { useState } from "react";
-// import Image from "next/image";
-// import { FaUser, FaMapMarkerAlt, FaClock } from "react-icons/fa";
-// import { IoClose } from "react-icons/io5";
-
-// export default function AccountPage() {
-//   const [activeSection, setActiveSection] = useState("profile");
-//   const [isEditing, setIsEditing] = useState(false);
-//   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
-
-
-//   return (
-//     <div className="bg-[#F6EFE4] font-serif py-[85px] min-h-screen">
-//       <div className="max-w-6xl mx-auto px-6">
-//         {/* Header */}
-//         <div className="border-b border-b-[#D0BFAF]">
-//           <h1 className="text-[36px] font-bold text-[#1E1E1E] mb-[9px]">Account</h1>
-//           <h2 className="text-[20px] font-semibold text-[#1E1E1E] mb-2">Alisa Menon</h2>
-//         </div>
-
-//         <div className="grid grid-cols-1 lg:grid-cols-4">
-//           {/* Sidebar */}
-//           <div className="border-r border-[#D0BFAF]">
-//             <div>
-//               <h3 className="font-bold text-[15px] text-[#1E1E1E] mb-3 mt-[35px]">Account</h3>
-//               <ul className="space-y-2">
-//                 {[
-//                   { key: "profile", label: "Profile", icon: <FaUser /> },
-//                   { key: "addresses", label: "Addresses", icon: <FaMapMarkerAlt /> },
-//                   { key: "history", label: "History", icon: <FaClock /> },
-//                 ].map((item) => (
-//                   <li
-//                     key={item.key}
-//                     onClick={() => setActiveSection(item.key)}
-//                     className={`cursor-pointer flex items-center gap-2 text-sm font-medium ${activeSection === item.key
-//                       ? "text-[#1E1E1E]"
-//                       : "text-[#7A6F63] hover:text-[#1E1E1E]"
-//                       }`}
-//                   >
-//                     {/* {item.icon} */}
-//                     {item.label}
-//                   </li>
-//                 ))}
-//               </ul>
-//             </div>
-
-//             <div className="mt-10">
-//               <h3 className="font-semibold text-sm text-[#1E1E1E] mb-3">
-//                 Legal
-//               </h3>
-//               <ul className="space-y-2 text-[#7A6F63] text-sm">
-//                 <li
-//                   className={`cursor-pointer ${activeSection === "terms" && "font-semibold text-[#1E1E1E]"
-//                     }`}
-//                   onClick={() => setActiveSection("terms")}
-//                 >
-//                   Terms Of Use
-//                 </li>
-//                 <li
-//                   className={`cursor-pointer ${activeSection === "privacy" && "font-semibold text-[#1E1E1E]"
-//                     }`}
-//                   onClick={() => setActiveSection("privacy")}
-//                 >
-//                   Privacy Center
-//                 </li>
-//               </ul>
-//             </div>
-//           </div>
-
-//           {/* Main Content */}
-//           <div className="lg:col-span-3 pl-6">
-//             {/* PROFILE SECTION */}
-//             {activeSection === "profile" && (
-//               <div className="border border-[#D0BFAF] bg-[#F6EFE4] px-[20px] md:px-[88px] lg:px-[88px] py-[19px] mt-8">
-//                 <h3 className="font-semibold text-sm text-[#1E1E1E] mb-3 border-b border-[#D0BFAF] pb-2">
-//                   Profile Details
-//                 </h3>
-
-//                 {!isEditing ? (
-//                   <div className="flex flex-col items-center">
-//                     <Image
-//                       src="/profile.jpg"
-//                       alt="Profile"
-//                       width={60}
-//                       height={60}
-//                       className="rounded-md mb-4"
-//                     />
-//                     <div className="grid grid-cols-2 gap-y-4 gap-x-10 text-sm text-[#1E1E1E]">
-//                       <p>Full Name</p>
-//                       <p className="font-medium">Alisa Menon</p>
-
-//                       <p>Mobile Number</p>
-//                       <p className="font-medium">1234567890</p>
-
-//                       <p>Email ID</p>
-//                       <p className="font-medium">abcdefg@gmail.com</p>
-
-//                       <p>Gender</p>
-//                       <p className="font-medium">Female</p>
-
-//                       <p>Age</p>
-//                       <p className="font-medium">27</p>
-
-//                       <p>Location</p>
-//                       <p className="font-medium">Jaipur</p>
-//                     </div>
-
-//                     <button
-//                       onClick={() => setIsEditing(true)}
-//                       className="mt-6 bg-[#5B3923] text-[#F6EFE4] px-10 py-2 w-1/2 rounded-sm text-sm"
-//                     >
-//                       Edit
-//                     </button>
-//                   </div>
-//                 ) : (
-//                   <form className="flex flex-col items-center space-y-4">
-//                     {/* Profile Image */}
-//                     <div className="relative flex justify-center">
-//                       <Image
-//                         src="/profile.jpg"
-//                         alt="Profile"
-//                         width={60}
-//                         height={60}
-//                         className="rounded-md object-cover"
-//                       />
-
-//                     </div>
-
-//                     {/* Phone Number */}
-//                     <div className="flex items-center w-full border border-[#D0BFAF] rounded-sm overflow-hidden">
-//                       <input
-//                         type="text"
-//                         value="1234567890"
-//                         readOnly
-//                         className="flex-1 bg-[#F6EFE4] text-[#1E1E1E] px-3 py-2 text-sm outline-none"
-//                       />
-//                       <button
-//                         type="button"
-//                         className="bg-[#758D83] text-[#F6EFE4] px-4 py-2 text-sm hover:opacity-90 transition"
-//                       >
-//                         Change
-//                       </button>
-//                     </div>
-
-//                     {/* Full Name - Floating Label */}
-//                     <div className="relative w-full">
-//                       <input
-//                         type="text"
-//                         id="fullName"
-//                         defaultValue="Alisa Menon"
-//                         className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
-//                         placeholder="Full name"
-//                       />
-//                       <label
-//                         htmlFor="fullName"
-//                         className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
-//                       >
-//                         Full name
-//                       </label>
-//                     </div>
-
-//                     {/* Email - Floating Label */}
-//                     <div className="relative w-full">
-//                       <input
-//                         type="email"
-//                         id="email"
-//                         defaultValue="abcdefgh@gmail.com"
-//                         className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
-//                         placeholder="Email"
-//                       />
-//                       <label
-//                         htmlFor="email"
-//                         className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
-//                       >
-//                         Email
-//                       </label>
-//                     </div>
-
-//                     {/* Gender */}
-//                     <div className="w-full grid grid-cols-2 border border-[#D0BFAF] rounded-sm overflow-hidden">
-//                       <label className="flex items-center justify-center gap-2 py-2 text-[#1E1E1E] border-r border-[#D0BFAF] cursor-pointer bg-[#F6EFE4]">
-//                         <input type="radio" name="gender" className="accent-[#5B3923]" />
-//                         Male
-//                       </label>
-//                       <label className="flex items-center justify-center gap-2 py-2 text-[#1E1E1E] cursor-pointer bg-[#F6EFE4]">
-//                         <input
-//                           type="radio"
-//                           name="gender"
-//                           className="accent-[#5B3923]"
-//                           defaultChecked
-//                         />
-//                         Female
-//                       </label>
-//                     </div>
-
-//                     {/* Birthday - Floating Label */}
-//                     <div className="relative w-full">
-//                       <input
-//                         type="text"
-//                         id="birthday"
-//                         defaultValue="01/01/1998"
-//                         placeholder="Birthday"
-//                         className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
-//                       />
-//                       <label
-//                         htmlFor="birthday"
-//                         className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
-//                       >
-//                         Birthday (dd/mm/yyyy)
-//                       </label>
-//                     </div>
-
-//                     {/* Save Button */}
-//                     <button
-//                       type="button"
-//                       onClick={() => setIsEditing(false)}
-//                       className="bg-[#5B3923] text-[#F6EFE4] px-8 py-2 rounded-sm text-sm w-1/2 hover:opacity-90 transition"
-//                     >
-//                       Save Details
-//                     </button>
-//                   </form>
-//                 )}
-//               </div>
-//             )}
-
-//             {/* Terms Of Use Section */}
-//             {activeSection === "terms" && (
-//               <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-//                 <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
-//                   Terms Of Use
-//                 </h3>
-//                 {[1, 2, 3].map((i) => (
-//                   <div key={i}>
-//                     <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
-//                     <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
-//                       Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-//                       accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-//                       quae ab illo inventore veritatis et quasi architecto beatae vitae
-//                       dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-//                       aspernatur aut odit aut fugit.
-//                     </p>
-//                   </div>
-//                 ))}
-//               </div>
-//             )}
-
-//             {/* Privacy Center Section */}
-//             {activeSection === "privacy" && (
-//               <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-//                 <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
-//                   Privacy Center
-//                 </h3>
-//                 {[1, 2, 3].map((i) => (
-//                   <div key={i}>
-//                     <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
-//                     <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
-//                       Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-//                       accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-//                       quae ab illo inventore veritatis et quasi architecto beatae vitae
-//                       dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-//                       aspernatur aut odit aut fugit.
-//                     </p>
-//                   </div>
-//                 ))}
-//               </div>
-//             )}
-
-//             {/* ADDRESS SECTION */}
-//             {activeSection === "addresses" && (
-//               <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-//                 <div>
-//                   <h3 className="font-semibold text-[16px] border-b border-[#D0BFAF] pb-2">
-//                     Default Address
-//                   </h3>
-//                   <div className="mt-4 text-sm text-[#1E1E1E] flex justify-between">
-//                     <div>
-//                       <p className="font-semibold">Alisa Menon</p>
-//                       <p>Plot No 97</p>
-//                       <p>Jagatpura</p>
-//                       <p>Jaipur - 303901</p>
-//                       <p>Rajasthan</p>
-//                       <p>Mobile: 0000000000</p>
-//                     </div>
-
-//                   </div>
-//                   <div className="flex justify-around gap-3 mt-4">
-//                     <button className="bg-[#5B3923] w-full text-[#F6EFE4] px-6 py-2 rounded-sm text-sm"
-//                       onClick={() => setIsAddressModalOpen(true)}
-
-//                     >
-//                       Edit
-//                     </button>
-//                     <button className="bg-[#5B3923] w-full text-[#F6EFE4] px-6 py-2 rounded-sm text-sm">
-//                       Remove
-//                     </button>
-//                   </div>
-//                 </div>
-
-//                 <div>
-//                   <h3 className="font-semibold text-sm border-t border-[#D0BFAF] pt-4">
-//                     Other Addresses
-//                   </h3>
-//                   <div className="grid md:grid-cols-2 gap-6 mt-4">
-//                     {[1, 2].map((i) => (
-//                       <div
-//                         key={i}
-//                         className="border border-[#D0BFAF] p-4 rounded-sm text-sm text-[#1E1E1E]"
-//                       >
-//                         <div className="flex justify-between mb-2">
-//                           <p className="font-semibold">Alisa Menon</p>
-//                           <span className="text-[10px] px-2 py-0.5 bg-[#E9E0D2] rounded-full">
-//                             Home
-//                           </span>
-//                         </div>
-//                         <p>Plot No 97</p>
-//                         <p>Jagatpura</p>
-//                         <p>Jaipur - 303901</p>
-//                         <p>Rajasthan</p>
-//                         <p>Mobile: 0000000000</p>
-//                       </div>
-//                     ))}
-//                   </div>
-//                 </div>
-//               </div>
-//             )}
-
-//             {/* Address Edit Modal */}
-//             {isAddressModalOpen && (
-//               // <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-//               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-//                 <div className="bg-[#F6EFE4] w-[90%] md:w-[600px] p-8 mt-10 rounded-md relative border border-[#D0BFAF]">
-//                   {/* <button
-//                     onClick={() => setIsAddressModalOpen(false)}
-//                     className="absolute top-4 right-4 text-[#5B3923]"
-//                   >
-//                     <IoClose size={22} />
-//                   </button> */}
-//                   <h3 className="font-semibold text-[#1E1E1E] mb-4 border-b border-[#D0BFAF] pb-2">
-//                     Edit Address
-//                   </h3>
-
-//                   <form className="space-y-4 text-sm text-[#1E1E1E]">
-//                     <div className="grid grid-cols-2 gap-4">
-//                       <div>
-//                         <label>Name*</label>
-//                         <input
-//                           defaultValue="Alisa Menon"
-//                           className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-//                         />
-//                       </div>
-//                       <div>
-//                         <label>Mobile*</label>
-//                         <input
-//                           defaultValue="0000000000"
-//                           className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-//                         />
-//                       </div>
-//                     </div>
-
-//                     <div className="grid grid-cols-2 gap-4">
-//                       <div>
-//                         <label>Pincode*</label>
-//                         <input
-//                           defaultValue="395007"
-//                           className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-//                         />
-//                       </div>
-//                       <div>
-//                         <label>State*</label>
-//                         <input
-//                           defaultValue="Rajasthan"
-//                           className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-//                         />
-//                       </div>
-//                     </div>
-
-//                     <div>
-//                       <label>Address (House Number, Street, Area)*</label>
-//                       <textarea
-//                         rows="2"
-//                         defaultValue="Plot No 97, Jagatpura, Jaipur"
-//                         className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-//                       />
-//                     </div>
-
-//                     <div className="grid grid-cols-2 gap-4">
-//                       <div>
-//                         <label>Locality/Town*</label>
-//                         <input
-//                           defaultValue="Mandal"
-//                           className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-//                         />
-//                       </div>
-//                       <div>
-//                         <label>City/District*</label>
-//                         <input
-//                           defaultValue="Bhilwara"
-//                           className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-//                         />
-//                       </div>
-//                     </div>
-
-//                     <div className="flex items-center gap-6">
-//                       <label className="flex items-center gap-2">
-//                         <input type="radio" name="addressType" defaultChecked /> Home
-//                       </label>
-//                       <label className="flex items-center gap-2">
-//                         <input type="radio" name="addressType" /> Office
-//                       </label>
-//                     </div>
-
-//                     <div className="flex items-center gap-2">
-//                       <input type="checkbox" defaultChecked />
-//                       <label>Make this as my default address</label>
-//                     </div>
-
-//                     <div className="flex gap-2 mt-6">
-//                       <button
-//                         type="button"
-//                         onClick={() => setIsAddressModalOpen(false)}
-//                         className="border border-[#5B3923] px-6 py-2 rounded-sm w-full"
-//                       >
-//                         Cancel
-//                       </button>
-//                       <button
-//                         type="submit"
-//                         className="bg-[#5B3923] text-[#F6EFE4] px-6 py-2 rounded-sm w-full"
-//                       >
-//                         Save
-//                       </button>
-//                     </div>
-//                   </form>
-//                 </div>
-//               </div>
-//             )}
-
-//             {/* HISTORY SECTION */}
-//             {activeSection === "history" && (
-//               <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-//                 <div>
-//                   <span className="font-semibold text-[20px] border-b border-black ">
-//                     Upcoming Bookings
-//                   </span>
-//                   {[1, 2].map((i) => (
-//                     <div
-//                       key={i}
-//                       className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 mb-4 text-sm text-[#1E1E1E]"
-//                     >
-//                       <div>
-//                         <p className="font-semibold">Facial, Legs Waxing</p>
-//                         <p className="text-[#7A6F63]">Upcoming • Nov 16, 2025</p>
-//                       </div>
-//                       <p>₹1200</p>
-//                     </div>
-//                   ))}
-//                 </div>
-
-//                 <div>
-//                   <span className="font-semibold text-[20px] border-b border-black mt-4">
-//                     History
-//                   </span>
-//                   {[1, 2, 3, 4, 5].map((i) => (
-//                     <div
-//                       key={i}
-//                       className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 text-sm text-[#1E1E1E]"
-//                     >
-//                       <div>
-//                         <p className="font-semibold">Facial, Legs Waxing</p>
-//                         <p className="text-[#7A6F63]">Completed • Nov 16, 2025</p>
-//                       </div>
-//                       <p>₹1200</p>
-//                     </div>
-//                   ))}
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-//=============================
-
 
 
 "use client";
-import React, { useState, useEffect,useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { FaUser, FaMapMarkerAlt, FaClock, FaWallet } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import axiosInstance from "../axios/axiosinstance";
 import { jwtDecode } from 'jwt-decode';
+import toast, { Toaster } from "react-hot-toast";
+
 
 export default function AccountPage() {
- const [activeSection, setActiveSection] = useState("profile");
+  const [activeSection, setActiveSection] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const [profileData, setProfileData] = useState(null);
@@ -516,16 +30,16 @@ export default function AccountPage() {
   });
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState("");
-const [upcomingBookings, setUpcomingBookings] = useState([]);
-    const [historyBookings, setHistoryBookings] = useState([]);
-    const [historyLoading, setHistoryLoading] = useState(false);
-    const [historyError, setHistoryError] = useState(null);
+  const [upcomingBookings, setUpcomingBookings] = useState([]);
+  const [historyBookings, setHistoryBookings] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState(null);
   // Fetch profile data
-  
 
 
 
-    // Fetch wallet data
+
+  // Fetch wallet data
   const fetchWalletData = useCallback(async (userId) => {
     try {
       setWalletLoading(true);
@@ -538,8 +52,8 @@ const [upcomingBookings, setUpcomingBookings] = useState([]);
     } finally {
       setWalletLoading(false);
     }
-  },[]);
-const fetchProfileData = useCallback(async () => {
+  }, []);
+  const fetchProfileData = useCallback(async () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get("/customers/profile");
@@ -556,8 +70,8 @@ const fetchProfileData = useCallback(async () => {
         if (customer.avatarUrl) {
           setAvatarPreview(customer.avatarUrl);
         }
-        
-        
+
+
         await fetchWalletData(customer._id);
 
       }
@@ -566,12 +80,14 @@ const fetchProfileData = useCallback(async () => {
     } finally {
       setLoading(false);
     }
-  },[fetchWalletData]);
+  }, [fetchWalletData]);
   // Add balance to wallet
   const handleAddBalance = async (e) => {
     e.preventDefault();
     if (!addAmount || isNaN(addAmount) || parseFloat(addAmount) <= 0) {
-      alert("Please enter a valid amount");
+      // alert("Please enter a valid amount");
+        toast.error("Please enter a valid amount");
+
       return;
     }
 
@@ -587,11 +103,15 @@ const fetchProfileData = useCallback(async () => {
         setWalletData(response.data.wallet);
         setAddBalanceModal(false);
         setAddAmount("");
-        alert("Balance added successfully!");
+        // alert("Balance added successfully!");
+        toast.success("Balance added successfully!");
+
       }
     } catch (error) {
       console.error("Error adding balance:", error);
-      alert("Failed to add balance. Please try again.");
+      // alert("Failed to add balance. Please try again.");
+      toast.error("Failed to add balance. Please try again.");
+
     }
   };
 
@@ -602,101 +122,101 @@ const fetchProfileData = useCallback(async () => {
 
   // --- 2. BOOKING HISTORY LOGIC (Corrected) ---
   const classifyBookings = (bookings) => {
-      const upcoming = [];
-      const history = [];
+    const upcoming = [];
+    const history = [];
 
-      bookings.forEach(booking => {
-          // Statuses considered 'Upcoming' (modify as per your backend states)
-          const upcomingStatuses = ['pending', 'approved', 'confirmed', 'inProgress'];
-          const status = booking.status ? booking.status.toLowerCase() : '';
+    bookings.forEach(booking => {
+      // Statuses considered 'Upcoming' (modify as per your backend states)
+      const upcomingStatuses = ['pending', 'approved', 'confirmed', 'inProgress'];
+      const status = booking.status ? booking.status.toLowerCase() : '';
 
-          // Check if status is defined and is in the list of upcoming statuses
-          if (upcomingStatuses.includes(status)) {
-              upcoming.push(booking);
-          } else { 
-              // Assuming 'completed', 'cancelled', 'rejected', etc., fall into History
-              history.push(booking);
-          }
-      });
+      // Check if status is defined and is in the list of upcoming statuses
+      if (upcomingStatuses.includes(status)) {
+        upcoming.push(booking);
+      } else {
+        // Assuming 'completed', 'cancelled', 'rejected', etc., fall into History
+        history.push(booking);
+      }
+    });
 
-      setUpcomingBookings(upcoming);
-      setHistoryBookings(history);
+    setUpcomingBookings(upcoming);
+    setHistoryBookings(history);
   };
 
   const fetchBookings = useCallback(async () => {
-      setHistoryLoading(true);
-      setHistoryError(null);
+    setHistoryLoading(true);
+    setHistoryError(null);
 
-      try {
-          const token = localStorage.getItem('token'); 
-          if (!token) {
-              setHistoryError("User not authenticated. Please log in.");
-              setHistoryLoading(false);
-              return;
-          }
-
-          // NOTE: Since the backend fetches the user ID from the JWT token, 
-          // we use the simple route /booking/user/
-          const response = await axiosInstance.get(`/booking/user/`);
-          
-          if (response.data.success) {
-              // Ensure response.data.bookings is an array before classifying
-              if (Array.isArray(response.data.bookings)) {
-                  classifyBookings(response.data.bookings);
-              } else {
-                  setHistoryError("Received invalid data structure from server.");
-              }
-          } else {
-              setHistoryError(response.data.message || "Failed to fetch bookings.");
-          }
-
-      } catch (err) {
-          console.error("Fetch Bookings Error:", err);
-          // Display a more user-friendly error if the request fails (e.g., 401, 500)
-          const errorMessage = err.response?.data?.message || "Error loading booking history. Check your network/server.";
-          setHistoryError(errorMessage);
-      } finally {
-          setHistoryLoading(false);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setHistoryError("User not authenticated. Please log in.");
+        setHistoryLoading(false);
+        return;
       }
-  },[]);
+
+      // NOTE: Since the backend fetches the user ID from the JWT token, 
+      // we use the simple route /booking/user/
+      const response = await axiosInstance.get(`/booking/user/`);
+
+      if (response.data.success) {
+        // Ensure response.data.bookings is an array before classifying
+        if (Array.isArray(response.data.bookings)) {
+          classifyBookings(response.data.bookings);
+        } else {
+          setHistoryError("Received invalid data structure from server.");
+        }
+      } else {
+        setHistoryError(response.data.message || "Failed to fetch bookings.");
+      }
+
+    } catch (err) {
+      console.error("Fetch Bookings Error:", err);
+      // Display a more user-friendly error if the request fails (e.g., 401, 500)
+      const errorMessage = err.response?.data?.message || "Error loading booking history. Check your network/server.";
+      setHistoryError(errorMessage);
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, []);
 
   // Fetch bookings only when the 'history' section is active
   useEffect(() => {
-      if (activeSection === 'history' && !historyBookings.length) {
-          fetchBookings();
-      }
+    if (activeSection === 'history' && !historyBookings.length) {
+      fetchBookings();
+    }
   }, [activeSection, fetchBookings, historyBookings.length]);
-    
-    // Helper function to get service names from nested structure
-    const getServiceNames = (services) => {
-      if (!Array.isArray(services)) return "No Services";
-      return services.map(s => s.serviceId?.name || s.name || 'Service').join(', ');
+
+  // Helper function to get service names from nested structure
+  const getServiceNames = (services) => {
+    if (!Array.isArray(services)) return "No Services";
+    return services.map(s => s.serviceId?.name || s.name || 'Service').join(', ');
+  };
+
+  // Helper function to format status
+  const getStatusDisplay = (status) => {
+    if (!status) return "N/A";
+    const statusMap = {
+      'pending': '⏳ Pending Approval',
+      'pendingapproval': '⏳ Waiting Approval',
+      'approved': '✅ Approved',
+      'confirmed': '✅ Confirmed',
+      'inprogress': '🛠️ In Progress',
+      'completed': '🎉 Completed',
+      'cancelled': '❌ Cancelled',
+      'rejected': '🚫 Rejected',
+      'refunded': '💸 Refunded',
     };
-    
-    // Helper function to format status
-    const getStatusDisplay = (status) => {
-      if (!status) return "N/A";
-      const statusMap = {
-          'pending': '⏳ Pending Approval',
-          'pendingapproval': '⏳ Waiting Approval',
-          'approved': '✅ Approved',
-          'confirmed': '✅ Confirmed',
-          'inprogress': '🛠️ In Progress',
-          'completed': '🎉 Completed',
-          'cancelled': '❌ Cancelled',
-          'rejected': '🚫 Rejected',
-          'refunded': '💸 Refunded',
-      };
-      const lowerStatus = status.toLowerCase();
-      // यदि statusMap में है, तो रंगीन/इमोजी वाला टेक्स्ट दिखाएं, अन्यथा Capitalize करें
-      return statusMap[lowerStatus] || status.charAt(0).toUpperCase() + status.slice(1);
-    };
-    const getBookingLocation = (booking) => {
-      if (booking.isAtHome) {
-          return "Home Service";
-      }
-      return booking.salonId?.salonName || "Salon Service"; 
-    };
+    const lowerStatus = status.toLowerCase();
+    // यदि statusMap में है, तो रंगीन/इमोजी वाला टेक्स्ट दिखाएं, अन्यथा Capitalize करें
+    return statusMap[lowerStatus] || status.charAt(0).toUpperCase() + status.slice(1);
+  };
+  const getBookingLocation = (booking) => {
+    if (booking.isAtHome) {
+      return "Home Service";
+    }
+    return booking.salonId?.salonName || "Salon Service";
+  };
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -749,11 +269,15 @@ const fetchProfileData = useCallback(async () => {
           setAvatarPreview(response.data.customer.avatarUrl);
         }
         setIsEditing(false);
-        alert("Profile updated successfully!");
+        // alert("Profile updated successfully!");
+        toast.success("Profile updated successfully!");
+
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile. Please try again.");
+      // alert("Failed to update profile. Please try again.");
+      toast.error("Failed to update profile. Please try again.");
+
     }
   };
 
@@ -794,26 +318,29 @@ const fetchProfileData = useCallback(async () => {
       </div>
     );
   }
-// 1. नाम दिखाने के लिए (Salon या Freelancer)
-const getProviderName = (booking) => {
-  if (booking.salonId) return booking.salonId.name || "Salon Service";
-  if (booking.freelancerId) return booking.freelancerId.fullName || "Freelancer Service";
-  return "Unknown Provider";
-};
+  // 1. नाम दिखाने के लिए (Salon या Freelancer)
+  const getProviderName = (booking) => {
+    if (booking.salonId) return booking.salonId.name || "Salon Service";
+    if (booking.freelancerId) return booking.freelancerId.fullName || "Freelancer Service";
+    return "Unknown Provider";
+  };
 
-// 2. प्रोफाइल फोटो दिखाने के लिए
-const getProviderImage = (booking) => {
-  if (booking.salonId && booking.salonId.photos?.length > 0) return booking.salonId.photos[0];
-  if (booking.freelancerId && booking.freelancerId.photos?.length > 0) return booking.freelancerId.photos[0];
-  return "https://via.placeholder.com/50"; // Default image
-};
+  // 2. प्रोफाइल फोटो दिखाने के लिए
+  const getProviderImage = (booking) => {
+    if (booking.salonId && booking.salonId.photos?.length > 0) return booking.salonId.photos[0];
+    if (booking.freelancerId && booking.freelancerId.photos?.length > 0) return booking.freelancerId.photos[0];
+    return "https://via.placeholder.com/50"; // Default image
+  };
 
-// 3. Service Names को फॉर्मेट करने के लिए
-// const getServiceNames = (services) => {
-//   if (!services || services.length === 0) return "No services selected";
-//   return services.map(s => s.serviceId?.name || "Service").join(", ");
-// };
+  // 3. Service Names को फॉर्मेट करने के लिए
+  // const getServiceNames = (services) => {
+  //   if (!services || services.length === 0) return "No services selected";
+  //   return services.map(s => s.serviceId?.name || "Service").join(", ");
+  // };
   return (
+    <>
+      <Toaster position="top-right" />
+
     <div className="bg-[#F6EFE4] font-serif py-[85px] min-h-screen">
       <div className="max-w-6xl mx-auto px-6">
         {/* Header */}
@@ -1075,7 +602,7 @@ const getProviderImage = (booking) => {
             )}
 
 
-             {/* WALLET SECTION */}
+            {/* WALLET SECTION */}
             {activeSection === "wallet" && (
               <div className="border border-[#D0BFAF] bg-[#F6EFE4] px-[20px] md:px-[88px] lg:px-[88px] py-[19px] mt-8">
                 <div className="flex justify-between items-center mb-6">
@@ -1123,22 +650,21 @@ const getProviderImage = (booking) => {
                       <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4 border-b border-[#D0BFAF] pb-2">
                         Transaction History
                       </h4>
-                      
+
                       {walletData.transactions && walletData.transactions.length > 0 ? (
                         <div className="space-y-3">
                           {walletData.transactions.map((transaction, index) => (
-                            <div 
-                              key={index} 
+                            <div
+                              key={index}
                               className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]"
                             >
                               <div className="flex justify-between items-start">
                                 <div>
                                   <div className="flex items-center gap-2 mb-1">
-                                    <span className={`px-2 py-1 rounded-full text-xs ${
-                                      transaction.type === 'credit' 
-                                        ? 'bg-green-100 text-green-800' 
+                                    <span className={`px-2 py-1 rounded-full text-xs ${transaction.type === 'credit'
+                                        ? 'bg-green-100 text-green-800'
                                         : 'bg-red-100 text-red-800'
-                                    }`}>
+                                      }`}>
                                       {transaction.type === 'credit' ? 'Credit' : 'Debit'}
                                     </span>
                                     <span className="text-sm text-[#7A6F63]">
@@ -1155,11 +681,10 @@ const getProviderImage = (booking) => {
                                   )}
                                 </div>
                                 <div className="text-right">
-                                  <div className={`text-lg font-bold ${
-                                    transaction.type === 'credit' 
-                                      ? 'text-green-600' 
+                                  <div className={`text-lg font-bold ${transaction.type === 'credit'
+                                      ? 'text-green-600'
                                       : 'text-red-600'
-                                  }`}>
+                                    }`}>
                                     {transaction.type === 'credit' ? '+' : '-'}₹{transaction.amount?.toFixed(2)}
                                   </div>
                                   <div className="text-xs text-[#7A6F63] mt-1">
@@ -1501,125 +1026,127 @@ const getProviderImage = (booking) => {
 
             {/* HISTORY SECTION */}
             {/* HISTORY SECTION (Updated to use fetched data) */}
-              {activeSection === "history" && (
-                <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-                  {historyLoading && <div className="text-center text-[#7A6F63]">Loading booking history...</div>}
-                  {historyError && <div className="text-center text-red-600">Error: {historyError}</div>}
-                  
-                  {!historyLoading && !historyError && (
-                      <>
-                          {/* UPCOMING BOOKINGS */}
-                          <div>
-                              <span className="font-semibold text-[20px] border-b border-black ">
-                                  Upcoming Bookings ({upcomingBookings.length})
-                              </span>
-                              
-                              {/* UPCOMING BOOKINGS DISPLAY */}
-                              {upcomingBookings.length === 0 ? (
-                                  <p className="mt-3 text-[#7A6F63] text-sm">You have no upcoming bookings.</p>
-                                ) : (
-                                    upcomingBookings.map((booking) => (
-                                      <div
-                                        key={booking._id}
-                                        className="border border-[#D0BFAF] px-6 py-4 mt-3 mb-4 bg-white shadow-sm flex flex-col md:flex-row gap-4"
-                                      >
-                                        {/* इमेज सेक्शन */}
-                                        <div className="w-20 h-20 flex-shrink-0">
-                                          <Image 
-                                            src={getProviderImage(booking)} 
-                                            alt="provider" 
-                                            width={80}  // 20 * 4 = 80px
-                                            height={80} // 20 * 4 = 80px
-                                            unoptimized={true} // Static export ke liye ye zaroori hai
-                                            className="w-full h-full object-cover rounded-md border border-[#E9E3D9]"
-                                          />
-                                        </div>
+            {activeSection === "history" && (
+              <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
+                {historyLoading && <div className="text-center text-[#7A6F63]">Loading booking history...</div>}
+                {historyError && <div className="text-center text-red-600">Error: {historyError}</div>}
 
-                                        {/* मुख्य जानकारी */}
-                                        <div className="flex-grow">
-                                          <div className="flex justify-between items-start">
-                                            <div>
-                                              <div className="flex items-center gap-2">
-                                                <p className="font-bold text-lg text-[#5F3F31]">
-                                                  {getProviderName(booking)}
-                                                </p>
-                                                {/* Tag दिखाने के लिए कि ये Salon है या Freelancer */}
-                                                <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${booking.salonId ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
-                                                  {booking.salonId ? 'Salon' : 'Freelancer'}
-                                                </span>
-                                              </div>
-                                              
-                                              <p className="text-[#1E1E1E] text-base mt-1">
-                                                <span className="font-medium text-[#7A6F63]">Services:</span> {getServiceNames(booking.services)}
-                                              </p>
+                {!historyLoading && !historyError && (
+                  <>
+                    {/* UPCOMING BOOKINGS */}
+                    <div>
+                      <span className="font-semibold text-[20px] border-b border-black ">
+                        Upcoming Bookings ({upcomingBookings.length})
+                      </span>
 
-                                              <p className="text-[#7A6F63] text-xs mt-1">
-                                                Booking ID: #{booking._id.slice(-6).toUpperCase()} • 
-                                                Date: {new Date(booking.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                              </p>
-                                            </div>
+                      {/* UPCOMING BOOKINGS DISPLAY */}
+                      {upcomingBookings.length === 0 ? (
+                        <p className="mt-3 text-[#7A6F63] text-sm">You have no upcoming bookings.</p>
+                      ) : (
+                        upcomingBookings.map((booking) => (
+                          <div
+                            key={booking._id}
+                            className="border border-[#D0BFAF] px-6 py-4 mt-3 mb-4 bg-white shadow-sm flex flex-col md:flex-row gap-4"
+                          >
+                            {/* इमेज सेक्शन */}
+                            <div className="w-20 h-20 flex-shrink-0">
+                              <Image
+                                src={getProviderImage(booking)}
+                                alt="provider"
+                                width={80}  // 20 * 4 = 80px
+                                height={80} // 20 * 4 = 80px
+                                unoptimized={true} // Static export ke liye ye zaroori hai
+                                className="w-full h-full object-cover rounded-md border border-[#E9E3D9]"
+                              />
+                            </div>
 
-                                            {/* Financials */}
-                                            <div className="text-right">
-                                              <p className="text-xl font-extrabold text-[#5F3F31]">
-                                                ₹{booking.totalAmount?.toFixed(2)}
-                                              </p>
-                                              <span className={`text-[11px] px-2 py-1 rounded font-medium ${booking.paymentStatus === 'paid' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
-                                                {booking.paymentType?.toUpperCase()} - {booking.paymentStatus?.toUpperCase()}
-                                              </span>
-                                            </div>
-                                          </div>
+                            {/* मुख्य जानकारी */}
+                            <div className="flex-grow">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <div className="flex items-center gap-2">
+                                    <p className="font-bold text-lg text-[#5F3F31]">
+                                      {getProviderName(booking)}
+                                    </p>
+                                    {/* Tag दिखाने के लिए कि ये Salon है या Freelancer */}
+                                    <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${booking.salonId ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                                      {booking.salonId ? 'Salon' : 'Freelancer'}
+                                    </span>
+                                  </div>
 
-                                          {/* एड्रेस सेक्शन (Freelancer Home Service के लिए या Salon Address के लिए) */}
-                                          <div className="mt-3 pt-3 border-t border-[#E9E3D9] flex items-center gap-2 text-[#7A6F63] text-xs">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                            <span>
-                                              {booking.isAtHome 
-                                                ? `Home Service: ${booking.address?.line1 || ''} ${booking.address?.city || ''}` 
-                                                : `Visit: ${booking.salonId?.address?.area || booking.freelancerId?.address?.area || 'Location not specified'}`}
-                                            </span>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    ))
-                                )}
+                                  <p className="text-[#1E1E1E] text-base mt-1">
+                                    <span className="font-medium text-[#7A6F63]">Services:</span> {getServiceNames(booking.services)}
+                                  </p>
+
+                                  <p className="text-[#7A6F63] text-xs mt-1">
+                                    Booking ID: #{booking._id.slice(-6).toUpperCase()} •
+                                    Date: {new Date(booking.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                  </p>
+                                </div>
+
+                                {/* Financials */}
+                                <div className="text-right">
+                                  <p className="text-xl font-extrabold text-[#5F3F31]">
+                                    ₹{booking.totalAmount?.toFixed(2)}
+                                  </p>
+                                  <span className={`text-[11px] px-2 py-1 rounded font-medium ${booking.paymentStatus === 'paid' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
+                                    {booking.paymentType?.toUpperCase()} - {booking.paymentStatus?.toUpperCase()}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* एड्रेस सेक्शन (Freelancer Home Service के लिए या Salon Address के लिए) */}
+                              <div className="mt-3 pt-3 border-t border-[#E9E3D9] flex items-center gap-2 text-[#7A6F63] text-xs">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                <span>
+                                  {booking.isAtHome
+                                    ? `Home Service: ${booking.address?.line1 || ''} ${booking.address?.city || ''}`
+                                    : `Visit: ${booking.salonId?.address?.area || booking.freelancerId?.address?.area || 'Location not specified'}`}
+                                </span>
+                              </div>
+                            </div>
                           </div>
+                        ))
+                      )}
+                    </div>
 
-                          {/* HISTORY BOOKINGS */}
-                          <div className="mt-6">
-                              <span className="font-semibold text-[20px] border-b border-black">
-                                  History ({historyBookings.length})
-                              </span>
-                              
-                              {historyBookings.length === 0 ? (
-                                  <p className="mt-3 text-[#7A6F63] text-sm">No past bookings found.</p>
-                              ) : (
-                                  historyBookings.map((booking) => (
-                                      <div
-                                          key={booking._id}
-                                          className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 text-sm text-[#1E1E1E]"
-                                      >
-                                          <div>
-                                              <p className="font-semibold">
-                                                  {getServiceNames(booking.services)}
-                                              </p>
-                                              <p className="text-[#7A6F63]">
-                                                  {getStatusDisplay(booking.status)} • {new Date(booking.createdAt).toLocaleDateString()}
-                                              </p>
-                                          </div>
-                                          <p>₹{booking.totalAmount?.toFixed(2) || 'N/A'}</p>
-                                      </div>
-                                  ))
-                              )}
+                    {/* HISTORY BOOKINGS */}
+                    <div className="mt-6">
+                      <span className="font-semibold text-[20px] border-b border-black">
+                        History ({historyBookings.length})
+                      </span>
+
+                      {historyBookings.length === 0 ? (
+                        <p className="mt-3 text-[#7A6F63] text-sm">No past bookings found.</p>
+                      ) : (
+                        historyBookings.map((booking) => (
+                          <div
+                            key={booking._id}
+                            className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 text-sm text-[#1E1E1E]"
+                          >
+                            <div>
+                              <p className="font-semibold">
+                                {getServiceNames(booking.services)}
+                              </p>
+                              <p className="text-[#7A6F63]">
+                                {getStatusDisplay(booking.status)} • {new Date(booking.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            <p>₹{booking.totalAmount?.toFixed(2) || 'N/A'}</p>
                           </div>
-                      </>
-                  )}
-                </div>
-              )}
+                        ))
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
+
+    </>
   );
 }
 
