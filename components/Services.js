@@ -632,9 +632,9 @@ export default function Services() {
       </div>
 
       {/* Services + Filters Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols gap-8">
         {/* Service Cards */}
-        <div className="lg:col-span-7">
+        <div className="lg:col-span-5">
           {filteredServices.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-gray-500">No services found matching your criteria.</p>
@@ -699,7 +699,7 @@ export default function Services() {
         </div>
 
         {/* Filters Section - NO CHANGES */}
-        <div className="lg:col-span-3 bg-white rounded-xl shadow-md p-6 h-fit sticky top-20">
+        {/* <div className="lg:col-span-3 bg-white rounded-xl shadow-md p-6 h-fit sticky top-20">
           {filters.map((group, idx) => (
             <div key={idx} className="mb-6">
               <h4 className="text-[#617772] font-semibold text-lg mb-4">
@@ -739,7 +739,7 @@ export default function Services() {
               />
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );
