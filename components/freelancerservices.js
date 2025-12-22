@@ -729,7 +729,7 @@ const [showModal, setShowModal] = useState(false);
                 setShowModal(true);
                 return;
             }
-            createBookingAPI(cash, freelancer_id, userId,'freelancer');         
+            createBookingAPI('cash', freelancer_id, userId,'freelancer');         
         } else {
             setShow(true);
             setShowModal(true);
