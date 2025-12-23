@@ -8,7 +8,9 @@ import AddComment from "../../../../components/AddComment";
 
 async function getBlogBySlug(slug) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+    // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://api.sustylo.com/api";
     const response = await fetch(`${baseUrl}/blogs/slug/${slug}`);
     
     if (!response.ok) {
@@ -29,7 +31,8 @@ async function getBlogBySlug(slug) {
 // Server-side function to fetch suggested blogs
 async function getSuggestedBlogs(currentSlug, limit = 3) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+    // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://api.sustylo.com/api";
     const response = await fetch(`${baseUrl}/blogs/list?limit=6`,);
     
     if (!response.ok) {
@@ -52,7 +55,8 @@ async function getSuggestedBlogs(currentSlug, limit = 3) {
 // Required for static export with dynamic routes
 export async function generateStaticParams() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+    // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://api.sustylo.com/api";
     const response = await fetch(`${baseUrl}/blogs/list?limit=100`,);
     
     if (!response.ok) {
