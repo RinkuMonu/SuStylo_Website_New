@@ -119,35 +119,64 @@ export default function Homeservices() {
           View all...
         </Link>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-        {/* 🎯 4. Rendering Logic को Loading State के आधार पर अपडेट करें */}
-        {loading ? (
-          <p className="col-span-full text-center text-gray-500">Loading services...</p>
-        ) : currentServices.length > 0 ? (
-          currentServices.map((srv,index) => (
-           
-              <div key={srv.id || index}
-                  onClick={() => {
-                    handleServiceClick(srv);
-                  }}
-                  className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-44 lg:h-44 rounded-lg relative overflow-hidden flex items-center justify-center shadow-sm bg-[#f5f5f5] cursor-pointer">
-                <Image
-                  src={srv?.image || getDefaultImage(srv?.name)}
-                  alt={srv?.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width:1024px) 8vw, 176px"
-                  className="object-cover w-full h-full"
-                />
-                <span className="absolute bottom-2 w-[90%] rounded-md text-center text-black bg-[#f6efe4] text-sm sm:text-lg font-semibold shadow-sm px-1">
-                  {srv.name}
-                </span>
-              </div>
-           
-          ))
-        ) : (
-          <p className="col-span-full text-center text-gray-500">No services found for {tab === 'women' ? 'women' : 'man'}.</p>
-        )}
+   <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-20 sm:gap-5 place-items-center">
+  
+  {loading ? (
+    <p className="col-span-full text-center text-gray-500">
+      Loading services...
+    </p>
+  ) : currentServices.length > 0 ? (
+    currentServices.map((srv, index) => (
+      <div
+        key={srv.id || index}
+        onClick={() => handleServiceClick(srv)}
+        className="
+          relative flex items-center justify-center
+          w-24 h-24
+          sm:w-28 sm:h-28
+          md:w-32 md:h-32
+          lg:w-36 lg:h-36
+          xl:w-44 xl:h-44
+          rounded-xl overflow-hidden
+          bg-[#f5f5f5] shadow-sm
+          cursor-pointer transition
+          hover:shadow-md
+        "
+      >
+        <Image
+          src={srv?.image || getDefaultImage(srv?.name)}
+          alt={srv?.name}
+          fill
+          sizes="
+            (max-width: 480px) 50vw,
+            (max-width: 768px) 33vw,
+            (max-width: 1024px) 25vw,
+            176px
+          "
+          className="object-cover"
+        />
+
+        <span
+          className="
+            absolute bottom-2
+            w-[90%] text-center
+            bg-[#f6efe4] text-black
+            text-[11px] sm:text-xs md:text-sm lg:text-base
+            font-semibold rounded-md
+            px-2 py-0.5 shadow
+          "
+        >
+          {srv.name}
+        </span>
       </div>
+    ))
+  ) : (
+    <p className="col-span-full text-center text-gray-500">
+      No services found for {tab === "women" ? "women" : "man"}.
+    </p>
+  )}
+</div>
+
     </section>
   );
 }
