@@ -682,6 +682,7 @@ export default function FreelancerServicesSection({ serviceData, freelancer_id }
     const handleAddressSubmit = (address) => {
         setUserAddress(address);
     }
+    console.log("address = ",userAddress);
     const bookingDetails = {
         // salon_id: salon_id,
         cart,
@@ -1154,7 +1155,7 @@ export default function FreelancerServicesSection({ serviceData, freelancer_id }
                                                     </div>
 
 
-                                                    <div className="flex items-center gap-5 text-[#F6EFE4] mt-3">
+                                                    <div className="flex items-center gap-5 text-black mt-3">
                                                         <div className="flex items-center text-sm opacity-80 ml-auto">
                                                             {/* Conditional display of Address */}
                                                             {userAddress ? (
@@ -1164,7 +1165,7 @@ export default function FreelancerServicesSection({ serviceData, freelancer_id }
                                                                     </span>
                                                                     <button
                                                                         onClick={addAddressForHome} // Use this to edit existing address
-                                                                        className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-0 ml-2"
+                                                                        className="text-black underline underline-offset-2 hover:opacity-90 text-sm mb-0 ml-2"
                                                                     >
                                                                         (Edit)
                                                                     </button>
