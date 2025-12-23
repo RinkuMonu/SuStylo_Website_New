@@ -10,6 +10,9 @@ import toast, { Toaster } from "react-hot-toast";
 
 
 const transformServices = (serviceData, genderKey) => {
+
+     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+     
     const genderServices = serviceData[genderKey];
     if (!genderServices) return [];
     return Object.keys(genderServices).map(categoryTitle => {
@@ -49,6 +52,11 @@ function AddressModal({ isOpen, onClose, onSubmit, currentAddress }) {
     };
 
     if (!isOpen) return null;
+
+
+
+
+
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 px-4 bg-black/70">
@@ -157,6 +165,7 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
 
     // Separate states for each section
     const [openFemaleCategory, setOpenFemaleCategory] = useState(null);
+    
 
     const [openMaleCategory, setOpenMaleCategory] = useState(null);
     const [cart, setCart] = useState([]);
@@ -201,6 +210,22 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
         "03:00 PM", "04:00 PM", "05:00 PM", "06:00 PM", "07:00 PM"
     ];
 
+
+    
+     useEffect(() => {
+            if (isBookingModalOpen) {
+                document.body.style.overflow = "hidden";
+            } else {
+                document.body.style.overflow = "auto";
+            }
+    
+            // Cleanup on unmount
+            return () => {
+                document.body.style.overflow = "auto";
+            };
+        }, [isBookingModalOpen]);
+
+        
 
     useEffect(() => {
         if (!salonBooking.date) return;
@@ -756,7 +781,8 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                                 </h3>
 
                                 {/* Service Info (Replace with actual selected item or cart summary) */}
-                                {cart.length > 0 && (() => {
+                               <div  className="ConfirmBookin" style={{ height: "calc(100vh - 280px)", overflow: "auto" }}>
+                                 {cart.length > 0 && (() => {
                                     const handleBookingTypeChange = (event) => {
                                         const newBookingType = event.target.value;
                                         setHomeBooking(prev => ({
@@ -778,8 +804,8 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
 
                                     // 2. JSX Rendering (वापस करें)
                                     return (
-                                        <div className="mb-4 space-y-2 max-h-40 overflow-y-auto pr-2">
-                                            <div className="my-4 p-4 border rounded-lg bg-white shadow-sm">
+                                        <div className="mb-4 space-y-2 max-h-60  pr-2">
+                                            <div className="my-4 p-4 border rounded-lg bg-[#f6efe4] shadow-sm">
                                                 <h3 className="capitalize text-lg font-semibold mb-3 text-[#5F3F31]">
                                                     {/* Display location of the items */}
                                                     {location} Services
@@ -799,7 +825,7 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                                                             // State से वैल्यू लें 
                                                             value={bookingState.bookingType || ''}
                                                             onChange={handleBookingTypeChange}
-                                                            className="w-full p-2 border border-[#C9BFAF] rounded-md bg-white text-[#5C5C5C] focus:ring-[#5F3F31] focus:border-[#5F3F31] transition"
+                                                            className="w-full p-2 border border-[#C9BFAF] rounded-md bg-[#] text-[#5C5C5C] focus:ring-[#5F3F31] focus:border-[#5F3F31] transition"
                                                         >
                                                             <option value="" disabled>Choose an option</option>
                                                             <option value="pre">Pre-booking</option>
@@ -1028,7 +1054,8 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                                 <div className="flex justify-center">
                                     <button
                                         onClick={() => setIsBookingModalOpen(false)} // Close modal to add more from main list
-                                        className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6"
+                                       className="text-[#F6EFE4] underline underline-offset-2 hover:opacity-90 text-sm mb-6 ml-auto"
+
                                     >
                                         + Add More Services
                                     </button>
@@ -1068,6 +1095,7 @@ export default function SalonServicesSection({ serviceData, salon_id }) {
                                         }
                                     </div>
                                 </div>
+                               </div>
                             </div>
                         </div>
                     </div>

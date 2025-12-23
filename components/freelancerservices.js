@@ -682,7 +682,7 @@ export default function FreelancerServicesSection({ serviceData, freelancer_id }
     const handleAddressSubmit = (address) => {
         setUserAddress(address);
     }
-    console.log("address = ",userAddress);
+    console.log("address = ", userAddress);
     const bookingDetails = {
         // salon_id: salon_id,
         cart,
