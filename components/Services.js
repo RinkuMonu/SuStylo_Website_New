@@ -650,7 +650,7 @@ export default function Services() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {filteredServices.map((item, index) => (
                 <div
                   key={item.id || index}
@@ -682,8 +682,6 @@ export default function Services() {
                   <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-[#f6efe4] rounded-md w-[90%] text-center text-lg font-semibold z-10">
                     {item.title}
                   </div>
-
-                  {/* Price info */}
                   {item.discountPrice && (
                     <div className="absolute top-3 right-3 bg-[#617772] text-white px-2 py-1 rounded text-sm">
                       ₹{item.discountPrice}
