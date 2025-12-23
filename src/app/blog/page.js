@@ -5,7 +5,10 @@ import BlogCards from "../../../components/BlogCards";
 // Server-side data fetching
 async function getBlogs(page = 1, limit = 9) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+    // const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api";
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://api.sustylo.com/api";
+
+    
     const response = await fetch(`${baseUrl}/blogs/list?page=${page}&limit=${limit}`);
     
     if (!response.ok) {
