@@ -89,7 +89,7 @@ const profession = "Haircut Specialist";
                                     borderBottomRightRadius: "80px",
                                 }}
                             >
-                                <Link href="/" className="block text-center px-10">
+                                <Link href="#servicesection" className="block text-center px-10">
                                     Book Now
                                 </Link>
                             </div>
