@@ -11,7 +11,7 @@ import toast, { Toaster } from "react-hot-toast";
 
 const transformServices = (serviceData, genderKey) => {
 
-     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    //  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
      
     const genderServices = serviceData[genderKey];
     if (!genderServices) return [];

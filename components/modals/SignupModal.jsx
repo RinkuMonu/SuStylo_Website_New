@@ -29,9 +29,10 @@ export default function SignupModal({ isOpen, onClose, onLogin }) {
       newErrors.username = "Username is required";
     } else if (formData.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters";
-    } else if (!/^[a-zA-Z][a-zA-Z0-9_]{2,}$/.test(formData.username)) {
-      newErrors.username = "Username must start with letter and contain only letters, numbers, underscore";
-    }
+    } 
+    // else if (!/^[a-zA-Z][a-zA-Z0-9_]{2,}$/.test(formData.username)) {
+    //   newErrors.username = "Username must start with letter and contain only letters, numbers, underscore";
+    // }
 
     // Mobile validation
     if (!formData.mobile.trim()) {

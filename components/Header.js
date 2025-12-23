@@ -10,7 +10,13 @@ import Image from "next/image";
 import AuthModalManager from "../components/modals/AuthModalManager";
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+   const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window !== "undefined") {
+      return !!localStorage.getItem("token");
+    }
+    return false;
+  });
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -18,10 +24,10 @@ export default function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  }, []);
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   setIsLoggedIn(!!token);
+  // }, []);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);

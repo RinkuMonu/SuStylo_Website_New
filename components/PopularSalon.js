@@ -42,6 +42,7 @@ export default function PopularSalon() {
     return area || city || "";
   };
 
+  console.log("mainnnn salon :", mainSalon);
   return (
     <>
       {/* TOP FEATURED SALON SECTION */}
@@ -64,11 +65,18 @@ export default function PopularSalon() {
                 <div className="relative w-full h-40 sm:h-56 md:h-80">
                   <Image
                     // if no coverImage from API, fallback to your static
+                    // src={
+                    //   mainSalon?.coverImage
+                    //     ? mainSalon.coverImage
+                    //     : "/Home/popular.png"
+                    // }
+
                     src={
-                      mainSalon?.coverImage
-                        ? mainSalon.coverImage
+                      mainSalon?.photos?.[0]
+                        ? mainSalon.photos[0]
                         : "/Home/popular.png"
                     }
+
                     alt={mainSalon?.salonName || "Salon Image"}
                     fill
                     className="object-cover w-full h-full rounded-b-2xl"
@@ -108,11 +116,18 @@ export default function PopularSalon() {
               >
                 <div className="relative w-full h-40 sm:h-44 md:h-52">
                   <Image
+                    // src={
+                    //   salon?.coverImage
+                    //     ? salon.coverImage
+                    //     : "/Home/popular2.png" // fallback
+                    // }
+
                     src={
-                      salon?.coverImage
-                        ? salon.coverImage
-                        : "/Home/popular2.png" // fallback
+                      salon?.photos?.[0]
+                        ? salon.photos[0]
+                        : "/Home/popular2.png"
                     }
+
                     alt={salon?.salonName || "Salon"}
                     fill
                     className="object-cover rounded-b-2xl"
