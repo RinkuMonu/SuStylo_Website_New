@@ -264,15 +264,15 @@ export default function Home() {
     if (type === 'service') {
       // Navigate to salon list with service filter
       const slug = item.name.toLowerCase().replace(/'/g, '').replace(/\s+/g, '-');
-      router.push(`/salonList?service=${encodeURIComponent(slug)}`);
+      router.push(`/salonlist?service=${encodeURIComponent(slug)}`);
     }
     else if (type === 'salon') {
       // Navigate to salon list with salon name filter
-      router.push(`/salonList?name=${encodeURIComponent(item.slug)}`);
+      router.push(`/salonlist?name=${encodeURIComponent(item.slug)}`);
     }
     else if (type === 'freelancer') {
       // Navigate to freelancer list with freelancer name filter
-      router.push(`/freelancerList?name=${encodeURIComponent(item.slug)}`);
+      router.push(`/freelancerlist?name=${encodeURIComponent(item.slug)}`);
     }
   };
 

@@ -438,8 +438,8 @@ export default function Services() {
     const slug = slugify(original, { lower: true, strict: true });
 
     // Navigate to salon list page
-    // router.push(`/salonList?service=${encodeURIComponent(service.title)}`);
-    router.push(`/salonList?service=${slug}`);
+    // router.push(`/salonlist?service=${encodeURIComponent(service.title)}`);
+    router.push(`/salonlist?service=${slug}`);
   };
 
   // Handle location selection
