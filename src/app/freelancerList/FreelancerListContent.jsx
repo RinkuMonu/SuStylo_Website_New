@@ -771,6 +771,8 @@ export default function FreelancerList() {
                     const transformedFreelancers = response.data.freelancers.map(freelancer => {
                         // Get first service or default
                         const firstService = freelancer.services?.[0] || {};
+
+                        
                        
                         return {
                             id: freelancer._id,
