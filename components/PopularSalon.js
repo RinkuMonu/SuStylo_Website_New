@@ -41,8 +41,9 @@ export default function PopularSalon() {
     if (area && city) return `${area}, ${city}`;
     return area || city || "";
   };
+  
 
-  console.log("mainnnn salon :", mainSalon);
+  // console.log("mainnnn salon :", mainSalon);
   return (
     <>
       {/* TOP FEATURED SALON SECTION */}
