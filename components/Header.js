@@ -85,7 +85,7 @@ export default function Header() {
 
             <div className="flex items-center gap-3">
               <Link
-                href="/salonList"
+                href="/salonlist"
                 className="px-6 py-2 text-xs rounded-full bg-[#9D9C9A] text-white font-medium"
               >
                 BOOK APPOINTMENT

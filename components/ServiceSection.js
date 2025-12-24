@@ -540,7 +540,7 @@ export default function ServiceSection({
           {services?.[activeTab]?.map((service, idx) => (
             // <Link href={service?.link || "#"} key={service.id || idx}>
             <Link
-              href={`/salonList?service=${slugify(service?.title || "", {
+              href={`/salonlist?service=${slugify(service?.title || "", {
                 lower: true,
                 strict: true, // special chars remove
                 trim: true
