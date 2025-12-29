@@ -34,9 +34,57 @@ export default function AccountPage() {
   const [historyBookings, setHistoryBookings] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState(null);
-  // Fetch profile data
 
+  // Cancel Booking Function
+  const handleCancelBooking = async (bookingId, reason) => {
+    try {
+      // Confirm cancellation with user
+      if (!window.confirm("Are you sure you want to cancel this booking?")) {
+        return;
+      }
 
+      const response = await axiosInstance.put(
+        `/booking/${bookingId}/cancel`,
+        { reason: reason || "User cancelled" }
+      );
+
+      if (response.data.success) {
+        toast.success("Booking cancelled successfully!");
+
+        // Update the bookings list
+        await fetchBookings(); // Re-fetch bookings to update status
+
+        return response.data.booking;
+      }
+    } catch (error) {
+      console.error("Error cancelling booking:", error);
+      const errorMessage = error.response?.data?.message || "Failed to cancel booking. Please try again.";
+      toast.error(errorMessage);
+    }
+  };
+
+  // Alternative with modal for cancellation reason
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
+  const [cancellationReason, setCancellationReason] = useState("");
+
+  const openCancelModal = (bookingId) => {
+    setSelectedBookingId(bookingId);
+    setCancellationReason("");
+    setShowCancelModal(true);
+  };
+
+  const confirmCancelBooking = async () => {
+    if (!selectedBookingId) return;
+
+    if (!cancellationReason.trim()) {
+      toast.error("Please provide a cancellation reason");
+      return;
+    }
+
+    await handleCancelBooking(selectedBookingId, cancellationReason);
+    setShowCancelModal(false);
+  };
 
 
   // Fetch wallet data
@@ -53,6 +101,7 @@ export default function AccountPage() {
       setWalletLoading(false);
     }
   }, []);
+
   const fetchProfileData = useCallback(async () => {
     try {
       setLoading(true);
@@ -81,12 +130,13 @@ export default function AccountPage() {
       setLoading(false);
     }
   }, [fetchWalletData]);
+
   // Add balance to wallet
   const handleAddBalance = async (e) => {
     e.preventDefault();
     if (!addAmount || isNaN(addAmount) || parseFloat(addAmount) <= 0) {
       // alert("Please enter a valid amount");
-        toast.error("Please enter a valid amount");
+      toast.error("Please enter a valid amount");
 
       return;
     }
@@ -329,7 +379,7 @@ export default function AccountPage() {
   const getProviderImage = (booking) => {
     if (booking.salonId && booking.salonId.photos?.length > 0) return booking.salonId.photos[0];
     if (booking.freelancerId && booking.freelancerId.photos?.length > 0) return booking.freelancerId.photos[0];
-    return "https://via.placeholder.com/50"; // Default image
+    return "/Image/freelancer/female-img2.png"; // Default image
   };
 
   // 3. Service Names को फॉर्मेट करने के लिए
@@ -337,814 +387,931 @@ export default function AccountPage() {
   //   if (!services || services.length === 0) return "No services selected";
   //   return services.map(s => s.serviceId?.name || "Service").join(", ");
   // };
+
+
+
   return (
     <>
       <Toaster position="top-right" />
 
-    <div className="bg-[#F6EFE4] font-serif py-[85px] min-h-screen">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Header */}
-        <div className="border-b border-b-[#D0BFAF]">
-          <h1 className="text-[36px] font-bold text-[#1E1E1E] mb-[9px]">Account</h1>
-          <h2 className="text-[20px] font-semibold text-[#1E1E1E] mb-2">
-            {profileData?.name || "Loading..."}
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-4">
-          {/* Sidebar */}
-          <div className="border-r border-[#D0BFAF]">
-            <div>
-              <h3 className="font-bold text-[15px] text-[#1E1E1E] mb-3 mt-[35px]">Account</h3>
-              <ul className="space-y-2">
-                {[
-                  { key: "profile", label: "Profile", icon: <FaUser /> },
-                  { key: "wallet", label: "Wallet", icon: <FaWallet /> },
-
-                  // { key: "addresses", label: "Addresses", icon: <FaMapMarkerAlt /> },
-                  { key: "history", label: "History", icon: <FaClock /> },
-                ].map((item) => (
-                  <li
-                    key={item.key}
-                    onClick={() => setActiveSection(item.key)}
-                    className={`cursor-pointer flex items-center gap-2 text-sm font-medium ${activeSection === item.key
-                      ? "text-[#1E1E1E]"
-                      : "text-[#7A6F63] hover:text-[#1E1E1E]"
-                      }`}
-                  >
-                    {item.label}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-10">
-              <h3 className="font-semibold text-sm text-[#1E1E1E] mb-3">
-                Legal
-              </h3>
-              <ul className="space-y-2 text-[#7A6F63] text-sm">
-                <li
-                  className={`cursor-pointer ${activeSection === "terms" && "font-semibold text-[#1E1E1E]"
-                    }`}
-                  onClick={() => setActiveSection("terms")}
-                >
-                  Terms Of Use
-                </li>
-                <li
-                  className={`cursor-pointer ${activeSection === "privacy" && "font-semibold text-[#1E1E1E]"
-                    }`}
-                  onClick={() => setActiveSection("privacy")}
-                >
-                  Privacy Center
-                </li>
-              </ul>
-
-              <ul className="space-y-2 mt-6">
-                <li
-                  onClick={handleLogout}
-                  className="cursor-pointer flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-800"
-                >
-                  Logout
-                </li>
-              </ul>
-
-            </div>
+      <div className="bg-[#F6EFE4] font-serif py-[85px] min-h-screen">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Header */}
+          <div className="border-b border-b-[#D0BFAF]">
+            <h1 className="text-[36px] font-bold text-[#1E1E1E] mb-[9px]">Account</h1>
+            <h2 className="text-[20px] font-semibold text-[#1E1E1E] mb-2">
+              {profileData?.name || "Loading..."}
+            </h2>
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-3 pl-6">
-            {/* PROFILE SECTION */}
-            {activeSection === "profile" && (
-              <div className="border border-[#D0BFAF] bg-[#F6EFE4] px-[20px] md:px-[88px] lg:px-[88px] py-[19px] mt-8">
-                <h3 className="font-semibold text-sm text-[#1E1E1E] mb-3 border-b border-[#D0BFAF] pb-2">
-                  Profile Details
-                </h3>
+          <div className="grid grid-cols-1 lg:grid-cols-4">
+            {/* Sidebar */}
+            <div className="border-r border-[#D0BFAF]">
+              <div>
+                <h3 className="font-bold text-[15px] text-[#1E1E1E] mb-3 mt-[35px]">Account</h3>
+                <ul className="space-y-2">
+                  {[
+                    { key: "profile", label: "Profile", icon: <FaUser /> },
+                    { key: "wallet", label: "Wallet", icon: <FaWallet /> },
 
-                {!isEditing ? (
-                  <div className="flex flex-col items-center">
-                    <Image
-                      src={profileData?.avatarUrl || "/profile.jpg"}
-                      alt="Profile"
-                      width={60}
-                      height={60}
-                      className="rounded-md mb-4"
-                    />
-                    <div className="grid grid-cols-2 gap-y-4 gap-x-10 text-sm text-[#1E1E1E]">
-                      <p>Full Name</p>
-                      <p className="font-medium">{profileData?.name || "N/A"}</p>
-
-                      <p>Mobile Number</p>
-                      <p className="font-medium">{profileData?.phone || "N/A"}</p>
-
-                      <p>Email ID</p>
-                      <p className="font-medium">{profileData?.email || "N/A"}</p>
-
-                      <p>Gender</p>
-                      <p className="font-medium">{profileData?.gender || "N/A"}</p>
-
-                      <p>Age</p>
-                      <p className="font-medium">{profileData?.age || "N/A"}</p>
-
-                      <p>Location</p>
-                      <p className="font-medium">
-                        {profileData?.address?.city || profileData?.address?.country || "Jaipur"}
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="mt-6 bg-[#5B3923] text-[#F6EFE4] px-10 py-2 w-1/2 rounded-sm text-sm"
+                    // { key: "addresses", label: "Addresses", icon: <FaMapMarkerAlt /> },
+                    { key: "history", label: "History", icon: <FaClock /> },
+                  ].map((item) => (
+                    <li
+                      key={item.key}
+                      onClick={() => setActiveSection(item.key)}
+                      className={`cursor-pointer flex items-center gap-2 text-sm font-medium ${activeSection === item.key
+                        ? "text-[#1E1E1E]"
+                        : "text-[#7A6F63] hover:text-[#1E1E1E]"
+                        }`}
                     >
-                      Edit
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleProfileUpdate} className="flex flex-col items-center space-y-4">
-                    {/* Profile Image */}
-                    <div className="relative flex justify-center">
+                      {item.label}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-10">
+                <h3 className="font-semibold text-sm text-[#1E1E1E] mb-3">
+                  Legal
+                </h3>
+                <ul className="space-y-2 text-[#7A6F63] text-sm">
+                  <li
+                    className={`cursor-pointer ${activeSection === "terms" && "font-semibold text-[#1E1E1E]"
+                      }`}
+                    onClick={() => setActiveSection("terms")}
+                  >
+                    Terms Of Use
+                  </li>
+                  <li
+                    className={`cursor-pointer ${activeSection === "privacy" && "font-semibold text-[#1E1E1E]"
+                      }`}
+                    onClick={() => setActiveSection("privacy")}
+                  >
+                    Privacy Center
+                  </li>
+                </ul>
+
+                <ul className="space-y-2 mt-6">
+                  <li
+                    onClick={handleLogout}
+                    className="cursor-pointer flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-800"
+                  >
+                    Logout
+                  </li>
+                </ul>
+
+              </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="lg:col-span-3 pl-6">
+              {/* PROFILE SECTION */}
+              {activeSection === "profile" && (
+                <div className="border border-[#D0BFAF] bg-[#F6EFE4] px-[20px] md:px-[88px] lg:px-[88px] py-[19px] mt-8">
+                  <h3 className="font-semibold text-sm text-[#1E1E1E] mb-3 border-b border-[#D0BFAF] pb-2">
+                    Profile Details
+                  </h3>
+
+                  {!isEditing ? (
+                    <div className="flex flex-col items-center">
                       <Image
-                        src={avatarPreview || "/profile.jpg"}
+                        src={profileData?.avatarUrl || "/profile.jpg"}
                         alt="Profile"
                         width={60}
                         height={60}
-                        className="rounded-md object-cover"
+                        className="rounded-md mb-4"
                       />
-                      <label className="absolute -bottom-2 -right-2 bg-[#5B3923] text-white p-1 rounded-full cursor-pointer">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleAvatarChange}
-                          className="hidden"
-                        />
-                        <span className="text-xs">Edit</span>
-                      </label>
-                    </div>
+                      <div className="grid grid-cols-2 gap-y-4 gap-x-10 text-sm text-[#1E1E1E]">
+                        <p>Full Name</p>
+                        <p className="font-medium">{profileData?.name || "N/A"}</p>
 
-                    {/* Phone Number */}
-                    <div className="flex items-center w-full border border-[#D0BFAF] rounded-sm overflow-hidden">
-                      <input
-                        type="text"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        className="flex-1 bg-[#F6EFE4] text-[#1E1E1E] px-3 py-2 text-sm outline-none"
-                      />
+                        <p>Mobile Number</p>
+                        <p className="font-medium">{profileData?.phone || "N/A"}</p>
+
+                        <p>Email ID</p>
+                        <p className="font-medium">{profileData?.email || "N/A"}</p>
+
+                        <p>Gender</p>
+                        <p className="font-medium">{profileData?.gender || "N/A"}</p>
+
+                        <p>Age</p>
+                        <p className="font-medium">{profileData?.age || "N/A"}</p>
+
+                        <p>Location</p>
+                        <p className="font-medium">
+                          {profileData?.address?.city || profileData?.address?.country || "Jaipur"}
+                        </p>
+                      </div>
+
                       <button
-                        type="button"
-                        className="bg-[#758D83] text-[#F6EFE4] px-4 py-2 text-sm hover:opacity-90 transition"
+                        onClick={() => setIsEditing(true)}
+                        className="mt-6 bg-[#5B3923] text-[#F6EFE4] px-10 py-2 w-1/2 rounded-sm text-sm"
                       >
-                        Change
+                        Edit
                       </button>
                     </div>
+                  ) : (
+                    <form onSubmit={handleProfileUpdate} className="flex flex-col items-center space-y-4">
+                      {/* Profile Image */}
+                      <div className="relative flex justify-center">
+                        <Image
+                          src={avatarPreview || "/profile.jpg"}
+                          alt="Profile"
+                          width={60}
+                          height={60}
+                          className="rounded-md object-cover"
+                        />
+                        <label className="absolute -bottom-2 -right-2 bg-[#5B3923] text-white p-1 rounded-full cursor-pointer">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarChange}
+                            className="hidden"
+                          />
+                          <span className="text-xs">Edit</span>
+                        </label>
+                      </div>
 
-                    {/* Full Name - Floating Label */}
-                    <div className="relative w-full">
-                      <input
-                        type="text"
-                        id="fullName"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
-                        placeholder="Full name"
-                      />
-                      <label
-                        htmlFor="fullName"
-                        className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
-                      >
-                        Full name
-                      </label>
-                    </div>
-
-                    {/* Email - Floating Label */}
-                    <div className="relative w-full">
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
-                        placeholder="Email"
-                      />
-                      <label
-                        htmlFor="email"
-                        className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
-                      >
-                        Email
-                      </label>
-                    </div>
-
-                    {/* Gender */}
-                    <div className="w-full grid grid-cols-2 border border-[#D0BFAF] rounded-sm overflow-hidden">
-                      <label className="flex items-center justify-center gap-2 py-2 text-[#1E1E1E] border-r border-[#D0BFAF] cursor-pointer bg-[#F6EFE4]">
+                      {/* Phone Number */}
+                      <div className="flex items-center w-full border border-[#D0BFAF] rounded-sm overflow-hidden">
                         <input
-                          type="radio"
-                          name="gender"
-                          value="male"
-                          checked={formData.gender === "male"}
+                          type="text"
+                          name="phone"
+                          value={formData.phone}
                           onChange={handleInputChange}
-                          className="accent-[#5B3923]"
+                          className="flex-1 bg-[#F6EFE4] text-[#1E1E1E] px-3 py-2 text-sm outline-none"
                         />
-                        Male
-                      </label>
-                      <label className="flex items-center justify-center gap-2 py-2 text-[#1E1E1E] cursor-pointer bg-[#F6EFE4]">
+                        <button
+                          type="button"
+                          className="bg-[#758D83] text-[#F6EFE4] px-4 py-2 text-sm hover:opacity-90 transition"
+                        >
+                          Change
+                        </button>
+                      </div>
+
+                      {/* Full Name - Floating Label */}
+                      <div className="relative w-full">
                         <input
-                          type="radio"
-                          name="gender"
-                          value="female"
-                          checked={formData.gender === "female"}
+                          type="text"
+                          id="fullName"
+                          name="name"
+                          value={formData.name}
                           onChange={handleInputChange}
-                          className="accent-[#5B3923]"
+                          className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
+                          placeholder="Full name"
                         />
-                        Female
-                      </label>
-                    </div>
+                        <label
+                          htmlFor="fullName"
+                          className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
+                        >
+                          Full name
+                        </label>
+                      </div>
 
-                    {/* Age - Floating Label */}
-                    <div className="relative w-full">
-                      <input
-                        type="number"
-                        id="age"
-                        name="age"
-                        value={formData.age}
-                        onChange={handleInputChange}
-                        placeholder="Age"
-                        className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
-                      />
-                      <label
-                        htmlFor="age"
-                        className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
-                      >
-                        Age
-                      </label>
-                    </div>
+                      {/* Email - Floating Label */}
+                      <div className="relative w-full">
+                        <input
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
+                          placeholder="Email"
+                        />
+                        <label
+                          htmlFor="email"
+                          className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
+                        >
+                          Email
+                        </label>
+                      </div>
 
-                    {/* Save and Cancel Buttons */}
-                    <div className="flex gap-4 w-1/2">
-                      <button
-                        type="button"
-                        onClick={handleCancelEdit}
-                        className="border border-[#5B3923] text-[#5B3923] px-4 py-2 rounded-sm text-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="bg-[#5B3923] text-[#F6EFE4] px-4 py-2 rounded-sm text-sm flex-1 hover:opacity-90 transition"
-                      >
-                        Save Details
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </div>
-            )}
+                      {/* Gender */}
+                      <div className="w-full grid grid-cols-2 border border-[#D0BFAF] rounded-sm overflow-hidden">
+                        <label className="flex items-center justify-center gap-2 py-2 text-[#1E1E1E] border-r border-[#D0BFAF] cursor-pointer bg-[#F6EFE4]">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="male"
+                            checked={formData.gender === "male"}
+                            onChange={handleInputChange}
+                            className="accent-[#5B3923]"
+                          />
+                          Male
+                        </label>
+                        <label className="flex items-center justify-center gap-2 py-2 text-[#1E1E1E] cursor-pointer bg-[#F6EFE4]">
+                          <input
+                            type="radio"
+                            name="gender"
+                            value="female"
+                            checked={formData.gender === "female"}
+                            onChange={handleInputChange}
+                            className="accent-[#5B3923]"
+                          />
+                          Female
+                        </label>
+                      </div>
 
+                      {/* Age - Floating Label */}
+                      <div className="relative w-full">
+                        <input
+                          type="number"
+                          id="age"
+                          name="age"
+                          value={formData.age}
+                          onChange={handleInputChange}
+                          placeholder="Age"
+                          className="peer w-full border border-[#D0BFAF] rounded-sm bg-[#F6EFE4] text-[#1E1E1E] px-3 pt-4 pb-2 text-sm placeholder-transparent focus:outline-none focus:border-[#5B3923]"
+                        />
+                        <label
+                          htmlFor="age"
+                          className="absolute left-3 -top-2.5 bg-[#F6EFE4] px-1 text-[#B89C87] text-xs transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-sm peer-placeholder-shown:text-[#B89C87] peer-focus:-top-2.5 peer-focus:text-xs"
+                        >
+                          Age
+                        </label>
+                      </div>
 
-            {/* WALLET SECTION */}
-            {activeSection === "wallet" && (
-              <div className="border border-[#D0BFAF] bg-[#F6EFE4] px-[20px] md:px-[88px] lg:px-[88px] py-[19px] mt-8">
-                <div className="flex justify-between items-center mb-6">
-                  <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
-                    My Wallet
-                  </h3>
-                  <button
-                    onClick={() => setAddBalanceModal(true)}
-                    className="bg-[#5B3923] text-[#F6EFE4] px-4 py-2 rounded-sm text-sm hover:opacity-90 transition"
-                  >
-                    Add Balance
-                  </button>
+                      {/* Save and Cancel Buttons */}
+                      <div className="flex gap-4 w-1/2">
+                        <button
+                          type="button"
+                          onClick={handleCancelEdit}
+                          className="border border-[#5B3923] text-[#5B3923] px-4 py-2 rounded-sm text-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="bg-[#5B3923] text-[#F6EFE4] px-4 py-2 rounded-sm text-sm flex-1 hover:opacity-90 transition"
+                        >
+                          Save Details
+                        </button>
+                      </div>
+                    </form>
+                  )}
                 </div>
+              )}
 
-                {walletLoading ? (
-                  <div className="text-center py-8">
-                    <div className="text-[#5B3923]">Loading wallet...</div>
-                  </div>
-                ) : walletData ? (
-                  <>
-                    {/* Wallet Summary */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                      <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
-                        <div className="text-[#7A6F63] text-sm mb-1">Total Balance</div>
-                        <div className="text-2xl font-bold text-[#5B3923]">
-                          ₹{walletData.balance?.toFixed(2) || "0.00"}
-                        </div>
-                      </div>
-                      <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
-                        <div className="text-[#7A6F63] text-sm mb-1">Pending Cash</div>
-                        <div className="text-2xl font-bold text-[#5B3923]">
-                          ₹{walletData.cashPending?.toFixed(2) || "0.00"}
-                        </div>
-                      </div>
-                      <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
-                        <div className="text-[#7A6F63] text-sm mb-1">Available Balance</div>
-                        <div className="text-2xl font-bold text-[#5B3923]">
-                          ₹{(walletData.balance - walletData.cashPending)?.toFixed(2) || "0.00"}
-                        </div>
-                      </div>
-                    </div>
 
-                    {/* Transaction History */}
-                    <div>
-                      <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4 border-b border-[#D0BFAF] pb-2">
-                        Transaction History
-                      </h4>
-
-                      {walletData.transactions && walletData.transactions.length > 0 ? (
-                        <div className="space-y-3">
-                          {walletData.transactions.map((transaction, index) => (
-                            <div
-                              key={index}
-                              className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]"
-                            >
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <div className="flex items-center gap-2 mb-1">
-                                    <span className={`px-2 py-1 rounded-full text-xs ${transaction.type === 'credit'
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-red-100 text-red-800'
-                                      }`}>
-                                      {transaction.type === 'credit' ? 'Credit' : 'Debit'}
-                                    </span>
-                                    <span className="text-sm text-[#7A6F63]">
-                                      {transaction.method || 'N/A'}
-                                    </span>
-                                  </div>
-                                  <div className="text-[#1E1E1E] font-medium text-sm">
-                                    {transaction.description || 'Transaction'}
-                                  </div>
-                                  {transaction.relatedUser && (
-                                    <div className="text-xs text-[#7A6F63] mt-1">
-                                      Related User: {transaction.relatedUser}
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="text-right">
-                                  <div className={`text-lg font-bold ${transaction.type === 'credit'
-                                      ? 'text-green-600'
-                                      : 'text-red-600'
-                                    }`}>
-                                    {transaction.type === 'credit' ? '+' : '-'}₹{transaction.amount?.toFixed(2)}
-                                  </div>
-                                  <div className="text-xs text-[#7A6F63] mt-1">
-                                    {new Date(transaction.createdAt).toLocaleDateString('en-IN', {
-                                      day: '2-digit',
-                                      month: 'short',
-                                      year: 'numeric'
-                                    })} at {new Date(transaction.createdAt).toLocaleTimeString('en-IN', {
-                                      hour: '2-digit',
-                                      minute: '2-digit'
-                                    })}
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <div className="text-center py-8 text-[#7A6F63]">
-                          No transactions yet
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Wallet Information */}
-                    <div className="mt-8 pt-6 border-t border-[#D0BFAF]">
-                      <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4">
-                        Wallet Information
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-[#7A6F63]">Wallet ID:</span>
-                          <span className="text-[#1E1E1E] font-medium">{walletData._id}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-[#7A6F63]">Owner ID:</span>
-                          <span className="text-[#1E1E1E] font-medium">{walletData.owner}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-[#7A6F63]">Created:</span>
-                          <span className="text-[#1E1E1E] font-medium">
-                            {new Date(walletData.createdAt).toLocaleDateString('en-IN')}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-[#7A6F63]">Last Updated:</span>
-                          <span className="text-[#1E1E1E] font-medium">
-                            {new Date(walletData.updatedAt).toLocaleDateString('en-IN')}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-center py-8 text-[#7A6F63]">
-                    No wallet data found
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Add Balance Modal */}
-            {addBalanceModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-                <div className="bg-[#F6EFE4] w-[90%] md:w-[500px] p-8 mt-10 rounded-md relative border border-[#D0BFAF]">
-                  <div className="flex justify-between items-center mb-4">
+              {/* WALLET SECTION */}
+              {activeSection === "wallet" && (
+                <div className="border border-[#D0BFAF] bg-[#F6EFE4] px-[20px] md:px-[88px] lg:px-[88px] py-[19px] mt-8">
+                  <div className="flex justify-between items-center mb-6">
                     <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
-                      Add Balance to Wallet
+                      My Wallet
                     </h3>
                     <button
-                      onClick={() => {
-                        setAddBalanceModal(false);
-                        setAddAmount("");
-                        setAddDescription("Customer added balance");
-                      }}
-                      className="text-[#7A6F63] hover:text-[#1E1E1E]"
+                      onClick={() => setAddBalanceModal(true)}
+                      className="bg-[#5B3923] text-[#F6EFE4] px-4 py-2 rounded-sm text-sm hover:opacity-90 transition"
                     >
-                      <IoClose size={24} />
+                      Add Balance
                     </button>
                   </div>
 
-                  <form onSubmit={handleAddBalance} className="space-y-4">
-                    <div>
-                      <label className="block text-sm text-[#1E1E1E] mb-2">
-                        Amount (₹)
-                      </label>
-                      <input
-                        type="number"
-                        value={addAmount}
-                        onChange={(e) => setAddAmount(e.target.value)}
-                        className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E]"
-                        placeholder="Enter amount"
-                        min="1"
-                        step="0.01"
-                        required
-                      />
+                  {walletLoading ? (
+                    <div className="text-center py-8">
+                      <div className="text-[#5B3923]">Loading wallet...</div>
                     </div>
+                  ) : walletData ? (
+                    <>
+                      {/* Wallet Summary */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
+                          <div className="text-[#7A6F63] text-sm mb-1">Total Balance</div>
+                          <div className="text-2xl font-bold text-[#5B3923]">
+                            ₹{walletData.balance?.toFixed(2) || "0.00"}
+                          </div>
+                        </div>
+                        <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
+                          <div className="text-[#7A6F63] text-sm mb-1">Pending Cash</div>
+                          <div className="text-2xl font-bold text-[#5B3923]">
+                            ₹{walletData.cashPending?.toFixed(2) || "0.00"}
+                          </div>
+                        </div>
+                        <div className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]">
+                          <div className="text-[#7A6F63] text-sm mb-1">Available Balance</div>
+                          <div className="text-2xl font-bold text-[#5B3923]">
+                            ₹{(walletData.balance - walletData.cashPending)?.toFixed(2) || "0.00"}
+                          </div>
+                        </div>
+                      </div>
 
-                    <div>
-                      <label className="block text-sm text-[#1E1E1E] mb-2">
-                        Description
-                      </label>
-                      <input
-                        type="text"
-                        value={addDescription}
-                        onChange={(e) => setAddDescription(e.target.value)}
-                        className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E]"
-                        placeholder="Enter description"
-                      />
+                      {/* Transaction History */}
+                      <div>
+                        <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4 border-b border-[#D0BFAF] pb-2">
+                          Transaction History
+                        </h4>
+
+                        {walletData.transactions && walletData.transactions.length > 0 ? (
+                          <div className="space-y-3">
+                            {walletData.transactions.map((transaction, index) => (
+                              <div
+                                key={index}
+                                className="border border-[#D0BFAF] rounded-sm p-4 bg-[#F6EFE4]"
+                              >
+                                <div className="flex justify-between items-start">
+                                  <div>
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <span className={`px-2 py-1 rounded-full text-xs ${transaction.type === 'credit'
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-red-100 text-red-800'
+                                        }`}>
+                                        {transaction.type === 'credit' ? 'Credit' : 'Debit'}
+                                      </span>
+                                      <span className="text-sm text-[#7A6F63]">
+                                        {transaction.method || 'N/A'}
+                                      </span>
+                                    </div>
+                                    <div className="text-[#1E1E1E] font-medium text-sm">
+                                      {transaction.description || 'Transaction'}
+                                    </div>
+                                    {transaction.relatedUser && (
+                                      <div className="text-xs text-[#7A6F63] mt-1">
+                                        Related User: {transaction.relatedUser}
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="text-right">
+                                    <div className={`text-lg font-bold ${transaction.type === 'credit'
+                                      ? 'text-green-600'
+                                      : 'text-red-600'
+                                      }`}>
+                                      {transaction.type === 'credit' ? '+' : '-'}₹{transaction.amount?.toFixed(2)}
+                                    </div>
+                                    <div className="text-xs text-[#7A6F63] mt-1">
+                                      {new Date(transaction.createdAt).toLocaleDateString('en-IN', {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric'
+                                      })} at {new Date(transaction.createdAt).toLocaleTimeString('en-IN', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                      })}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 text-[#7A6F63]">
+                            No transactions yet
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Wallet Information */}
+                      <div className="mt-8 pt-6 border-t border-[#D0BFAF]">
+                        <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4">
+                          Wallet Information
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                          <div className="flex justify-between">
+                            <span className="text-[#7A6F63]">Wallet ID:</span>
+                            <span className="text-[#1E1E1E] font-medium">{walletData._id}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[#7A6F63]">Owner ID:</span>
+                            <span className="text-[#1E1E1E] font-medium">{walletData.owner}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[#7A6F63]">Created:</span>
+                            <span className="text-[#1E1E1E] font-medium">
+                              {new Date(walletData.createdAt).toLocaleDateString('en-IN')}
+                            </span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-[#7A6F63]">Last Updated:</span>
+                            <span className="text-[#1E1E1E] font-medium">
+                              {new Date(walletData.updatedAt).toLocaleDateString('en-IN')}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="text-center py-8 text-[#7A6F63]">
+                      No wallet data found
                     </div>
+                  )}
+                </div>
+              )}
 
-                    <div className="flex gap-2 mt-6">
+              {/* Add Balance Modal */}
+              {addBalanceModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                  <div className="bg-[#F6EFE4] w-[90%] md:w-[500px] p-8 mt-10 rounded-md relative border border-[#D0BFAF]">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
+                        Add Balance to Wallet
+                      </h3>
                       <button
-                        type="button"
                         onClick={() => {
                           setAddBalanceModal(false);
                           setAddAmount("");
                           setAddDescription("Customer added balance");
                         }}
-                        className="border border-[#5B3923] text-[#5B3923] px-6 py-2 rounded-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
+                        className="text-[#7A6F63] hover:text-[#1E1E1E]"
                       >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="bg-[#5B3923] text-[#F6EFE4] px-6 py-2 rounded-sm flex-1 hover:opacity-90 transition"
-                      >
-                        Add Balance
+                        <IoClose size={24} />
                       </button>
                     </div>
-                  </form>
+
+                    <form onSubmit={handleAddBalance} className="space-y-4">
+                      <div>
+                        <label className="block text-sm text-[#1E1E1E] mb-2">
+                          Amount (₹)
+                        </label>
+                        <input
+                          type="number"
+                          value={addAmount}
+                          onChange={(e) => setAddAmount(e.target.value)}
+                          className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E]"
+                          placeholder="Enter amount"
+                          min="1"
+                          step="0.01"
+                          required
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm text-[#1E1E1E] mb-2">
+                          Description
+                        </label>
+                        <input
+                          type="text"
+                          value={addDescription}
+                          onChange={(e) => setAddDescription(e.target.value)}
+                          className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E]"
+                          placeholder="Enter description"
+                        />
+                      </div>
+
+                      <div className="flex gap-2 mt-6">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAddBalanceModal(false);
+                            setAddAmount("");
+                            setAddDescription("Customer added balance");
+                          }}
+                          className="border border-[#5B3923] text-[#5B3923] px-6 py-2 rounded-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="bg-[#5B3923] text-[#F6EFE4] px-6 py-2 rounded-sm flex-1 hover:opacity-90 transition"
+                        >
+                          Add Balance
+                        </button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Terms Of Use Section */}
-            {activeSection === "terms" && (
-              <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-                <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
-                  Terms Of Use
-                </h3>
-                {[1, 2, 3].map((i) => (
-                  <div key={i}>
-                    <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
-                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
-                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                      accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                      quae ab illo inventore veritatis et quasi architecto beatae vitae
-                      dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-                      aspernatur aut odit aut fugit.
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Privacy Center Section */}
-            {activeSection === "privacy" && (
-              <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-                <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
-                  Privacy Center
-                </h3>
-                {[1, 2, 3].map((i) => (
-                  <div key={i}>
-                    <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
-                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
-                      Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                      accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                      quae ab illo inventore veritatis et quasi architecto beatae vitae
-                      dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-                      aspernatur aut odit aut fugit.
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* ADDRESS SECTION */}
-            {activeSection === "addresses" && (
-              <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-                <div>
-                  <h3 className="font-semibold text-[16px] border-b border-[#D0BFAF] pb-2">
-                    Default Address
+              {/* Terms Of Use Section */}
+              {activeSection === "terms" && (
+                <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
+                  <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
+                    Terms Of Use
                   </h3>
-                  <div className="mt-4 text-sm text-[#1E1E1E] flex justify-between">
-                    <div>
-                      <p className="font-semibold">{profileData?.name || "N/A"}</p>
-                      <p>Plot No 97</p>
-                      <p>Jagatpura</p>
-                      <p>Jaipur - 303901</p>
-                      <p>Rajasthan</p>
-                      <p>Mobile: {profileData?.phone || "N/A"}</p>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i}>
+                      <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
+                      <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                        quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+                        aspernatur aut odit aut fugit.
+                      </p>
                     </div>
-
-                  </div>
-                  <div className="flex justify-around gap-3 mt-4">
-                    <button
-                      className="bg-[#5B3923] w-full text-[#F6EFE4] px-6 py-2 rounded-sm text-sm"
-                      onClick={() => setIsAddressModalOpen(true)}
-                    >
-                      Edit
-                    </button>
-                    <button className="bg-[#5B3923] w-full text-[#F6EFE4] px-6 py-2 rounded-sm text-sm">
-                      Remove
-                    </button>
-                  </div>
+                  ))}
                 </div>
+              )}
 
-                <div>
-                  <h3 className="font-semibold text-sm border-t border-[#D0BFAF] pt-4">
-                    Other Addresses
+              {/* Privacy Center Section */}
+              {activeSection === "privacy" && (
+                <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
+                  <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
+                    Privacy Center
                   </h3>
-                  <div className="grid md:grid-cols-2 gap-6 mt-4">
-                    {[1, 2].map((i) => (
-                      <div
-                        key={i}
-                        className="border border-[#D0BFAF] p-4 rounded-sm text-sm text-[#1E1E1E]"
-                      >
-                        <div className="flex justify-between mb-2">
-                          <p className="font-semibold">{profileData?.name || "N/A"}</p>
-                          <span className="text-[10px] px-2 py-0.5 bg-[#E9E0D2] rounded-full">
-                            Home
-                          </span>
-                        </div>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i}>
+                      <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
+                      <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+                        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+                        quae ab illo inventore veritatis et quasi architecto beatae vitae
+                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+                        aspernatur aut odit aut fugit.
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* ADDRESS SECTION */}
+              {activeSection === "addresses" && (
+                <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
+                  <div>
+                    <h3 className="font-semibold text-[16px] border-b border-[#D0BFAF] pb-2">
+                      Default Address
+                    </h3>
+                    <div className="mt-4 text-sm text-[#1E1E1E] flex justify-between">
+                      <div>
+                        <p className="font-semibold">{profileData?.name || "N/A"}</p>
                         <p>Plot No 97</p>
                         <p>Jagatpura</p>
                         <p>Jaipur - 303901</p>
                         <p>Rajasthan</p>
                         <p>Mobile: {profileData?.phone || "N/A"}</p>
                       </div>
-                    ))}
+
+                    </div>
+                    <div className="flex justify-around gap-3 mt-4">
+                      <button
+                        className="bg-[#5B3923] w-full text-[#F6EFE4] px-6 py-2 rounded-sm text-sm"
+                        onClick={() => setIsAddressModalOpen(true)}
+                      >
+                        Edit
+                      </button>
+                      <button className="bg-[#5B3923] w-full text-[#F6EFE4] px-6 py-2 rounded-sm text-sm">
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold text-sm border-t border-[#D0BFAF] pt-4">
+                      Other Addresses
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6 mt-4">
+                      {[1, 2].map((i) => (
+                        <div
+                          key={i}
+                          className="border border-[#D0BFAF] p-4 rounded-sm text-sm text-[#1E1E1E]"
+                        >
+                          <div className="flex justify-between mb-2">
+                            <p className="font-semibold">{profileData?.name || "N/A"}</p>
+                            <span className="text-[10px] px-2 py-0.5 bg-[#E9E0D2] rounded-full">
+                              Home
+                            </span>
+                          </div>
+                          <p>Plot No 97</p>
+                          <p>Jagatpura</p>
+                          <p>Jaipur - 303901</p>
+                          <p>Rajasthan</p>
+                          <p>Mobile: {profileData?.phone || "N/A"}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Address Edit Modal */}
-            {isAddressModalOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-                <div className="bg-[#F6EFE4] w-[90%] md:w-[600px] p-8 mt-10 rounded-md relative border border-[#D0BFAF]">
-                  <h3 className="font-semibold text-[#1E1E1E] mb-4 border-b border-[#D0BFAF] pb-2">
-                    Edit Address
-                  </h3>
+              {/* Address Edit Modal */}
+              {isAddressModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+                  <div className="bg-[#F6EFE4] w-[90%] md:w-[600px] p-8 mt-10 rounded-md relative border border-[#D0BFAF]">
+                    <h3 className="font-semibold text-[#1E1E1E] mb-4 border-b border-[#D0BFAF] pb-2">
+                      Edit Address
+                    </h3>
 
-                  <form className="space-y-4 text-sm text-[#1E1E1E]">
-                    <div className="grid grid-cols-2 gap-4">
+                    <form className="space-y-4 text-sm text-[#1E1E1E]">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label>Name*</label>
+                          <input
+                            defaultValue={profileData?.name || ""}
+                            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
+                          />
+                        </div>
+                        <div>
+                          <label>Mobile*</label>
+                          <input
+                            defaultValue={profileData?.phone || ""}
+                            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label>Pincode*</label>
+                          <input
+                            defaultValue="395007"
+                            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
+                          />
+                        </div>
+                        <div>
+                          <label>State*</label>
+                          <input
+                            defaultValue="Rajasthan"
+                            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
+                          />
+                        </div>
+                      </div>
+
                       <div>
-                        <label>Name*</label>
-                        <input
-                          defaultValue={profileData?.name || ""}
+                        <label>Address (House Number, Street, Area)*</label>
+                        <textarea
+                          rows="2"
+                          defaultValue="Plot No 97, Jagatpura, Jaipur"
                           className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
                         />
                       </div>
-                      <div>
-                        <label>Mobile*</label>
-                        <input
-                          defaultValue={profileData?.phone || ""}
-                          className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-                        />
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label>Locality/Town*</label>
+                          <input
+                            defaultValue="Mandal"
+                            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
+                          />
+                        </div>
+                        <div>
+                          <label>City/District*</label>
+                          <input
+                            defaultValue="Bhilwara"
+                            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label>Pincode*</label>
-                        <input
-                          defaultValue="395007"
-                          className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-                        />
+                      <div className="flex items-center gap-6">
+                        <label className="flex items-center gap-2">
+                          <input type="radio" name="addressType" defaultChecked /> Home
+                        </label>
+                        <label className="flex items-center gap-2">
+                          <input type="radio" name="addressType" /> Office
+                        </label>
                       </div>
-                      <div>
-                        <label>State*</label>
-                        <input
-                          defaultValue="Rajasthan"
-                          className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-                        />
+
+                      <div className="flex items-center gap-2">
+                        <input type="checkbox" defaultChecked />
+                        <label>Make this as my default address</label>
                       </div>
-                    </div>
 
-                    <div>
-                      <label>Address (House Number, Street, Area)*</label>
-                      <textarea
-                        rows="2"
-                        defaultValue="Plot No 97, Jagatpura, Jaipur"
-                        className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label>Locality/Town*</label>
-                        <input
-                          defaultValue="Mandal"
-                          className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-                        />
+                      <div className="flex gap-2 mt-6">
+                        <button
+                          type="button"
+                          onClick={() => setIsAddressModalOpen(false)}
+                          className="border border-[#5B3923] px-6 py-2 rounded-sm w-full"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          className="bg-[#5B3923] text-[#F6EFE4] px-6 py-2 rounded-sm w-full"
+                        >
+                          Save
+                        </button>
                       </div>
-                      <div>
-                        <label>City/District*</label>
-                        <input
-                          defaultValue="Bhilwara"
-                          className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-6">
-                      <label className="flex items-center gap-2">
-                        <input type="radio" name="addressType" defaultChecked /> Home
-                      </label>
-                      <label className="flex items-center gap-2">
-                        <input type="radio" name="addressType" /> Office
-                      </label>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <input type="checkbox" defaultChecked />
-                      <label>Make this as my default address</label>
-                    </div>
-
-                    <div className="flex gap-2 mt-6">
-                      <button
-                        type="button"
-                        onClick={() => setIsAddressModalOpen(false)}
-                        className="border border-[#5B3923] px-6 py-2 rounded-sm w-full"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="submit"
-                        className="bg-[#5B3923] text-[#F6EFE4] px-6 py-2 rounded-sm w-full"
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </form>
+                    </form>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* HISTORY SECTION */}
-            {/* HISTORY SECTION (Updated to use fetched data) */}
-            {activeSection === "history" && (
-              <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
-                {historyLoading && <div className="text-center text-[#7A6F63]">Loading booking history...</div>}
-                {historyError && <div className="text-center text-red-600">Error: {historyError}</div>}
+              {/* HISTORY SECTION */}
+              {activeSection === "history" && (
+                <div className="border border-[#D0BFAF] bg-[#F6EFE4] p-8 py-[19px] mt-8">
+                  {historyLoading && <div className="text-center text-[#7A6F63]">Loading booking history...</div>}
+                  {historyError && <div className="text-center text-red-600">Error: {historyError}</div>}
 
-                {!historyLoading && !historyError && (
-                  <>
-                    {/* UPCOMING BOOKINGS */}
-                    <div>
-                      <span className="font-semibold text-[20px] border-b border-black ">
-                        Upcoming Bookings ({upcomingBookings.length})
-                      </span>
+                  {!historyLoading && !historyError && (
+                    <>
+                      {/* UPCOMING BOOKINGS */}
+                      <div>
+                        <span className="font-semibold text-[20px] border-b border-black ">
+                          Upcoming Bookings ({upcomingBookings.length})
+                        </span>
 
-                      {/* UPCOMING BOOKINGS DISPLAY */}
-                      {upcomingBookings.length === 0 ? (
-                        <p className="mt-3 text-[#7A6F63] text-sm">You have no upcoming bookings.</p>
-                      ) : (
-                        upcomingBookings.map((booking) => (
-                          <div
-                            key={booking._id}
-                            className="border border-[#D0BFAF] px-6 py-4 mt-3 mb-4 bg-white shadow-sm flex flex-col md:flex-row gap-4"
-                          >
-                            {/* इमेज सेक्शन */}
-                            <div className="w-20 h-20 flex-shrink-0">
-                              <Image
-                                src={getProviderImage(booking)}
-                                alt="provider"
-                                width={80}  // 20 * 4 = 80px
-                                height={80} // 20 * 4 = 80px
-                                unoptimized={true} // Static export ke liye ye zaroori hai
-                                className="w-full h-full object-cover rounded-md border border-[#E9E3D9]"
-                              />
-                            </div>
+                        {/* UPCOMING BOOKINGS DISPLAY */}
+                        {/* UPCOMING BOOKINGS DISPLAY */}
+                        {upcomingBookings.length === 0 ? (
+                          <p className="mt-3 text-[#7A6F63] text-sm">You have no upcoming bookings.</p>
+                        ) : (
+                          upcomingBookings.map((booking) => {
+                            // Check if booking can be cancelled
+                            const canCancel = ['pending', 'approved', 'confirmed'].includes(booking.status?.toLowerCase());
 
-                            {/* मुख्य जानकारी */}
-                            <div className="flex-grow">
-                              <div className="flex justify-between items-start">
-                                <div>
-                                  <div className="flex items-center gap-2">
-                                    <p className="font-bold text-lg text-[#5F3F31]">
-                                      {getProviderName(booking)}
-                                    </p>
-                                    {/* Tag दिखाने के लिए कि ये Salon है या Freelancer */}
-                                    <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${booking.salonId ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
-                                      {booking.salonId ? 'Salon' : 'Freelancer'}
-                                    </span>
+                            return (
+                              <div
+                                key={booking._id}
+                                className="border border-[#D0BFAF] px-6 py-4 mt-3 mb-4 bg-white shadow-sm flex flex-col md:flex-row gap-4"
+                              >
+                                {/* Image section */}
+                                <div className="w-20 h-20 flex-shrink-0">
+                                  <Image
+                                    src={getProviderImage(booking)}
+                                    alt="provider"
+                                    width={80}
+                                    height={80}
+                                    className="w-full h-full object-cover rounded-md border border-[#E9E3D9]"
+                                  />
+                                </div>
+
+                                {/* Main information */}
+                                <div className="flex-grow">
+                                  <div className="flex justify-between items-start">
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <p className="font-bold text-lg text-[#5F3F31]">
+                                          {getProviderName(booking)}
+                                        </p>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase font-bold ${booking.salonId ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}>
+                                          {booking.salonId ? 'Salon' : 'Freelancer'}
+                                        </span>
+                                      </div>
+
+                                      <p className="text-[#1E1E1E] text-base mt-1">
+                                        <span className="font-medium text-[#7A6F63]">Services:</span> {getServiceNames(booking.services)}
+                                      </p>
+
+                                      <p className="text-[#7A6F63] text-xs mt-1">
+                                        Booking ID: #{booking._id.slice(-6).toUpperCase()} •
+                                        Date: {new Date(booking.scheduledDate || booking.createdAt).toLocaleDateString('en-IN', {
+                                          day: 'numeric',
+                                          month: 'short',
+                                          year: 'numeric',
+                                          hour: '2-digit',
+                                          minute: '2-digit'
+                                        })}
+                                      </p>
+
+                                      {/* Status Display */}
+                                      <div className="mt-2">
+                                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${booking.status?.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                            booking.status?.toLowerCase() === 'confirmed' ? 'bg-green-100 text-green-800' :
+                                              booking.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-800' :
+                                                'bg-gray-100 text-gray-800'
+                                          }`}>
+                                          {getStatusDisplay(booking.status)}
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    {/* Financials and Actions */}
+                                    <div className="text-right">
+                                      <p className="text-xl font-extrabold text-[#5F3F31]">
+                                        ₹{booking.totalAmount?.toFixed(2)}
+                                      </p>
+                                      <span className={`text-[11px] px-2 py-1 rounded font-medium ${booking.paymentStatus === 'paid' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
+                                        {booking.paymentType?.toUpperCase()} - {booking.paymentStatus?.toUpperCase()}
+                                      </span>
+
+                                      {/* Cancel Button (only for cancellable statuses) */}
+                                      {canCancel && (
+                                        <button
+                                          onClick={() => openCancelModal(booking._id)}
+                                          className="mt-2 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 px-3 py-1 rounded text-xs font-medium transition-colors"
+                                        >
+                                          Cancel Booking
+                                        </button>
+                                      )}
+                                    </div>
                                   </div>
 
-                                  <p className="text-[#1E1E1E] text-base mt-1">
-                                    <span className="font-medium text-[#7A6F63]">Services:</span> {getServiceNames(booking.services)}
-                                  </p>
-
-                                  <p className="text-[#7A6F63] text-xs mt-1">
-                                    Booking ID: #{booking._id.slice(-6).toUpperCase()} •
-                                    Date: {new Date(booking.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-                                  </p>
-                                </div>
-
-                                {/* Financials */}
-                                <div className="text-right">
-                                  <p className="text-xl font-extrabold text-[#5F3F31]">
-                                    ₹{booking.totalAmount?.toFixed(2)}
-                                  </p>
-                                  <span className={`text-[11px] px-2 py-1 rounded font-medium ${booking.paymentStatus === 'paid' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
-                                    {booking.paymentType?.toUpperCase()} - {booking.paymentStatus?.toUpperCase()}
-                                  </span>
+                                  {/* Address Section */}
+                                  <div className="mt-3 pt-3 border-t border-[#E9E3D9] flex items-center gap-2 text-[#7A6F63] text-xs">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                      <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                    <span>
+                                      {booking.isAtHome
+                                        ? `Home Service: ${booking.address?.line1 || ''} ${booking.address?.city || ''}`
+                                        : `Visit: ${booking.salonId?.address?.area || booking.freelancerId?.address?.area || 'Location not specified'}`}
+                                    </span>
+                                  </div>
                                 </div>
                               </div>
+                            );
+                          })
+                        )}
+                      </div>
 
-                              {/* एड्रेस सेक्शन (Freelancer Home Service के लिए या Salon Address के लिए) */}
-                              <div className="mt-3 pt-3 border-t border-[#E9E3D9] flex items-center gap-2 text-[#7A6F63] text-xs">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                                <span>
-                                  {booking.isAtHome
-                                    ? `Home Service: ${booking.address?.line1 || ''} ${booking.address?.city || ''}`
-                                    : `Visit: ${booking.salonId?.address?.area || booking.freelancerId?.address?.area || 'Location not specified'}`}
-                                </span>
+                      {/* HISTORY BOOKINGS */}
+                      <div className="mt-6">
+                        <span className="font-semibold text-[20px] border-b border-black">
+                          History ({historyBookings.length})
+                        </span>
+
+                        {historyBookings.length === 0 ? (
+                          <p className="mt-3 text-[#7A6F63] text-sm">No past bookings found.</p>
+                        ) : (
+                          historyBookings.map((booking) => (
+                            <div
+                              key={booking._id}
+                              className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 text-sm text-[#1E1E1E]"
+                            >
+                              <div>
+                                <p className="font-semibold">
+                                  {getServiceNames(booking.services)}
+                                </p>
+                                <p className="text-[#7A6F63]">
+                                  {getStatusDisplay(booking.status)} • {new Date(booking.createdAt).toLocaleDateString()}
+                                </p>
                               </div>
+                              <p>₹{booking.totalAmount?.toFixed(2) || 'N/A'}</p>
                             </div>
-                          </div>
-                        ))
-                      )}
-                    </div>
-
-                    {/* HISTORY BOOKINGS */}
-                    <div className="mt-6">
-                      <span className="font-semibold text-[20px] border-b border-black">
-                        History ({historyBookings.length})
-                      </span>
-
-                      {historyBookings.length === 0 ? (
-                        <p className="mt-3 text-[#7A6F63] text-sm">No past bookings found.</p>
-                      ) : (
-                        historyBookings.map((booking) => (
-                          <div
-                            key={booking._id}
-                            className="flex justify-between items-center border border-[#D0BFAF] px-6 py-3 mt-3 text-sm text-[#1E1E1E]"
-                          >
-                            <div>
-                              <p className="font-semibold">
-                                {getServiceNames(booking.services)}
-                              </p>
-                              <p className="text-[#7A6F63]">
-                                {getStatusDisplay(booking.status)} • {new Date(booking.createdAt).toLocaleDateString()}
-                              </p>
-                            </div>
-                            <p>₹{booking.totalAmount?.toFixed(2) || 'N/A'}</p>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </>
-                )}
-              </div>
-            )}
+                          ))
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
+
+      
+      {/* Cancellation Modal */}
+{showCancelModal && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+    <div className="bg-[#F6EFE4] w-[90%] md:w-[500px] p-8 rounded-md relative border border-[#D0BFAF]">
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
+          Cancel Booking
+        </h3>
+        <button
+          onClick={() => setShowCancelModal(false)}
+          className="text-[#7A6F63] hover:text-[#1E1E1E]"
+        >
+          <IoClose size={24} />
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-sm text-[#7A6F63] mb-4">
+          Please provide a reason for cancellation. This will help us improve our service.
+        </p>
+
+        <div>
+          <label className="block text-sm text-[#1E1E1E] mb-2">
+            Cancellation Reason *
+          </label>
+          <textarea
+            value={cancellationReason}
+            onChange={(e) => setCancellationReason(e.target.value)}
+            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E] min-h-[100px]"
+            placeholder="Please specify why you are cancelling..."
+            required
+          />
+        </div>
+
+        {/* Quick Reason Options */}
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            "Change of plans",
+            "Found another service provider",
+            "Price too high",
+            "Unavailable at scheduled time",
+            "Service no longer needed",
+            "Other reasons"
+          ].map((reason) => (
+            <button
+              key={reason}
+              type="button"
+              onClick={() => setCancellationReason(reason)}
+              className="text-xs border border-[#D0BFAF] hover:bg-[#E9E0D2] px-3 py-2 rounded-sm text-[#5B3923] transition-colors"
+            >
+              {reason}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex gap-2 mt-6">
+          <button
+            type="button"
+            onClick={() => setShowCancelModal(false)}
+            className="border border-[#5B3923] text-[#5B3923] px-6 py-2 rounded-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
+          >
+            Go Back
+          </button>
+          <button
+            type="button"
+            onClick={confirmCancelBooking}
+            className="bg-red-600 text-white px-6 py-2 rounded-sm flex-1 hover:bg-red-700 transition"
+          >
+            Confirm Cancellation
+          </button>
+        </div>
+
+        <p className="text-xs text-[#7A6F63] mt-4">
+          Note: Cancellation policy may apply. Refund will be processed as per terms.
+        </p>
+      </div>
     </div>
+  </div>
+)}
 
     </>
   );
