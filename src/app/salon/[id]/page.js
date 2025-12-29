@@ -33,7 +33,7 @@ import axiosInstance from "../../axios/axiosinstance";
 
 export async function generateStaticParams() {
   const res = await axiosInstance.get("/salons");
-
+  
   return res.data.salons.map((salon) => ({
     id: salon._id.toString(),
   }));

@@ -126,7 +126,7 @@ export default function Homeservices() {
       Loading services...
     </p>
   ) : currentServices.length > 0 ? (
-    currentServices.map((srv, index) => (
+    currentServices.slice(0, 6).map((srv, index) => (
       <div
         key={srv.id || index}
         onClick={() => handleServiceClick(srv)}
