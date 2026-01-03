@@ -201,11 +201,11 @@ export default function BlogCards({ blogs = [] }) {
                   )}
                   
                   {/* Views badge */}
-                  <div className="absolute top-2 right-2">
+                  {/* <div className="absolute top-2 right-2">
                     <span className="px-2 py-1 bg-black/70 text-white text-xs rounded-full flex items-center gap-1">
                       👁️ {blog.views || 0}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
 
                 {/* Content */}
@@ -254,9 +254,9 @@ export default function BlogCards({ blogs = [] }) {
                     <span className="text-[#5F3F31] text-sm font-medium group-hover:underline">
                       Read More →
                     </span>
-                    <span className="text-xs text-gray-500">
+                    {/* <span className="text-xs text-gray-500">
                       {blog.comments?.length || 0} comments
-                    </span>
+                    </span> */}
                   </div>
                 </div>
               </div>

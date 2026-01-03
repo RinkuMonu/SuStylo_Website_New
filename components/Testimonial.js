@@ -10,32 +10,38 @@ import React, { useState } from "react";
 const testimonials = [
   {
     text: "I always had trouble finding good salons nearby, but booking through Sustylos is super easy. Got my service on time without any hassle.",
-    img: "/Home/user1.png",
+    // img: "/Home/user1.png",
+    img: "/Home/t1.jpg",
     name: "PRIYA SHARMA",
     bgImg: "/Home/testimonial-bg1.png",
   },
   {
     text: "This was my first time booking a freelancer stylist. Very professional and polite. The home service experience was really good.",
-    img: "/Home/user2.png",
-    name: "ROHAN VERMA",
+    // img: "/Home/user2.png",
+        img: "/Home/t2.jpg",
+
+    name: "NISHA RATHORE",
     bgImg: "/Home/testimonial-bg2.png",
   },
   {
     text: "Comparing salon prices and directly booking a slot saves so much time. The app is very convenient for quick bookings.",
-    img: "/Home/user3.png",
+    // img: "/Home/user3.png",
+        img: "/Home/t3.jpg",
     name: "SNEHA KAPOOR",
     bgImg: "/Home/testimonial-bg3.png",
   },
   {
     text: "Booked after seeing the offers and discounts. The service I received was even better than expected. Totally worth it!",
-    img: "/Home/user4.png",
+    // img: "/Home/user4.png",
+        img: "/Home/t4.jpg",
     name: "ADITYA SINGH",
     bgImg: "/Home/testimonial-bg4.png",
   },
   {
     text: "The platform is simple to use, salon details are clear, and the payment process is smooth. Works perfectly for me.",
-    img: "/Home/user4.png",
-    name: "NISHA RATHORE",
+    // img: "/Home/user4.png",
+        img: "/Home/t5.jpg",
+    name: "ROHAN VERMA",
     bgImg: "/Home/testimonial-bg3.png",
   },
 ];

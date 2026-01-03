@@ -47,7 +47,7 @@ export default function Footer() {
               height={18}
               className=""
             />
-                      7unique@gmail.com
+              info@sustylo.com
           </p>
           <p className="flex items-start gap-2 text-gray-300 text-sm mb-4 lg:w-3/4">
             <Image
@@ -57,7 +57,7 @@ export default function Footer() {
               height={18}
               className=""
             />
-              +91-9876543210
+              0141-4511098
           </p>
         </div>
 
@@ -90,7 +90,7 @@ export default function Footer() {
 
         <div>
             {/* --------- 3️⃣ Get App Link --------- */}
-              <div className="bg-[#F6EFE4] text-black p-6 rounded-xl border border-[#CBAA87] h-auto self-start">
+              <div   id="get-app" className="bg-[#F6EFE4] text-black p-6 rounded-xl border border-[#CBAA87] h-auto self-start">
               <h3 className="font-semibold text-lg mb-4">Get App Link</h3>
               <p className="text-sm mb-2">Email Address</p>
 

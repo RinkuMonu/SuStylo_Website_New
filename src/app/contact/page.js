@@ -543,13 +543,13 @@ export default function ContactPage() {
             <div className="p-5 bg-[#F6EFE4] shadow-[4px_4px_4px_0px_#61777280] rounded-lg border border-[#617772] text-center text-[18px]">
               <BiSolidPhoneCall className="text-[#637571] text-3xl mb-2 mx-auto" />
               <p className="font-semibold">Call Us</p>
-              <p className="text-sm text-gray-600">+91-9876543210</p>
+              <p className="text-sm text-gray-600">0141-4511098</p>
             </div>
 
             <div className="p-5 bg-[#F6EFE4] shadow-[4px_4px_4px_0px_#61777280] rounded-lg border border-[#617772] text-center text-[18px]">
               <FaEnvelope className="text-[#637571] text-2xl mb-2 mx-auto" />
               <p className="font-semibold">Email Us</p>
-              <p className="text-sm text-gray-600">7unique@gmail.com</p>
+              <p className="text-sm text-gray-600">info@sustylo.com</p>
             </div>
           </div>
 

@@ -91,7 +91,8 @@ export default function Header() {
                 BOOK APPOINTMENT
               </Link>
               <Link
-                href="/"
+                // href="/"
+                  href="#get-app"
                 className="px-5 py-2 text-xs rounded-full bg-[#E9E3D9] text-gray-900 font-medium"
               >
                 GET APP

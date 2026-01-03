@@ -762,34 +762,7 @@ export default function AccountPage() {
                         )}
                       </div>
 
-                      {/* Wallet Information */}
-                      <div className="mt-8 pt-6 border-t border-[#D0BFAF]">
-                        <h4 className="font-semibold text-[14px] text-[#1E1E1E] mb-4">
-                          Wallet Information
-                        </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-[#7A6F63]">Wallet ID:</span>
-                            <span className="text-[#1E1E1E] font-medium">{walletData._id}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-[#7A6F63]">Owner ID:</span>
-                            <span className="text-[#1E1E1E] font-medium">{walletData.owner}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-[#7A6F63]">Created:</span>
-                            <span className="text-[#1E1E1E] font-medium">
-                              {new Date(walletData.createdAt).toLocaleDateString('en-IN')}
-                            </span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-[#7A6F63]">Last Updated:</span>
-                            <span className="text-[#1E1E1E] font-medium">
-                              {new Date(walletData.updatedAt).toLocaleDateString('en-IN')}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
+
                     </>
                   ) : (
                     <div className="text-center py-8 text-[#7A6F63]">
@@ -879,20 +852,37 @@ export default function AccountPage() {
                   <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
                     Terms Of Use
                   </h3>
-                  {[1, 2, 3].map((i) => (
-                    <div key={i}>
-                      <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
-                      <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                        quae ab illo inventore veritatis et quasi architecto beatae vitae
-                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-                        aspernatur aut odit aut fugit.
-                      </p>
-                    </div>
-                  ))}
+
+                  <div>
+                    <h4 className="text-[15px] mb-1">Service Booking</h4>
+                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                      By booking a service through our platform, you agree to provide accurate
+                      details such as contact information, service preferences, and location.
+                      Appointments are subject to availability and confirmation by the salon or
+                      service professional.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-[15px] mb-1">Cancellations & Rescheduling</h4>
+                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                      You may cancel or reschedule your appointment within the allowed time
+                      mentioned during booking. Late cancellations or no-shows may result in
+                      cancellation charges as per the salon’s policy.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-[15px] mb-1">Service Responsibility</h4>
+                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                      The quality of services is the responsibility of the respective salon or
+                      professional. We act as a booking platform and are not responsible for
+                      individual service outcomes, delays, or dissatisfaction.
+                    </p>
+                  </div>
                 </div>
               )}
+
 
               {/* Privacy Center Section */}
               {activeSection === "privacy" && (
@@ -900,20 +890,36 @@ export default function AccountPage() {
                   <h3 className="font-semibold text-[16px] text-[#1E1E1E] pb-2">
                     Privacy Center
                   </h3>
-                  {[1, 2, 3].map((i) => (
-                    <div key={i}>
-                      <h4 className=" text-[15px] mb-1">Finibus Bonorum</h4>
-                      <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
-                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                        quae ab illo inventore veritatis et quasi architecto beatae vitae
-                        dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-                        aspernatur aut odit aut fugit.
-                      </p>
-                    </div>
-                  ))}
+
+                  <div>
+                    <h4 className="text-[15px] mb-1">Personal Information</h4>
+                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                      We collect basic personal details such as your name, phone number, and
+                      booking information only to manage appointments and improve your salon
+                      experience. Your information is kept secure and confidential.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-[15px] mb-1">Use of Data</h4>
+                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                      Your data is used solely for service bookings, communication, and customer
+                      support. We do not sell or share your personal information with third
+                      parties for marketing purposes.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h4 className="text-[15px] mb-1">Data Protection</h4>
+                    <p className="text-[#7A6F63] text-sm leading-relaxed mb-4">
+                      We take reasonable measures to protect your data from unauthorized access,
+                      misuse, or loss. You can request data updates or removal by contacting our
+                      support team.
+                    </p>
+                  </div>
                 </div>
               )}
+
 
               {/* ADDRESS SECTION */}
               {activeSection === "addresses" && (
@@ -1147,9 +1153,9 @@ export default function AccountPage() {
                                       {/* Status Display */}
                                       <div className="mt-2">
                                         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${booking.status?.toLowerCase() === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                            booking.status?.toLowerCase() === 'confirmed' ? 'bg-green-100 text-green-800' :
-                                              booking.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-800' :
-                                                'bg-gray-100 text-gray-800'
+                                          booking.status?.toLowerCase() === 'confirmed' ? 'bg-green-100 text-green-800' :
+                                            booking.status?.toLowerCase() === 'approved' ? 'bg-blue-100 text-blue-800' :
+                                              'bg-gray-100 text-gray-800'
                                           }`}>
                                           {getStatusDisplay(booking.status)}
                                         </span>
@@ -1232,86 +1238,86 @@ export default function AccountPage() {
         </div>
       </div>
 
-      
+
       {/* Cancellation Modal */}
-{showCancelModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
-    <div className="bg-[#F6EFE4] w-[90%] md:w-[500px] p-8 rounded-md relative border border-[#D0BFAF]">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
-          Cancel Booking
-        </h3>
-        <button
-          onClick={() => setShowCancelModal(false)}
-          className="text-[#7A6F63] hover:text-[#1E1E1E]"
-        >
-          <IoClose size={24} />
-        </button>
-      </div>
+      {showCancelModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+          <div className="bg-[#F6EFE4] w-[90%] md:w-[500px] p-8 rounded-md relative border border-[#D0BFAF]">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold text-[16px] text-[#1E1E1E]">
+                Cancel Booking
+              </h3>
+              <button
+                onClick={() => setShowCancelModal(false)}
+                className="text-[#7A6F63] hover:text-[#1E1E1E]"
+              >
+                <IoClose size={24} />
+              </button>
+            </div>
 
-      <div className="space-y-4">
-        <p className="text-sm text-[#7A6F63] mb-4">
-          Please provide a reason for cancellation. This will help us improve our service.
-        </p>
+            <div className="space-y-4">
+              <p className="text-sm text-[#7A6F63] mb-4">
+                Please provide a reason for cancellation. This will help us improve our service.
+              </p>
 
-        <div>
-          <label className="block text-sm text-[#1E1E1E] mb-2">
-            Cancellation Reason *
-          </label>
-          <textarea
-            value={cancellationReason}
-            onChange={(e) => setCancellationReason(e.target.value)}
-            className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E] min-h-[100px]"
-            placeholder="Please specify why you are cancelling..."
-            required
-          />
+              <div>
+                <label className="block text-sm text-[#1E1E1E] mb-2">
+                  Cancellation Reason *
+                </label>
+                <textarea
+                  value={cancellationReason}
+                  onChange={(e) => setCancellationReason(e.target.value)}
+                  className="w-full border border-[#D0BFAF] bg-[#F6EFE4] px-3 py-2 rounded-sm text-[#1E1E1E] min-h-[100px]"
+                  placeholder="Please specify why you are cancelling..."
+                  required
+                />
+              </div>
+
+              {/* Quick Reason Options */}
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  "Change of plans",
+                  "Found another service provider",
+                  "Price too high",
+                  "Unavailable at scheduled time",
+                  "Service no longer needed",
+                  "Other reasons"
+                ].map((reason) => (
+                  <button
+                    key={reason}
+                    type="button"
+                    onClick={() => setCancellationReason(reason)}
+                    className="text-xs border border-[#D0BFAF] hover:bg-[#E9E0D2] px-3 py-2 rounded-sm text-[#5B3923] transition-colors"
+                  >
+                    {reason}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex gap-2 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setShowCancelModal(false)}
+                  className="border border-[#5B3923] text-[#5B3923] px-6 py-2 rounded-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
+                >
+                  Go Back
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmCancelBooking}
+                  className="bg-red-600 text-white px-6 py-2 rounded-sm flex-1 hover:bg-red-700 transition"
+                >
+                  Confirm Cancellation
+                </button>
+              </div>
+
+              <p className="text-xs text-[#7A6F63] mt-4">
+                Note: Cancellation policy may apply. Refund will be processed as per terms.
+              </p>
+            </div>
+          </div>
         </div>
-
-        {/* Quick Reason Options */}
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            "Change of plans",
-            "Found another service provider",
-            "Price too high",
-            "Unavailable at scheduled time",
-            "Service no longer needed",
-            "Other reasons"
-          ].map((reason) => (
-            <button
-              key={reason}
-              type="button"
-              onClick={() => setCancellationReason(reason)}
-              className="text-xs border border-[#D0BFAF] hover:bg-[#E9E0D2] px-3 py-2 rounded-sm text-[#5B3923] transition-colors"
-            >
-              {reason}
-            </button>
-          ))}
-        </div>
-
-        <div className="flex gap-2 mt-6">
-          <button
-            type="button"
-            onClick={() => setShowCancelModal(false)}
-            className="border border-[#5B3923] text-[#5B3923] px-6 py-2 rounded-sm flex-1 hover:bg-[#5B3923] hover:text-[#F6EFE4] transition"
-          >
-            Go Back
-          </button>
-          <button
-            type="button"
-            onClick={confirmCancelBooking}
-            className="bg-red-600 text-white px-6 py-2 rounded-sm flex-1 hover:bg-red-700 transition"
-          >
-            Confirm Cancellation
-          </button>
-        </div>
-
-        <p className="text-xs text-[#7A6F63] mt-4">
-          Note: Cancellation policy may apply. Refund will be processed as per terms.
-        </p>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
     </>
   );
