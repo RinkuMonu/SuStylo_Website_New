@@ -19,7 +19,7 @@ axiosInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (_) {
-      // localStorage not available (SSR) - ignore 
+      // localStorage not available (SSR) - ignore
     }
     return config;
   },
