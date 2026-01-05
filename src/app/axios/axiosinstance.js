@@ -2,8 +2,8 @@ import axios from "axios";
 
 const axiosInstance = axios.create({
   // baseURL: process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api",
-  
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL || "https://api.sustylo.com//api",
+
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL || "https://api.sustylo.com/api",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -20,7 +20,7 @@ axiosInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (_) {
-      // localStorage not available (SSR) - ignore 
+      // localStorage not available (SSR) - ignore
     }
     return config;
   },
