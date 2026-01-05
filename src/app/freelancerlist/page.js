@@ -2,7 +2,7 @@
 import React from 'react'
 import HeroSection from '../../../components/freelancerListHero'
 // import FreelancerList from '../../../components/freelancerListComponent'
-import FreelancerList from './FreelancerListContent'
+import FreelancerList from './FreelancerlistContent'
 import { Suspense } from 'react'
 
 
