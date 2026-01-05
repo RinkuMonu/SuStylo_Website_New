@@ -1766,6 +1766,8 @@ export default function SalonList() {
                     newFilters.location = null;
                     break;
 
+
+                    
                 case 'price':
                     const [min, max] = value.split('-').map(v => parseInt(v.trim()));
                     newFilters.minPrice = min;
